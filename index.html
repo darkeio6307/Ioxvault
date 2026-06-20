@@ -826,6 +826,10 @@ textarea.input-field{height:auto;padding:12px 14px;min-height:100px}
         <svg><use href="#i-settings"/></svg>
         <div class="admin-label">Settings</div>
       </div>
+      <div class="admin-card" data-admin="languages">
+        <svg><use href="#i-globe"/></svg>
+        <div class="admin-label">Languages</div>
+      </div>
       <div class="admin-card" data-admin="analytics">
         <svg><use href="#i-chart"/></svg>
         <div class="admin-label">Analytics</div>
@@ -940,12 +944,24 @@ try{
     tg.setHeaderColor('#f5f5fa');
     tg.setBackgroundColor('#f5f5fa');
 
-    // Safe access to user data with multiple fallback checks
+    // Try multiple ways to get user data from Telegram
     let user=null;
+
+    // Method 1: initDataUnsafe (most common)
     if(tg.initDataUnsafe && tg.initDataUnsafe.user){
       user=tg.initDataUnsafe.user;
-    }else if(tg.initData && tg.initData.user){
-      user=tg.initData.user;
+    }
+    // Method 2: Parse initData string
+    else if(tg.initData){
+      try{
+        const params=new URLSearchParams(tg.initData);
+        const userJson=params.get('user');
+        if(userJson) user=JSON.parse(userJson);
+      }catch(e){}
+    }
+    // Method 3: Direct access
+    else if(window.Telegram.WebApp.initDataUnsafe && window.Telegram.WebApp.initDataUnsafe.user){
+      user=window.Telegram.WebApp.initDataUnsafe.user;
     }
 
     if(user && user.id){
@@ -956,9 +972,11 @@ try{
         username:user.username||'',
         photoUrl:user.photo_url||''
       };
-      // Save to localStorage for persistence
       try{localStorage.setItem('iox_user',JSON.stringify(state.user));}catch(e){}
       if(state.user.id===ADMIN_UID) state.isAdmin=true;
+      console.log('Telegram user loaded:',state.user.id,state.user.firstName);
+    }else{
+      console.log('No user in Telegram initData');
     }
   }
 }catch(e){ console.log('Telegram WebApp error:',e); }
@@ -972,6 +990,7 @@ if(!state.user || !state.user.id){
       if(parsed && parsed.id){
         state.user=parsed;
         if(state.user.id===ADMIN_UID) state.isAdmin=true;
+        console.log('User loaded from localStorage');
       }
     }
   }catch(e){}
@@ -1633,13 +1652,18 @@ function banUser(uid,name){
 // ═══════════════════════════════════════════════════
 function renderProfile(){
   const u=state.user;
-  const avatar=$('#profile-avatar');
-  if(u?.photoUrl){avatar.innerHTML=`<img src="${escapeHtml(u.photoUrl)}" alt="">`}
-  else{avatar.textContent=(u?.firstName||'G').charAt(0).toUpperCase()}
+  if(!u){console.warn('No user data in renderProfile');return;}
 
-  $('#profile-name').textContent=(u?.firstName+' '+u?.lastName).trim()||'Guest';
-  $('#profile-handle').textContent='@'+(u?.username||u?.firstName?.toLowerCase()||'guest');
-  $('#profile-uid').textContent='UID: '+(u?.id||'--');
+  const avatar=$('#profile-avatar');
+  if(u.photoUrl){avatar.innerHTML=`<img src="${escapeHtml(u.photoUrl)}" alt="">`}
+  else{avatar.textContent=(u.firstName||'G').charAt(0).toUpperCase()}
+
+  $('#profile-name').textContent=(u.firstName+' '+u.lastName).trim()||'Guest';
+  $('#profile-handle').textContent='@'+(u.username||u.firstName?.toLowerCase()||'guest');
+  $('#profile-uid').textContent='UID: '+(u.id||'--');
+
+  // Update admin badge visibility
+  $('#admin-badge').classList.toggle('hidden',!state.isAdmin);
 
   // Update composer too
   const cav=$('#composer-avatar');
@@ -1731,6 +1755,18 @@ function showAdminSection(section){
   else if(section==='feed'){
     sc.innerHTML=`<h3 style="font-family:Outfit,sans-serif;font-weight:800;margin-bottom:12px">Feed Posts</h3><div id="admin-feed-list"></div>`;
     loadAdminFeed();
+  }
+  else if(section==='languages'){
+    sc.innerHTML=`<div class="flex items-center justify-between mb-12"><h3 style="font-family:Outfit,sans-serif;font-weight:800">Anime Languages</h3><button class="btn btn-primary btn-sm" id="add-lang-btn">${svgIcon('plus',14,14)} Add Language</button></div>
+      <div class="input-wrap mb-12"><label>Anime ID</label><input type="number" class="input-field" id="lang-anime-id" placeholder="AniList ID"></div>
+      <div class="input-wrap mb-12"><label>Languages (comma separated)</label><input type="text" class="input-field" id="lang-list" placeholder="Hindi, English, Tamil, Telugu"></div>
+      <button class="btn btn-primary mb-12" id="save-lang-btn">Save Languages</button>
+      <div id="languages-list"></div>`;
+    loadLanguagesList();
+    $('#save-lang-btn').addEventListener('click',saveLanguages);
+    $('#add-lang-btn').addEventListener('click',()=>{
+      $('#lang-anime-id').value=''; $('#lang-list').value=''; $('#lang-anime-id').focus();
+    });
   }
   else if(section==='settings'){
     sc.innerHTML=`<h3 style="font-family:Outfit,sans-serif;font-weight:800;margin-bottom:12px">Settings</h3>
@@ -1866,6 +1902,49 @@ function loadAdminData(){
   db.ref('users').on('value',s=>{state.users=s.val()||{}});
   db.ref('animeChannels').on('value',s=>{state.channels=s.val()||{}});
   db.ref('animeLanguages').on('value',s=>{state.languages=s.val()||{}});
+}
+
+function loadLanguagesList(){
+  db.ref('animeLanguages').once('value').then(snap=>{
+    const langs=snap.val()||{};
+    const c=$('#languages-list');
+    if(!Object.keys(langs).length){c.innerHTML='<p class="text-sm text-secondary">No languages added</p>';return}
+    c.innerHTML=`<table class="admin-table"><thead><tr><th>Anime ID</th><th>Languages</th><th>Actions</th></tr></thead><tbody>
+      ${Object.entries(langs).map(([id,langArr])=>{
+        const langStr=Array.isArray(langArr)?langArr.join(', '):(typeof langArr==='string'?langArr:JSON.stringify(langArr));
+        return`<tr><td>${id}</td><td>${escapeHtml(langStr)}</td>
+        <td class="cell-actions"><button class="btn btn-danger btn-sm admin-del-lang" data-id="${id}">${svgIcon('trash',12,12)}</button></td></tr>`;
+      }).join('')}</tbody></table>`;
+    $$('.admin-del-lang').forEach(b=>b.addEventListener('click',()=>{
+      if(!confirm('Delete these languages?'))return;
+      db.ref('animeLanguages/'+b.dataset.id).remove().then(()=>{
+        showToast('Languages deleted','info');
+        loadLanguagesList();
+      }).catch(err=>{console.error('Delete error:',err);showToast('Delete failed','error');});
+    }));
+  }).catch(err=>{
+    console.error('Load languages error:',err);
+    $('#languages-list').innerHTML='<p class="text-sm text-danger">Error loading languages</p>';
+  });
+}
+
+function saveLanguages(){
+  const id=$('#lang-anime-id').value.trim();
+  const langs=$('#lang-list').value.trim();
+  if(!id||!langs){showToast('Please fill all fields','error');return;}
+  const numId=parseInt(id);
+  if(isNaN(numId)||numId<=0){showToast('Invalid Anime ID','error');return;}
+  const langArray=langs.split(',').map(l=>l.trim()).filter(l=>l);
+  if(!langArray.length){showToast('Enter at least one language','error');return;}
+  showToast('Saving languages...','info');
+  db.ref('animeLanguages/'+numId).set(langArray).then(()=>{
+    showToast('Languages saved successfully','success');
+    $('#lang-anime-id').value=''; $('#lang-list').value='';
+    loadLanguagesList();
+  }).catch(err=>{
+    console.error('Save languages error:',err);
+    showToast('Failed to save: '+err.message,'error');
+  });
 }
 
 // ═══════════════════════════════════════════════════
