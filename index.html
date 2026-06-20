@@ -936,6 +936,7 @@ const GENRES=['Action','Adventure','Comedy','Drama','Fantasy','Horror','Mystery'
 //  TELEGRAM WEBAPP
 // ═══════════════════════════════════════════════════
 let tg=null;
+let tgInitDataRaw=null;
 try{
   if(window.Telegram && window.Telegram.WebApp){
     tg=window.Telegram.WebApp;
@@ -943,25 +944,24 @@ try{
     tg.expand();
     tg.setHeaderColor('#f5f5fa');
     tg.setBackgroundColor('#f5f5fa');
+    tgInitDataRaw=tg.initData||'';
 
-    // Try multiple ways to get user data from Telegram
+    // Parse user from initData string (initDataUnsafe is often empty)
     let user=null;
-
-    // Method 1: initDataUnsafe (most common)
-    if(tg.initDataUnsafe && tg.initDataUnsafe.user){
-      user=tg.initDataUnsafe.user;
-    }
-    // Method 2: Parse initData string
-    else if(tg.initData){
+    if(tgInitDataRaw){
       try{
-        const params=new URLSearchParams(tg.initData);
+        const params=new URLSearchParams(tgInitDataRaw);
         const userJson=params.get('user');
-        if(userJson) user=JSON.parse(userJson);
-      }catch(e){}
+        if(userJson){
+          user=JSON.parse(decodeURIComponent(userJson));
+          console.log('User parsed from initData string');
+        }
+      }catch(e){console.log('initData parse error:',e);}
     }
-    // Method 3: Direct access
-    else if(window.Telegram.WebApp.initDataUnsafe && window.Telegram.WebApp.initDataUnsafe.user){
-      user=window.Telegram.WebApp.initDataUnsafe.user;
+    // Fallback: initDataUnsafe
+    if(!user && tg.initDataUnsafe && tg.initDataUnsafe.user){
+      user=tg.initDataUnsafe.user;
+      console.log('User from initDataUnsafe');
     }
 
     if(user && user.id){
@@ -976,7 +976,7 @@ try{
       if(state.user.id===ADMIN_UID) state.isAdmin=true;
       console.log('Telegram user loaded:',state.user.id,state.user.firstName);
     }else{
-      console.log('No user in Telegram initData');
+      console.log('No user data found. initData length:',tgInitDataRaw?tgInitDataRaw.length:0);
     }
   }
 }catch(e){ console.log('Telegram WebApp error:',e); }
@@ -1243,6 +1243,8 @@ $('#home-search-bar').addEventListener('click',()=>switchTab('search'));
 // ═══════════════════════════════════════════════════
 async function openAnimeDetail(id){
   const numId=parseInt(id);
+  // Reset current anime to prevent showing stale data
+  state.currentAnime=null;
   $('#anime-detail').classList.add('open');
   if(tg){tg.BackButton.show();tg.BackButton.onClick(closeAnimeDetail)}
 
@@ -1347,8 +1349,8 @@ function renderDetailTab(a){
     let desc=escapeHtml(a.description||'').replace(/<br\s*\/?>/gi,'\n').replace(/<[^>]+>/g,'');
     c.innerHTML=`<div class="description collapsed" id="desc-text">${desc}</div>
       <span class="read-more" id="read-more">Read more</span>
-      ${a.genres?.length?`<div style="margin-top:14px"><div class="text-xs text-secondary mb-8">Genres</div><div class="flex flex-wrap gap-4">${a.genres.map(g=>`<span class="chip">${escapeHtml(g)}</span>`).join('')}</div></div>`:''}
-      ${a.tags?.length?`<div style="margin-top:14px"><div class="text-xs text-secondary mb-8">Tags</div><div class="flex flex-wrap gap-4">${a.tags.slice(0,15).map(t=>`<span class="pill">${escapeHtml(t.name)}</span>`).join('')}</div></div>`:''}
+      ${a.genres?.length?`<div style="margin-top:14px"><div class="text-xs text-secondary mb-8">Genres</div><div style="display:flex;flex-wrap:wrap;gap:8px;max-width:100%;overflow:hidden">${a.genres.map(g=>`<span class="chip" style="margin-bottom:4px">${escapeHtml(g)}</span>`).join('')}</div></div>`:''}
+      ${a.tags?.length?`<div style="margin-top:14px"><div class="text-xs text-secondary mb-8">Tags</div><div style="display:flex;flex-wrap:wrap;gap:8px;max-width:100%;overflow:hidden">${a.tags.slice(0,15).map(t=>`<span class="pill" style="margin-bottom:4px">${escapeHtml(t.name)}</span>`).join('')}</div></div>`:''}
       <div style="margin-top:16px"><div class="text-xs text-secondary mb-8">Available Languages</div><div class="flex flex-wrap gap-4" id="anime-langs"><span class="pill">Loading...</span></div></div>`;
 
     $('#read-more').addEventListener('click',()=>{$('#desc-text').classList.toggle('collapsed');$('#read-more').textContent=$('#desc-text').classList.contains('collapsed')?'Read more':'Show less'});
