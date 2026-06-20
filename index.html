@@ -1,0 +1,1847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#f5f5fa">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>IOX VAULT</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════
+   RESET & BASE
+   ═══════════════════════════════════════════ */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{font-size:16px;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.5;overflow-x:hidden;min-height:100dvh}
+:root{
+  --bg:#f5f5fa;--bg2:#ffffff;--bg3:#eef0f5;--surface:rgba(255,255,255,0.85);
+  --card:#ffffff;--card-border:rgba(0,0,0,0.06);
+  --primary:#3b82f6;--primary-glow:rgba(59,130,246,0.25);--accent:#8b5cf6;--accent-glow:rgba(139,92,246,0.25);
+  --success:#22c55e;--danger:#ef4444;--warning:#f59e0b;
+  --text:#1e293b;--text2:#64748b;--text3:#94a3b8;--text-inverse:#ffffff;
+  --header-h:56px;--nav-h:64px;--radius:12px;--radius-lg:16px;--radius-sm:8px;
+}
+img{max-width:100%;display:block}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+a{color:var(--primary);text-decoration:none}
+input,textarea{font-family:inherit;font-size:14px;border:none;outline:none;background:transparent;color:var(--text)}
+textarea{resize:none}
+ul,ol{list-style:none}
+
+/* ═══════════════════════════════════════════
+   SCROLLBAR
+   ═══════════════════════════════════════════ */
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(0,0,0,0.12);border-radius:4px}
+::-webkit-scrollbar-thumb:hover{background:rgba(0,0,0,0.2)}
+
+/* ═══════════════════════════════════════════
+   ANIMATIONS
+   ═══════════════════════════════════════════ */
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeInRight{from{opacity:0;transform:translateX(100%)}to{opacity:1;transform:translateX(0)}}
+@keyframes fadeOutRight{from{opacity:1;transform:translateX(0)}to{opacity:0;transform:translateX(100%)}}
+@keyframes slideUp{from{transform:translateY(120px);opacity:0}to{transform:translateY(0);opacity:1}}
+@keyframes scaleIn{from{transform:scale(0.92);opacity:0}to{transform:scale(1);opacity:1}}
+@keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes draw{to{stroke-dashoffset:0}}
+@keyframes toastIn{from{transform:translateY(120px);opacity:0}to{transform:translateY(0);opacity:1}}
+@keyframes toastOut{from{transform:translateY(0);opacity:1}to{transform:translateY(120px);opacity:0}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes glow{0%,100%{box-shadow:0 0 20px var(--primary-glow)}50%{box-shadow:0 0 40px var(--primary-glow),0 0 60px var(--accent-glow)}}
+@keyframes shimmerLoad{0%{background-position:-200% 0}100%{background-position:200% 0}}
+
+.anim-fade{animation:fadeIn .3s ease}
+.anim-fade-up{animation:fadeInUp .4s ease}
+.anim-scale{animation:scaleIn .3s ease}
+
+/* ═══════════════════════════════════════════
+   APP SHELL
+   ═══════════════════════════════════════════ */
+#app{min-height:100dvh;display:flex;flex-direction:column;position:relative}
+
+/* ═══════════════════════════════════════════
+   LOADER / SPLASH SCREEN
+   ═══════════════════════════════════════════ */
+#loader{position:fixed;inset:0;z-index:99999;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .6s ease,visibility .6s}
+#loader.hidden{opacity:0;visibility:hidden}
+.loader-logo{width:80px;height:80px;margin-bottom:20px}
+.loader-logo svg{width:100%;height:100%}
+.loader-logo .stroke-anim{stroke-dasharray:200;stroke-dashoffset:200;animation:draw 1.2s ease forwards}
+.loader-avatar{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--accent));display:flex;align-items:center;justify-content:center;color:#fff;font-family:'Outfit',sans-serif;font-weight:800;font-size:24px;margin-bottom:12px;opacity:0;transform:scale(0.5);transition:all .5s cubic-bezier(.34,1.56,.64,1)}
+.loader-avatar.visible{opacity:1;transform:scale(1)}
+.loader-avatar img{width:100%;height:100%;border-radius:50%;object-fit:cover}
+.loader-name{font-family:'Outfit',sans-serif;font-weight:800;font-size:22px;color:var(--text);opacity:0;transition:opacity .4s ease;margin-bottom:4px}
+.loader-sub{font-size:13px;color:var(--text2);opacity:0;transition:opacity .4s ease .2s}
+.loader-name.visible,.loader-sub.visible{opacity:1}
+
+/* ═══════════════════════════════════════════
+   GLASSMORPHISM
+   ═══════════════════════════════════════════ */
+.glass{background:var(--surface);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,0.5)}
+.glass-card{background:rgba(255,255,255,0.72);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,0.5)}
+
+/* ═══════════════════════════════════════════
+   HEADER
+   ═══════════════════════════════════════════ */
+#header{position:fixed;top:0;left:0;right:0;height:var(--header-h);z-index:100;display:flex;align-items:center;padding:0 16px;gap:12px}
+.header-back{width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:var(--radius-sm);transition:background .2s;flex-shrink:0}
+.header-back:active{background:var(--bg3)}
+.header-title{flex:1;font-family:'Outfit',sans-serif;font-weight:800;font-size:18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.header-actions{display:flex;align-items:center;gap:8px}
+.header-btn{height:32px;padding:0 14px;border-radius:16px;font-size:12px;font-weight:600;display:flex;align-items:center;gap:6px;transition:all .2s;flex-shrink:0}
+.header-btn-primary{background:var(--primary);color:#fff}
+.header-btn-primary:active{transform:scale(0.96)}
+.header-admin-badge{background:var(--warning);color:#fff;font-size:10px;font-weight:800;padding:2px 8px;border-radius:10px;margin-left:8px;letter-spacing:.5px}
+.header-logo-wrap{display:flex;align-items:center;gap:8px;flex:1}
+
+/* ═══════════════════════════════════════════
+   BOTTOM NAV
+   ═══════════════════════════════════════════ */
+#bottom-nav{position:fixed;bottom:0;left:0;right:0;height:var(--nav-h);z-index:100;padding-bottom:env(safe-area-inset-bottom,0);display:flex;align-items:center;justify-content:space-around;border-top:1px solid rgba(0,0,0,0.06)}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;height:100%;transition:all .2s;position:relative;color:var(--text3)}
+.nav-item svg{width:22px;height:22px;transition:all .2s}
+.nav-item span{font-size:11px;font-weight:600}
+.nav-item.active{color:var(--primary)}
+.nav-item.active svg{transform:translateY(-1px)}
+.nav-item:active{opacity:.7}
+.nav-indicator{position:absolute;bottom:6px;width:20px;height:3px;border-radius:2px;background:var(--primary);transition:all .3s cubic-bezier(.4,0,.2,1)}
+
+/* ═══════════════════════════════════════════
+   MAIN CONTENT
+   ═══════════════════════════════════════════ */
+#main-content{flex:1;margin-top:var(--header-h);margin-bottom:var(--nav-h);overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;contain:layout}
+.page{padding:16px;display:none;animation:fadeInUp .3s ease}
+.page.active{display:block}
+.container{width:100%;max-width:1200px;margin:0 auto;padding:0 16px}
+@media(min-width:768px){.container{padding:0 24px}#main-content{padding:16px 0}}
+
+/* ═══════════════════════════════════════════
+   CARDS & COMPONENTS
+   ═══════════════════════════════════════════ */
+.card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);overflow:hidden;transition:transform .2s,box-shadow .2s;contain:layout style paint}
+.card-hover:active{transform:scale(0.98)}
+@media(hover:hover){.card-hover:hover{transform:scale(1.03);box-shadow:0 8px 30px rgba(0,0,0,0.1)}}
+
+/* Score badge */
+.score-badge{position:absolute;top:8px;right:8px;background:var(--warning);color:#fff;font-size:11px;font-weight:800;padding:3px 8px;border-radius:8px;z-index:2}
+
+/* Status badge */
+.status-badge{font-size:10px;font-weight:700;padding:3px 8px;border-radius:6px;text-transform:uppercase;letter-spacing:.3px}
+.status-RELEASING{background:rgba(34,197,94,0.12);color:#16a34a}
+.status-FINISHED{background:rgba(59,130,246,0.12);color:#2563eb}
+.status-NOT_YET_RELEASED{background:rgba(139,92,246,0.12);color:#7c3aed}
+.status-CANCELLED{background:rgba(239,68,68,0.12);color:#dc2626}
+.status-HIATUS{background:rgba(245,158,11,0.12);color:#d97706}
+
+/* Anime card (horizontal scroll) */
+.anime-card{width:140px;flex-shrink:0;cursor:pointer}
+.anime-card .poster-wrap{position:relative;border-radius:var(--radius);overflow:hidden;aspect-ratio:2/3;background:var(--bg3)}
+.anime-card .poster-wrap img{width:100%;height:100%;object-fit:cover}
+.anime-card .card-title{margin-top:8px;font-size:13px;font-weight:600;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;color:var(--text)}
+@media(min-width:480px){.anime-card{width:160px}}
+
+/* Anime card (grid) */
+.anime-card-grid{cursor:pointer}
+.anime-card-grid .poster-wrap{position:relative;border-radius:var(--radius);overflow:hidden;aspect-ratio:2/3;background:var(--bg3)}
+.anime-card-grid .poster-wrap img{width:100%;height:100%;object-fit:cover}
+.anime-card-grid .card-title{margin-top:8px;font-size:13px;font-weight:600;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;color:var(--text)}
+
+/* Horizontal scroll section */
+.h-scroll{display:flex;gap:12px;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;padding-bottom:8px;margin:0 -16px;padding-left:16px;padding-right:16px;-webkit-overflow-scrolling:touch}
+.h-scroll::-webkit-scrollbar{display:none}
+.h-scroll>*{scroll-snap-align:start}
+
+/* Section header */
+.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.section-header h2{font-family:'Outfit',sans-serif;font-weight:800;font-size:18px}
+.section-header .view-all{font-size:13px;font-weight:600;color:var(--primary)}
+
+/* Chip */
+.chip{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:20px;font-size:13px;font-weight:600;white-space:nowrap;transition:all .2s;border:1px solid var(--card-border);background:var(--bg2);color:var(--text2);cursor:pointer;user-select:none}
+.chip.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+.chip:active{transform:scale(0.95)}
+
+/* Chips scroll */
+.chips-scroll{display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;margin:0 -16px;padding-left:16px;padding-right:16px;-webkit-overflow-scrolling:touch}
+.chips-scroll::-webkit-scrollbar{display:none}
+
+/* Pills */
+.pill{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:12px;font-size:12px;font-weight:600;background:var(--bg3);color:var(--text2)}
+.pill .pill-x{width:14px;height:14px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;border-radius:50%;transition:background .2s}
+.pill .pill-x:hover{background:rgba(0,0,0,0.08)}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 18px;border-radius:var(--radius-sm);font-size:14px;font-weight:600;transition:all .2s;white-space:nowrap}
+.btn-primary{background:var(--primary);color:#fff}
+.btn-primary:active{transform:scale(0.97);opacity:.9}
+.btn-accent{background:var(--accent);color:#fff}
+.btn-accent:active{transform:scale(0.97);opacity:.9}
+.btn-danger{background:var(--danger);color:#fff}
+.btn-ghost{background:var(--bg3);color:var(--text)}
+.btn-outline{border:1px solid var(--card-border);color:var(--text)}
+.btn-sm{padding:6px 12px;font-size:12px}
+.btn-lg{padding:14px 24px;font-size:15px}
+.btn:disabled{opacity:.5;cursor:not-allowed;pointer-events:none}
+.btn-icon{width:40px;height:40px;padding:0;display:flex;align-items:center;justify-content:center;border-radius:var(--radius-sm)}
+.btn-icon-sm{width:32px;height:32px}
+.btn svg{width:16px;height:16px}
+
+/* ═══════════════════════════════════════════
+   SEARCH & INPUTS
+   ═══════════════════════════════════════════ */
+.search-bar{display:flex;align-items:center;gap:10px;background:var(--bg2);border:1px solid var(--card-border);border-radius:var(--radius-lg);padding:0 14px;height:48px;transition:all .2s;position:sticky;top:0;z-index:10;margin-bottom:12px}
+.search-bar:focus-within{border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-glow)}
+.search-bar input{flex:1;height:100%;font-size:15px}
+.search-bar .search-icon{color:var(--text3);flex-shrink:0}
+.search-bar .search-actions{display:flex;align-items:center;gap:6px}
+
+/* Input fields */
+.input-wrap{display:flex;flex-direction:column;gap:6px}
+.input-wrap label{font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.4px}
+.input-field{width:100%;height:44px;padding:0 14px;background:var(--bg2);border:1px solid var(--card-border);border-radius:var(--radius-sm);font-size:14px;transition:all .2s}
+.input-field:focus{border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-glow)}
+textarea.input-field{height:auto;padding:12px 14px;min-height:100px}
+
+/* ═══════════════════════════════════════════
+   ANIME DETAIL PAGE
+   ═══════════════════════════════════════════ */
+#anime-detail{position:fixed;inset:0;z-index:200;background:var(--bg);transform:translateX(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);overflow-y:auto;-webkit-overflow-scrolling:touch}
+#anime-detail.open{transform:translateX(0)}
+.detail-banner{position:relative;height:220px;overflow:hidden}
+.detail-banner .banner-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:blur(8px) brightness(0.5);transform:scale(1.1)}
+.detail-banner .banner-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 0%,var(--bg) 100%)}
+.detail-header{position:relative;display:flex;gap:16px;padding:0 16px;margin-top:-60px}
+.detail-poster{width:120px;height:180px;border-radius:var(--radius);overflow:hidden;flex-shrink:0;box-shadow:0 8px 30px rgba(0,0,0,0.2);border:2px solid var(--bg)}
+.detail-poster img{width:100%;height:100%;object-fit:cover}
+.detail-title-wrap{flex:1;padding-top:60px}
+.detail-title{font-family:'Outfit',sans-serif;font-weight:800;font-size:20px;line-height:1.2;margin-bottom:6px}
+.detail-badges{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.detail-actions{display:flex;gap:10px;padding:16px}
+.detail-actions .btn-watch{flex:1}
+.detail-actions .btn-heart{width:44px;height:44px;padding:0;display:flex;align-items:center;justify-content:center;border-radius:var(--radius-sm);background:var(--bg2);border:1px solid var(--card-border);color:var(--text2);transition:all .2s}
+.detail-actions .btn-heart.active{color:var(--danger);background:rgba(239,68,68,0.08);border-color:rgba(239,68,68,0.2)}
+.detail-actions .btn-heart:active{transform:scale(0.9)}
+
+/* Stats bar */
+.stats-bar{display:flex;gap:16px;padding:0 16px 16px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.stats-bar::-webkit-scrollbar{display:none}
+.stat-item{display:flex;flex-direction:column;align-items:center;gap:2px;min-width:60px}
+.stat-value{font-family:'Outfit',sans-serif;font-weight:800;font-size:16px;color:var(--text)}
+.stat-label{font-size:11px;color:var(--text3);font-weight:500}
+
+/* Tabs */
+.tabs{display:flex;border-bottom:1px solid var(--card-border);position:sticky;top:0;background:var(--bg);z-index:5}
+.tab{flex:1;padding:12px 8px;text-align:center;font-size:13px;font-weight:600;color:var(--text3);position:relative;transition:color .2s;cursor:pointer;white-space:nowrap}
+.tab.active{color:var(--primary)}
+.tab-indicator{position:absolute;bottom:0;height:2px;background:var(--primary);border-radius:2px 2px 0 0;transition:all .3s cubic-bezier(.4,0,.2,1)}
+
+/* Description */
+.description{font-size:14px;line-height:1.65;color:var(--text2)}
+.description.collapsed{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.read-more{font-size:13px;font-weight:600;color:var(--primary);cursor:pointer;margin-top:4px;display:inline-block}
+
+/* ═══════════════════════════════════════════
+   REVIEWS
+   ═══════════════════════════════════════════ */
+.composer-card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:16px;margin-bottom:16px}
+.composer-header{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.composer-avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--accent));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:15px;flex-shrink:0;overflow:hidden}
+.composer-avatar img{width:100%;height:100%;object-fit:cover}
+.composer-info{flex:1}
+.composer-name{font-weight:700;font-size:14px}
+.composer-handle{font-size:12px;color:var(--text3)}
+
+/* Star rating */
+.star-rating{display:flex;gap:4px;margin:8px 0}
+.star-rating svg{width:24px;height:24px;cursor:pointer;transition:transform .15s}
+.star-rating svg:active{transform:scale(0.85)}
+.star-filled{color:var(--warning);fill:var(--warning);stroke:var(--warning)}
+.star-empty{color:var(--text3);stroke:var(--text3)}
+
+/* Review card */
+.review-card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:16px;margin-bottom:12px}
+.review-header{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.review-avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--accent));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:15px;flex-shrink:0;overflow:hidden}
+.review-avatar img{width:100%;height:100%;object-fit:cover}
+.review-meta{flex:1}
+.review-author{font-weight:700;font-size:14px;display:flex;align-items:center;gap:6px}
+.review-anime{font-size:13px;color:var(--primary);font-weight:600;margin-top:2px;cursor:pointer}
+.review-time{font-size:12px;color:var(--text3)}
+.review-text{font-size:14px;line-height:1.6;color:var(--text);margin:10px 0;white-space:pre-wrap}
+.review-actions-bar{display:flex;align-items:center;gap:16px;padding-top:10px;border-top:1px solid var(--card-border)}
+.review-action{display:flex;align-items:center;gap:5px;font-size:13px;color:var(--text3);font-weight:600;cursor:pointer;padding:4px 8px;border-radius:8px;transition:all .2s}
+.review-action:hover{background:var(--bg3)}
+.review-action svg{width:18px;height:18px}
+.review-action.liked{color:var(--danger)}
+.review-action.liked svg{fill:var(--danger);stroke:var(--danger)}
+
+/* Reply section */
+.replies{margin-top:12px;padding-left:16px;border-left:2px solid var(--card-border)}
+.reply-item{display:flex;gap:10px;margin-bottom:10px}
+.reply-avatar{width:32px;height:32px;border-radius:50%;background:var(--bg3);display:flex;align-items:center;justify-content:center;color:var(--text2);font-weight:700;font-size:12px;flex-shrink:0;overflow:hidden}
+.reply-avatar img{width:100%;height:100%;object-fit:cover}
+.reply-content{flex:1}
+.reply-author{font-weight:700;font-size:13px}
+.reply-text{font-size:13px;color:var(--text2);margin-top:2px;line-height:1.5}
+.reply-time{font-size:11px;color:var(--text3);margin-top:2px}
+.reply-input-wrap{display:flex;gap:8px;margin-top:10px;align-items:center}
+.reply-input{flex:1;height:38px;padding:0 14px;background:var(--bg3);border-radius:19px;font-size:13px}
+.reply-send{width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:var(--primary);color:#fff;flex-shrink:0;transition:all .2s}
+.reply-send:active{transform:scale(0.9)}
+
+/* Admin actions on reviews */
+.admin-review-actions{display:flex;gap:6px;margin-left:auto}
+.admin-review-actions .btn-icon{width:28px;height:28px;background:transparent;border:1px solid var(--card-border);color:var(--text3)}
+.admin-review-actions .btn-icon:hover{background:var(--danger);color:#fff;border-color:var(--danger)}
+
+/* ═══════════════════════════════════════════
+   PROFILE
+   ═══════════════════════════════════════════ */
+.profile-hero{display:flex;flex-direction:column;align-items:center;padding:24px 16px;text-align:center}
+.profile-avatar{width:84px;height:84px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--accent));display:flex;align-items:center;justify-content:center;color:#fff;font-family:'Outfit',sans-serif;font-weight:800;font-size:32px;box-shadow:0 0 30px var(--primary-glow);overflow:hidden;flex-shrink:0}
+.profile-avatar img{width:100%;height:100%;object-fit:cover}
+.profile-name{font-family:'Outfit',sans-serif;font-weight:800;font-size:20px;margin-top:12px}
+.profile-handle{font-size:13px;color:var(--text3);margin-top:2px}
+.profile-uid{font-family:monospace;font-size:11px;color:var(--text3);background:var(--bg3);padding:2px 8px;border-radius:10px;margin-top:4px}
+.profile-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:0 16px 16px}
+.stat-card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:14px;text-align:center}
+.stat-card .num{font-family:'Outfit',sans-serif;font-weight:800;font-size:20px;color:var(--primary)}
+.stat-card .label{font-size:12px;color:var(--text3);margin-top:2px}
+
+/* Watchlist */
+.watchlist-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.watchlist-card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);overflow:hidden;cursor:pointer;transition:transform .2s}
+.watchlist-card:active{transform:scale(0.97)}
+.watchlist-card .wl-poster{aspect-ratio:2/3;overflow:hidden;position:relative}
+.watchlist-card .wl-poster img{width:100%;height:100%;object-fit:cover}
+.watchlist-card .wl-info{padding:10px}
+.watchlist-card .wl-title{font-size:13px;font-weight:600;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:6px}
+.watchlist-card .wl-status{font-size:11px;font-weight:700;padding:2px 8px;border-radius:6px;display:inline-block;margin-bottom:6px}
+.status-watching{background:rgba(34,197,94,0.12);color:#16a34a}
+.status-completed{background:rgba(59,130,246,0.12);color:#2563eb}
+.status-onhold{background:rgba(245,158,11,0.12);color:#d97706}
+.status-dropped{background:rgba(239,68,68,0.12);color:#dc2626}
+.status-plantowatch{background:rgba(139,92,246,0.12);color:#7c3aed}
+.wl-progress{height:4px;background:var(--bg3);border-radius:2px;margin-top:6px;overflow:hidden}
+.wl-progress-bar{height:100%;background:linear-gradient(90deg,var(--primary),var(--accent));border-radius:2px;transition:width .3s}
+
+/* ═══════════════════════════════════════════
+   ADMIN PANEL
+   ═══════════════════════════════════════════ */
+#admin-panel{position:fixed;inset:0;z-index:300;background:var(--bg);transform:translateX(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);overflow-y:auto;-webkit-overflow-scrolling:touch}
+#admin-panel.open{transform:translateX(0)}
+.admin-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:16px}
+.admin-card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:20px;text-align:center;cursor:pointer;transition:all .2s}
+.admin-card:active{transform:scale(0.97)}
+.admin-card svg{width:28px;height:28px;color:var(--primary);margin-bottom:8px}
+.admin-card .admin-label{font-size:13px;font-weight:700;color:var(--text)}
+
+/* Admin tables */
+.admin-table{width:100%;border-collapse:collapse;font-size:13px}
+.admin-table th{text-align:left;padding:10px 12px;background:var(--bg3);font-weight:700;color:var(--text2);font-size:11px;text-transform:uppercase;letter-spacing:.4px;position:sticky;top:0}
+.admin-table td{padding:10px 12px;border-bottom:1px solid var(--card-border);vertical-align:middle}
+.admin-table tr:last-child td{border-bottom:none}
+.admin-table .cell-actions{display:flex;gap:6px}
+
+/* ═══════════════════════════════════════════
+   MODALS
+   ═══════════════════════════════════════════ */
+.modal-overlay{position:fixed;inset:0;z-index:400;background:rgba(0,0,0,0.5);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;visibility:hidden;transition:all .25s ease}
+.modal-overlay.open{opacity:1;visibility:visible}
+.modal-content{background:var(--card);border-radius:var(--radius-lg);width:100%;max-width:420px;max-height:85vh;overflow-y:auto;transform:scale(0.92);transition:transform .25s cubic-bezier(.4,0,.2,1);box-shadow:0 20px 60px rgba(0,0,0,0.15)}
+.modal-overlay.open .modal-content{transform:scale(1)}
+.modal-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--card-border)}
+.modal-header h3{font-family:'Outfit',sans-serif;font-weight:800;font-size:18px}
+.modal-close{width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:50%;transition:background .2s;color:var(--text2)}
+.modal-close:active{background:var(--bg3)}
+.modal-body{padding:20px}
+.modal-footer{display:flex;gap:10px;padding:16px 20px;border-top:1px solid var(--card-border)}
+.modal-footer .btn{flex:1}
+
+/* ═══════════════════════════════════════════
+   TOASTS
+   ═══════════════════════════════════════════ */
+#toast-container{position:fixed;bottom:calc(var(--nav-h) + 16px);left:0;right:0;z-index:500;display:flex;flex-direction:column;align-items:center;gap:8px;pointer-events:none;padding:0 16px}
+.toast{display:flex;align-items:center;gap:10px;padding:12px 20px;border-radius:var(--radius-lg);font-size:13px;font-weight:600;color:#fff;box-shadow:0 8px30px rgba(0,0,0,0.15);animation:toastIn .35s ease;pointer-events:auto;max-width:100%}
+.toast.toast-out{animation:toastOut .3s ease forwards}
+.toast-success{background:var(--success)}
+.toast-error{background:var(--danger)}
+.toast-info{background:var(--primary)}
+
+/* ═══════════════════════════════════════════
+   EMPTY STATE
+   ═══════════════════════════════════════════ */
+.empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;text-align:center}
+.empty-state svg{width:64px;height:64px;color:var(--text3);margin-bottom:12px;opacity:.5}
+.empty-state h3{font-family:'Outfit',sans-serif;font-weight:700;font-size:16px;color:var(--text2);margin-bottom:4px}
+.empty-state p{font-size:13px;color:var(--text3)}
+
+/* ═══════════════════════════════════════════
+   SKELETON LOADING
+   ═══════════════════════════════════════════ */
+.skeleton{background:linear-gradient(90deg,var(--bg3) 25%,var(--bg) 50%,var(--bg3) 75%);background-size:200% 100%;animation:shimmerLoad 1.5s infinite;border-radius:var(--radius-sm)}
+.skeleton-poster{aspect-ratio:2/3;border-radius:var(--radius)}
+.skeleton-text{height:14px;border-radius:6px;margin-top:8px}
+.skeleton-text.short{width:60%}
+
+/* ═══════════════════════════════════════════
+   EPISODE LIST
+   ═══════════════════════════════════════════ */
+.episode-item{display:flex;align-items:center;gap:12px;padding:12px;background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);margin-bottom:8px}
+.episode-num{width:36px;height:36px;display:flex;align-items:center;justify-content:center;background:var(--bg3);border-radius:var(--radius-sm);font-family:'Outfit',sans-serif;font-weight:800;font-size:14px;color:var(--text2);flex-shrink:0}
+.episode-info{flex:1}
+.episode-title{font-size:13px;font-weight:600}
+.episode-check{width:22px;height:22px;border-radius:6px;border:2px solid var(--text3);display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;transition:all .2s}
+.episode-check.checked{background:var(--success);border-color:var(--success);color:#fff}
+
+/* ═══════════════════════════════════════════
+   CHARACTER / STAFF CARDS
+   ═══════════════════════════════════════════ */
+.char-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.char-card{display:flex;gap:10px;background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);overflow:hidden}
+.char-card img{width:60px;height:80px;object-fit:cover;flex-shrink:0}
+.char-info{padding:10px 10px 10px 0;flex:1;min-width:0}
+.char-name{font-size:13px;font-weight:700;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.char-role{font-size:11px;color:var(--text3);margin-top:2px}
+.char-va{font-size:11px;color:var(--text2);margin-top:4px;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}
+
+/* ═══════════════════════════════════════════
+   GRID SYSTEMS
+   ═══════════════════════════════════════════ */
+.anime-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+@media(min-width:480px){.anime-grid{grid-template-columns:repeat(3,1fr)}}
+@media(min-width:768px){.anime-grid{grid-template-columns:repeat(4,1fr)}}
+@media(min-width:1024px){.anime-grid{grid-template-columns:repeat(5,1fr)}}
+
+/* ═══════════════════════════════════════════
+   PROGRESS BAR
+   ═══════════════════════════════════════════ */
+.progress-bar{height:6px;background:var(--bg3);border-radius:3px;overflow:hidden}
+.progress-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--primary),var(--accent));transition:width .4s ease}
+
+/* ═══════════════════════════════════════════
+   REDUCED MOTION
+   ═══════════════════════════════════════════ */
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+
+/* ═══════════════════════════════════════════
+   UTILITY
+   ═══════════════════════════════════════════ */
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border-width:0}
+.hidden{display:none!important}
+.text-center{text-align:center}
+.flex{display:flex}
+.flex-col{display:flex;flex-direction:column}
+.items-center{align-items:center}
+.justify-between{justify-content:space-between}
+.gap-4{gap:4px}
+.gap-8{gap:8px}
+.gap-12{gap:12px}
+.mb-8{margin-bottom:8px}
+.mb-12{margin-bottom:12px}
+.mb-16{margin-bottom:16px}
+.mt-12{margin-top:12px}
+.p-16{padding:16px}
+.w-full{width:100%}
+.rounded{border-radius:var(--radius)}
+.text-sm{font-size:13px}
+.text-xs{font-size:11px}
+.font-bold{font-weight:700}
+.text-primary{color:var(--primary)}
+.text-secondary{color:var(--text2)}
+.text-danger{color:var(--danger)}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════
+     SVG ICON DEFINITIONS
+     ═══════════════════════════════════════════ -->
+<svg style="display:none">
+  <defs>
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><polyline points="9 22 9 12 15 12 15 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="21" y1="21" x2="16.65" y2="16.65" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-heart" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="7" r="4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="5" y1="12" x2="19" y2="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-ban" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-edit" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="6" y1="6" x2="18" y2="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-arrow-left" viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><polyline points="12 19 5 12 12 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-filter" viewBox="0 0 24 24"><line x1="4" y1="21" x2="4" y2="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="4" y1="10" x2="4" y2="3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="12" y1="21" x2="12" y2="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="12" y1="8" x2="12" y2="3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="20" y1="21" x2="20" y2="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="20" y1="12" x2="20" y2="3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-trending" viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><polyline points="17 6 23 6 23 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><polyline points="12 6 12 12 16 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="16" y1="2" x2="16" y2="6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="8" y1="2" x2="8" y2="6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="3" y1="10" x2="21" y2="10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-film" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="2.18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="7" y1="2" x2="7" y2="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="17" y1="2" x2="17" y2="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="2" y1="12" x2="22" y2="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="2" y1="7" x2="7" y2="7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="2" y1="17" x2="7" y2="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="17" y1="17" x2="22" y2="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="17" y1="7" x2="22" y2="7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-tv" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="15" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><polyline points="17 2 12 7 7 2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-sparkles" viewBox="0 0 24 24"><path d="m12 3-1.5 4.5L6 9l4.5 1.5L12 15l1.5-4.5L18 9l-4.5-1.5z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="m5 15-1 3-3 1 3 1 1 3 1-3 3-1-3-1-1-3z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="m19 15-1 3-3 1 3 1 1 3 1-3 3-1-3-1-1-3z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="2" y1="12" x2="22" y2="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-send" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><polygon points="22 2 15 22 11 13 2 9 22 2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.73 21a2 2 0 0 1-3.46 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.67 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.67 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.67a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-chart" viewBox="0 0 24 24"><path d="M18 20V10M12 20V4M6 20v-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-more-h" viewBox="0 0 24 24"><circle cx="12" cy="12" r="1" fill="currentColor"/><circle cx="19" cy="12" r="1" fill="currentColor"/><circle cx="5" cy="12" r="1" fill="currentColor"/></symbol>
+    <symbol id="i-bookmark" viewBox="0 0 24 24"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-share" viewBox="0 0 24 24"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><polyline points="16 6 12 2 8 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="12" y1="2" x2="12" y2="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><polyline points="7 10 12 15 17 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="12" y1="15" x2="12" y2="3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-message" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-zap" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  </defs>
+</svg>
+
+<!-- ═══════════════════════════════════════════
+     LOADER
+     ═══════════════════════════════════════════ -->
+<div id="loader">
+  <div class="loader-logo">
+    <svg viewBox="0 0 80 80">
+      <defs><linearGradient id="lg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#3b82f6"/><stop offset="100%" style="stop-color:#8b5cf6"/></linearGradient></defs>
+      <path class="stroke-anim" d="M20 40c0-11 9-20 20-20s20 9 20 20-9 20-20 20" fill="none" stroke="url(#lg)" stroke-width="3" stroke-linecap="round"/>
+      <path class="stroke-anim" d="M60 40c0 11-9 20-20 20s-20-9-20-20 9-20 20-20" fill="none" stroke="url(#lg)" stroke-width="3" stroke-linecap="round" style="animation-delay:.3s"/>
+      <polygon class="stroke-anim" points="45 28 38 40 45 40 42 52 52 40 45 40" fill="none" stroke="url(#lg)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="animation-delay:.6s"/>
+    </svg>
+  </div>
+  <div class="loader-avatar" id="loader-avatar"></div>
+  <div class="loader-name" id="loader-name">IOX VAULT</div>
+  <div class="loader-sub" id="loader-sub">Loading your anime world</div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     APP SHELL
+     ═══════════════════════════════════════════ -->
+<div id="app" class="hidden">
+
+  <!-- Header -->
+  <header id="header" class="glass">
+    <div class="header-logo-wrap" id="header-logo-wrap">
+      <span class="header-title" id="header-title">IOX VAULT</span>
+      <span class="header-admin-badge hidden" id="admin-badge">ADMIN</span>
+    </div>
+    <div class="header-actions">
+      <a href="https://t.me/codeioxstorebot" target="_blank" class="header-btn header-btn-primary" id="launch-bot-btn">
+        <svg width="14" height="14"><use href="#i-send"/></svg>
+        <span>Launch Bot</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main id="main-content">
+
+    <!-- HOME PAGE -->
+    <div class="page" id="page-home">
+      <!-- Search Bar -->
+      <div class="search-bar" id="home-search-bar">
+        <svg class="search-icon" width="20" height="20"><use href="#i-search"/></svg>
+        <input type="text" placeholder="Search anime..." id="home-search-input" readonly>
+        <div class="search-actions">
+          <button class="btn-icon btn-icon-sm" id="home-filter-btn" aria-label="Filter">
+            <svg width="16" height="16"><use href="#i-filter"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Quick Access Chips -->
+      <div class="chips-scroll mb-12">
+        <button class="chip active" data-filter="trending"><svg width="14" height="14"><use href="#i-trending"/></svg>Trending</button>
+        <button class="chip" data-filter="movies"><svg width="14" height="14"><use href="#i-film"/></svg>Movies</button>
+        <button class="chip" data-filter="tv"><svg width="14" height="14"><use href="#i-tv"/></svg>TV</button>
+        <button class="chip" data-filter="new"><svg width="14" height="14"><use href="#i-sparkles"/></svg>New</button>
+        <button class="chip" data-filter="top"><svg width="14" height="14"><use href="#i-star"/></svg>Top 100</button>
+        <button class="chip" data-filter="az"><svg width="14" height="14"><use href="#i-globe"/></svg>A-Z</button>
+      </div>
+
+      <!-- Trending Now -->
+      <div class="mb-16">
+        <div class="section-header">
+          <h2>Trending Now</h2>
+          <button class="view-all" data-nav="search" data-filter="trending">View All</button>
+        </div>
+        <div class="h-scroll" id="trending-scroll"></div>
+      </div>
+
+      <!-- Popular This Season -->
+      <div class="mb-16">
+        <div class="section-header">
+          <h2>Popular This Season</h2>
+        </div>
+        <div class="h-scroll" id="popular-scroll"></div>
+      </div>
+
+      <!-- Top Rated -->
+      <div class="mb-16">
+        <div class="section-header">
+          <h2>Top Rated</h2>
+        </div>
+        <div class="h-scroll" id="toprated-scroll"></div>
+      </div>
+
+      <!-- Upcoming -->
+      <div class="mb-16">
+        <div class="section-header">
+          <h2>Upcoming</h2>
+        </div>
+        <div class="h-scroll" id="upcoming-scroll"></div>
+      </div>
+    </div>
+
+    <!-- SEARCH PAGE -->
+    <div class="page" id="page-search">
+      <div class="search-bar" id="search-bar">
+        <svg class="search-icon" width="20" height="20"><use href="#i-search"/></svg>
+        <input type="text" placeholder="Search anime..." id="search-input">
+        <div class="search-actions">
+          <button class="btn-icon btn-icon-sm hidden" id="search-clear" aria-label="Clear">
+            <svg width="16" height="16"><use href="#i-x"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Filter Chips -->
+      <div class="chips-scroll mb-12" id="filter-chips"></div>
+
+      <!-- Active Filters -->
+      <div class="flex flex-wrap gap-8 mb-12 hidden" id="active-filters"></div>
+
+      <!-- Results -->
+      <div class="anime-grid" id="search-results"></div>
+
+      <!-- Load More -->
+      <div class="text-center mt-12 mb-12 hidden" id="load-more-wrap">
+        <button class="btn btn-outline" id="load-more-btn">Load More</button>
+      </div>
+
+      <!-- Empty State -->
+      <div class="empty-state hidden" id="search-empty">
+        <svg><use href="#i-search"/></svg>
+        <h3>No anime found</h3>
+        <p>Try different keywords or filters</p>
+      </div>
+    </div>
+
+    <!-- REVIEWS PAGE -->
+    <div class="page" id="page-reviews">
+      <!-- Review Composer -->
+      <div class="composer-card">
+        <div class="composer-header">
+          <div class="composer-avatar" id="composer-avatar"></div>
+          <div class="composer-info">
+            <div class="composer-name" id="composer-name">Guest</div>
+            <div class="composer-handle" id="composer-handle">@guest</div>
+          </div>
+        </div>
+        <input type="text" class="input-field mb-8" id="review-anime-input" placeholder="Anime name you're reviewing...">
+        <div class="star-rating" id="composer-stars"></div>
+        <textarea class="input-field" id="review-text-input" placeholder="Share your thoughts..."></textarea>
+        <button class="btn btn-primary w-full mt-12" id="post-review-btn">Post Review</button>
+      </div>
+
+      <!-- Reviews Feed -->
+      <div id="reviews-feed"></div>
+
+      <!-- Empty State -->
+      <div class="empty-state hidden" id="reviews-empty">
+        <svg><use href="#i-message"/></svg>
+        <h3>No reviews yet</h3>
+        <p>Be the first to share your thoughts</p>
+      </div>
+    </div>
+
+    <!-- PROFILE PAGE -->
+    <div class="page" id="page-profile">
+      <div class="profile-hero">
+        <div class="profile-avatar" id="profile-avatar"></div>
+        <div class="profile-name" id="profile-name">Guest</div>
+        <div class="profile-handle" id="profile-handle">@guest</div>
+        <div class="profile-uid" id="profile-uid">--</div>
+      </div>
+
+      <div class="profile-stats">
+        <div class="stat-card">
+          <div class="num" id="stat-reviews">0</div>
+          <div class="label">Reviews</div>
+        </div>
+        <div class="stat-card">
+          <div class="num" id="stat-watchlist">0</div>
+          <div class="label">Watchlist</div>
+        </div>
+        <div class="stat-card">
+          <div class="num" id="stat-posts">0</div>
+          <div class="label">Posts</div>
+        </div>
+      </div>
+
+      <div class="p-16">
+        <div class="section-header mb-12">
+          <h2>My Watchlist</h2>
+        </div>
+        <div class="watchlist-grid" id="profile-watchlist"></div>
+        <div class="empty-state hidden" id="watchlist-empty">
+          <svg><use href="#i-bookmark"/></svg>
+          <h3>Your watchlist is empty</h3>
+          <p>Start adding anime you want to watch</p>
+        </div>
+      </div>
+
+      <div class="p-16">
+        <div class="section-header mb-12">
+          <h2>My Reviews</h2>
+        </div>
+        <div id="profile-reviews"></div>
+      </div>
+
+      <div class="p-16" style="padding-bottom:32px">
+        <button class="btn btn-ghost w-full" id="settings-btn">
+          <svg width="16" height="16"><use href="#i-settings"/></svg>
+          Settings
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Bottom Nav -->
+  <nav id="bottom-nav" class="glass">
+    <button class="nav-item active" data-tab="home" aria-label="Home">
+      <svg><use href="#i-home"/></svg>
+      <span>Home</span>
+      <div class="nav-indicator"></div>
+    </button>
+    <button class="nav-item" data-tab="search" aria-label="Search">
+      <svg><use href="#i-search"/></svg>
+      <span>Search</span>
+      <div class="nav-indicator" style="opacity:0"></div>
+    </button>
+    <button class="nav-item" data-tab="reviews" aria-label="Reviews">
+      <svg><use href="#i-star"/></svg>
+      <span>Reviews</span>
+      <div class="nav-indicator" style="opacity:0"></div>
+    </button>
+    <button class="nav-item" data-tab="profile" aria-label="Profile">
+      <svg><use href="#i-user"/></svg>
+      <span>Profile</span>
+      <div class="nav-indicator" style="opacity:0"></div>
+    </button>
+  </nav>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     ANIME DETAIL OVERLAY
+     ═══════════════════════════════════════════ -->
+<div id="anime-detail">
+  <div class="glass" style="position:sticky;top:0;z-index:10;display:flex;align-items:center;padding:0 16px;height:var(--header-h);gap:12px">
+    <button class="header-back" id="detail-back" aria-label="Go back">
+      <svg width="20" height="20"><use href="#i-arrow-left"/></svg>
+    </button>
+    <span class="header-title">Anime Details</span>
+    <button class="header-back" style="margin-left:auto" id="detail-share" aria-label="Share">
+      <svg width="18" height="18"><use href="#i-share"/></svg>
+    </button>
+  </div>
+
+  <div id="detail-content">
+    <!-- Banner -->
+    <div class="detail-banner" id="detail-banner"></div>
+
+    <!-- Header info -->
+    <div class="detail-header" id="detail-header"></div>
+
+    <!-- Actions -->
+    <div class="detail-actions" id="detail-actions"></div>
+
+    <!-- Stats -->
+    <div class="stats-bar" id="detail-stats"></div>
+
+    <!-- Tabs -->
+    <div class="tabs" id="detail-tabs">
+      <button class="tab active" data-tab="overview">Overview</button>
+      <button class="tab" data-tab="watch">Watch</button>
+      <button class="tab" data-tab="characters">Characters</button>
+      <button class="tab" data-tab="staff">Staff</button>
+      <div class="tab-indicator" id="tab-indicator"></div>
+    </div>
+
+    <!-- Tab content -->
+    <div class="p-16" id="detail-tab-content"></div>
+
+    <!-- Related -->
+    <div class="p-16" id="detail-related-wrap">
+      <div class="section-header">
+        <h2>Related Anime</h2>
+      </div>
+      <div class="h-scroll" id="detail-related"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     ADMIN PANEL
+     ═══════════════════════════════════════════ -->
+<div id="admin-panel">
+  <div class="glass" style="display:flex;align-items:center;padding:0 16px;height:var(--header-h);gap:12px">
+    <button class="header-back" id="admin-back" aria-label="Go back">
+      <svg width="20" height="20"><use href="#i-arrow-left"/></svg>
+    </button>
+    <span class="header-title">Admin Panel</span>
+  </div>
+
+  <div id="admin-dashboard">
+    <div class="admin-grid">
+      <div class="admin-card" data-admin="channels">
+        <svg><use href="#i-tv"/></svg>
+        <div class="admin-label">Channels</div>
+      </div>
+      <div class="admin-card" data-admin="users">
+        <svg><use href="#i-user"/></svg>
+        <div class="admin-label">Users</div>
+      </div>
+      <div class="admin-card" data-admin="reviews">
+        <svg><use href="#i-star"/></svg>
+        <div class="admin-label">Reviews</div>
+      </div>
+      <div class="admin-card" data-admin="feed">
+        <svg><use href="#i-message"/></svg>
+        <div class="admin-label">Feed</div>
+      </div>
+      <div class="admin-card" data-admin="settings">
+        <svg><use href="#i-settings"/></svg>
+        <div class="admin-label">Settings</div>
+      </div>
+      <div class="admin-card" data-admin="analytics">
+        <svg><use href="#i-chart"/></svg>
+        <div class="admin-label">Analytics</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="admin-section" class="hidden">
+    <div style="padding:16px">
+      <button class="btn btn-ghost btn-sm mb-12" id="admin-section-back">
+        <svg width="14" height="14"><use href="#i-arrow-left"/></svg>
+        Back
+      </button>
+      <div id="admin-section-content"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     MODALS CONTAINER
+     ═══════════════════════════════════════════ -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal-content" id="modal-content">
+    <div class="modal-header">
+      <h3 id="modal-title">Modal</h3>
+      <button class="modal-close" id="modal-close" aria-label="Close modal">
+        <svg width="18" height="18"><use href="#i-x"/></svg>
+      </button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+    <div class="modal-footer hidden" id="modal-footer">
+      <button class="btn btn-ghost" id="modal-cancel">Cancel</button>
+      <button class="btn btn-primary" id="modal-confirm">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     TOAST CONTAINER
+     ═══════════════════════════════════════════ -->
+<div id="toast-container"></div>
+
+<!-- ═══════════════════════════════════════════
+     JAVASCRIPT
+     ═══════════════════════════════════════════ -->
+<script>
+// ═══════════════════════════════════════════════════
+//  FIREBASE CONFIG
+// ═══════════════════════════════════════════════════
+const firebaseConfig={
+  apiKey:"AIzaSyC-psUKqTO9u5kCuA3OUqWT63Ey0IvDei4",
+  authDomain:"study-ae01d.firebaseapp.com",
+  databaseURL:"https://study-ae01d-default-rtdb.firebaseio.com",
+  projectId:"study-ae01d",
+  storageBucket:"study-ae01d.firebasestorage.app",
+  messagingSenderId:"198271524977",
+  appId:"1:198271524977:web:b6c47ce187c6619c103bd0",
+  measurementId:"G-58F37JVFPJ"
+};
+firebase.initializeApp(firebaseConfig);
+const db=firebase.database();
+
+// ═══════════════════════════════════════════════════
+//  CONSTANTS & STATE
+// ═══════════════════════════════════════════════════
+const ADMIN_UID="8644584624";
+const ADMIN_PASSWORD="ioxvault2024";
+const ANILIST_URL="https://graphql.anilist.co";
+
+const state={
+  tab:'home',
+  prevTab:'',
+  isAdmin:false,
+  user:null,
+  watchlist:{},
+  reviews:[],
+  animeCache:new Map(),
+  searchResults:[],
+  searchPage:1,
+  currentAnime:null,
+  detailTab:'overview',
+  adminTapCount:0,
+  adminTapTimer:null,
+  activeFilters:{genre:'',year:'',status:'',rating:'',format:'',sort:'POPULARITY_DESC'},
+  composerRating:0,
+  replyOpen:{},
+  currentAdminSection:'',
+  feed:[],
+  users:{},
+  channels:{},
+  languages:{},
+  analytics:{users:0,reviews:0,posts:0,active:0}
+};
+
+const tabs=['home','search','reviews','profile'];
+
+// Indian languages
+const INDIAN_LANGS=['Dual','English','Hindi','Japanese','Tamil','Telugu','Kannada','Malayalam','Marathi','Bengali','Gujarati','Punjabi','Urdu','Odia','Assamese','Nepali','Sanskrit','Konkani','Maithili','Sindhi','Kashmiri','Manipuri','Dogri','Bodo','Santhali'];
+
+// Genre list
+const GENRES=['Action','Adventure','Comedy','Drama','Fantasy','Horror','Mystery','Romance','Sci-Fi','Slice of Life','Sports','Supernatural','Thriller'];
+
+// ═══════════════════════════════════════════════════
+//  TELEGRAM WEBAPP
+// ═══════════════════════════════════════════════════
+let tg=null;
+try{
+  tg=window.Telegram.WebApp;
+  tg.ready();
+  tg.expand();
+  const user=tg.initDataUnsafe?.user;
+  if(user){
+    state.user={
+      id:String(user.id),
+      firstName:user.first_name||'',
+      lastName:user.last_name||'',
+      username:user.username||'',
+      photoUrl:user.photo_url||''
+    };
+    if(state.user.id===ADMIN_UID) state.isAdmin=true;
+  }
+}catch(e){ console.log('Telegram WebApp not available'); }
+
+// Fallback user
+if(!state.user){
+  state.user={id:'guest_'+Date.now(),firstName:'Guest',lastName:'',username:'guest',photoUrl:''};
+}
+
+// ═══════════════════════════════════════════════════
+//  HELPER FUNCTIONS
+// ═══════════════════════════════════════════════════
+function $(s){return document.querySelector(s)}
+function $$(s){return document.querySelectorAll(s)}
+function escapeHtml(s){
+  if(!s)return'';
+  const d=document.createElement('div');d.textContent=s;return d.innerHTML;
+}
+function formatNum(n){if(!n)return'0';return n.toLocaleString()}
+function timeAgo(ts){
+  const d=Date.now()-ts;
+  const s=Math.floor(d/1000),m=Math.floor(s/60),h=Math.floor(m/60),day=Math.floor(h/24);
+  if(s<60)return'now';if(m<60)return m+'m';if(h<24)return h+'h';if(day<30)return day+'d';
+  return new Date(ts).toLocaleDateString();
+}
+function getTitle(a){return a?.title?.english||a?.title?.romaji||a?.title?.native||'Unknown'}
+function getPoster(a){return a?.coverImage?.large||a?.coverImage?.medium||''}
+function getBanner(a){return a?.bannerImage||getPoster(a)}
+
+// ═══════════════════════════════════════════════════
+//  SVG HELPER
+// ═══════════════════════════════════════════════════
+function svgIcon(name,w,h,cls){return`<svg width="${w||16}" height="${h||16}" class="${cls||''}"><use href="#i-${name}"/></svg>`}
+
+// ═══════════════════════════════════════════════════
+//  ANILIST API
+// ═══════════════════════════════════════════════════
+async function aniQuery(query,vars){
+  const key=JSON.stringify({q:query,v:vars});
+  if(state.animeCache.has(key))return state.animeCache.get(key);
+  try{
+    const r=await fetch(ANILIST_URL,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({query,variables:vars})
+    });
+    const j=await r.json();
+    if(j.data){state.animeCache.set(key,j.data);return j.data}
+    return null;
+  }catch(e){console.error('AniList error:',e);return null}
+}
+
+const Q_TRENDING=`query{Page(page:1,perPage:20){media(sort:TRENDING_DESC,type:ANIME){id title{english romaji native}coverImage{large}bannerImage averageScore popularity format status episodes season seasonYear genres}}}`;
+const Q_POPULAR=`query($season:MediaSeason,$year:Int){Page(page:1,perPage:20){media(season:$season,seasonYear:$year,sort:POPULARITY_DESC,type:ANIME){id title{english romaji native}coverImage{large}bannerImage averageScore popularity format status episodes season seasonYear genres}}}`;
+const Q_TOPRATED=`query{Page(page:1,perPage:20){media(sort:SCORE_DESC,type:ANIME){id title{english romaji native}coverImage{large}bannerImage averageScore popularity format status episodes season seasonYear genres}}}`;
+const Q_UPCOMING=`query{Page(page:1,perPage:20){media(status:NOT_YET_RELEASED,sort:POPULARITY_DESC,type:ANIME){id title{english romaji native}coverImage{large}bannerImage averageScore popularity format status episodes season seasonYear genres}}}`;
+const Q_SEARCH=`query($search:String,$genre:[String],$year:Int,$status:MediaStatus,$sort:[MediaSort],$format:MediaFormat,$page:Int){Page(page:$page,perPage:24){media(search:$search,genre_in:$genre,seasonYear:$year,status:$status,sort:$sort,format:$format,type:ANIME){id title{english romaji native}coverImage{large}bannerImage averageScore popularity format status episodes season seasonYear genres description studios{nodes{name}}}}}`;
+const Q_DETAIL=`query($id:Int){Media(id:$id,type:ANIME){id title{english romaji native}coverImage{large medium}bannerImage averageScore popularity favourites format status episodes duration season seasonYear genres tags{name}description startDate{year month day}endDate{year month day} studios{nodes{name}} source hashtag siteUrl relations{edges{relationType node{id title{english romaji}coverImage{large}format status averageScore}}}}}`;
+const Q_CHARACTERS=`query($id:Int){Media(id:$id,type:ANIME){characters(page:1,perPage:25){edges{role node{name{full}image{large}} voiceActors{languageV2 name{full} image{large}}}}}}`;
+const Q_STAFF=`query($id:Int){Media(id:$id,type:ANIME){staff(page:1,perPage:25){edges{role node{name{full}image{large}}}}}}`;
+
+// ═══════════════════════════════════════════════════
+//  SPLASH SCREEN
+// ═══════════════════════════════════════════════════
+function runLoader(){
+  const av=$('#loader-avatar'),nm=$('#loader-name'),sub=$('#loader-sub');
+  setTimeout(()=>{
+    if(state.user?.photoUrl){av.innerHTML=`<img src="${escapeHtml(state.user.photoUrl)}" alt="">`;}
+    else{const i=(state.user?.firstName||'U').charAt(0).toUpperCase();av.textContent=i;}
+    av.classList.add('visible');
+  },1300);
+  setTimeout(()=>{
+    const n=state.user?(state.user.firstName+' '+state.user.lastName).trim()||'User':'IOX VAULT';
+    nm.textContent=n;nm.classList.add('visible');
+  },1600);
+  setTimeout(()=>{sub.classList.add('visible');},1800);
+  setTimeout(()=>{
+    $('#loader').classList.add('hidden');
+    $('#app').classList.remove('hidden');
+    initApp();
+  },2500);
+}
+
+// ═══════════════════════════════════════════════════
+//  TOAST
+// ═══════════════════════════════════════════════════
+function showToast(msg,type='info'){
+  const c=$('#toast-container');
+  const t=document.createElement('div');
+  t.className='toast toast-'+type;
+  const icons={success:svgIcon('check',16,16),error:svgIcon('x',16,16),info:svgIcon('bell',16,16)};
+  t.innerHTML=icons[type]+'<span>'+escapeHtml(msg)+'</span>';
+  c.appendChild(t);
+  setTimeout(()=>{t.classList.add('toast-out');setTimeout(()=>t.remove(),300)},2500);
+}
+
+// ═══════════════════════════════════════════════════
+//  MODALS
+// ═══════════════════════════════════════════════════
+function openModal(title,bodyHtml,showFooter,onConfirm){
+  $('#modal-title').textContent=title;
+  $('#modal-body').innerHTML=bodyHtml;
+  $('#modal-footer').classList.toggle('hidden',!showFooter);
+  $('#modal-overlay').classList.add('open');
+  if(onConfirm){
+    const btn=$('#modal-confirm');
+    btn.onclick=()=>{onConfirm();closeModal()};
+  }
+}
+function closeModal(){$('#modal-overlay').classList.remove('open')}
+$('#modal-close').addEventListener('click',closeModal);
+$('#modal-overlay').addEventListener('click',e=>{if(e.target===$('#modal-overlay'))closeModal()});
+$('#modal-cancel').addEventListener('click',closeModal);
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
+
+// ═══════════════════════════════════════════════════
+//  NAVIGATION
+// ═══════════════════════════════════════════════════
+function switchTab(tab){
+  if(tab===state.tab&&tab!=='search')return;
+  state.prevTab=state.tab;
+  state.tab=tab;
+
+  // Update nav
+  $$('.nav-item').forEach(n=>{
+    n.classList.toggle('active',n.dataset.tab===tab);
+    const ind=n.querySelector('.nav-indicator');
+    if(ind)ind.style.opacity=n.dataset.tab===tab?'1':'0';
+  });
+
+  // Update page
+  $$('.page').forEach(p=>p.classList.remove('active'));
+  const tp=$(`#page-${tab}`);
+  if(tp){tp.classList.add('active');tp.style.animation='none';tp.offsetHeight;tp.style.animation=''}
+
+  // Header
+  const titles={home:'IOX VAULT',search:'Search',reviews:'Reviews',profile:'Profile'};
+  $('#header-title').textContent=titles[tab]||'IOX VAULT';
+  $('#admin-badge').classList.toggle('hidden',!state.isAdmin);
+
+  // Page-specific init
+  if(tab==='reviews') loadReviews();
+  if(tab==='profile') renderProfile();
+  if(tab==='search'){$('#search-input').focus()}
+
+  // Scroll to top
+  $('#main-content').scrollTop=0;
+}
+
+$$('.nav-item').forEach(n=>n.addEventListener('click',()=>switchTab(n.dataset.tab)));
+
+// ═══════════════════════════════════════════════════
+//  HOME PAGE
+// ═══════════════════════════════════════════════════
+function createAnimeCard(a,cls){
+  const title=escapeHtml(getTitle(a));
+  const poster=escapeHtml(getPoster(a));
+  const score=a.averageScore?Math.round(a.averageScore/10):null;
+  const c=cls||'anime-card';
+  return`<div class="${c} card-hover" data-id="${a.id}">
+    <div class="poster-wrap">
+      ${poster?`<img src="${poster}" alt="${title}" loading="lazy" decoding="async">`:'<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:var(--text3);font-size:12px">No Image</div>'}
+      ${score!==null?`<div class="score-badge">${score}</div>`:''}
+    </div>
+    <div class="card-title">${title}</div>
+  </div>`;
+}
+
+function renderSkeletonScroll(id,n=8){
+  let h='';for(let i=0;i<n;i++)h+=`<div class="anime-card"><div class="poster-wrap skeleton skeleton-poster"></div><div class="skeleton skeleton-text"></div></div>`;
+  $(id).innerHTML=h;
+}
+
+async function loadHome(){
+  renderSkeletonScroll('#trending-scroll');
+  renderSkeletonScroll('#popular-scroll');
+  renderSkeletonScroll('#toprated-scroll');
+  renderSkeletonScroll('#upcoming-scroll');
+
+  // Trending
+  const t=await aniQuery(Q_TRENDING);
+  if(t?.Page?.media) $('#trending-scroll').innerHTML=t.Page.media.map(a=>createAnimeCard(a)).join('');
+
+  // Popular this season
+  const now=new Date();
+  const season=['WINTER','SPRING','SUMMER','FALL'][Math.floor((now.getMonth())/3)];
+  const p=await aniQuery(Q_POPULAR,{season,year:now.getFullYear()});
+  if(p?.Page?.media) $('#popular-scroll').innerHTML=p.Page.media.map(a=>createAnimeCard(a)).join('');
+
+  // Top rated
+  const tr=await aniQuery(Q_TOPRATED);
+  if(tr?.Page?.media) $('#toprated-scroll').innerHTML=tr.Page.media.map(a=>createAnimeCard(a)).join('');
+
+  // Upcoming
+  const u=await aniQuery(Q_UPCOMING);
+  if(u?.Page?.media) $('#upcoming-scroll').innerHTML=u.Page.media.map(a=>createAnimeCard(a)).join('');
+
+  // Click handlers
+  $$('.anime-card').forEach(c=>c.addEventListener('click',()=>openAnimeDetail(c.dataset.id)));
+}
+
+// Quick access chips
+$$('.chip').forEach(chip=>{
+  chip.addEventListener('click',()=>{
+    $$('.chip').forEach(c=>c.classList.remove('active'));
+    chip.classList.add('active');
+    const f=chip.dataset.filter;
+    if(f==='movies'){state.activeFilters.format='MOVIE';switchTab('search');doSearch()}
+    else if(f==='tv'){state.activeFilters.format='TV';switchTab('search');doSearch()}
+    else if(f==='top'){state.activeFilters.sort='SCORE_DESC';switchTab('search');doSearch()}
+    else if(f==='new'){state.activeFilters.sort='START_DATE_DESC';switchTab('search');doSearch()}
+    else if(f==='az'){state.activeFilters.sort='TITLE_ENGLISH';switchTab('search');doSearch()}
+    else{state.activeFilters.sort='TRENDING_DESC';switchTab('search');doSearch()}
+  });
+});
+
+// Home search bar -> go to search
+$('#home-search-bar').addEventListener('click',()=>switchTab('search'));
+
+// ═══════════════════════════════════════════════════
+//  ANIME DETAIL
+// ═══════════════════════════════════════════════════
+async function openAnimeDetail(id){
+  const numId=parseInt(id);
+  $('#anime-detail').classList.add('open');
+  if(tg){tg.BackButton.show();tg.BackButton.onClick(closeAnimeDetail)}
+
+  const data=await aniQuery(Q_DETAIL,{id:numId});
+  if(!data?.Media){showToast('Failed to load anime','error');return}
+  const a=state.currentAnime=data.Media;
+
+  // Banner
+  const banner=getBanner(a);
+  $('#detail-banner').innerHTML=`<img class="banner-img" src="${escapeHtml(banner)}" alt="" loading="lazy"><div class="banner-overlay"></div>`;
+
+  // Header
+  const title=escapeHtml(getTitle(a));
+  const poster=escapeHtml(getPoster(a));
+  $('#detail-header').innerHTML=`<div class="detail-poster"><img src="${poster}" alt="${title}" loading="lazy"></div>
+    <div class="detail-title-wrap">
+      <div class="detail-title">${title}</div>
+      <div class="detail-badges">
+        ${a.format?`<span class="status-badge">${a.format}</span>`:''}
+        ${a.seasonYear?`<span class="status-badge">${a.seasonYear}</span>`:''}
+        ${a.status?`<span class="status-badge status-${a.status}">${a.status.replace('_',' ')}</span>`:''}
+      </div>
+    </div>`;
+
+  // Watch channel
+  const chanSnap=await db.ref('animeChannels/'+numId).once('value');
+  const channel=chanSnap.val();
+  const inWL=state.watchlist[numId];
+  $('#detail-actions').innerHTML=`<button class="btn btn-primary btn-lg btn-watch" id="btn-watch" ${!channel?'disabled':''}>
+      <svg width="16" height="16"><use href="#i-play"/></svg>
+      ${channel?'Watch on Telegram':'Coming Soon'}
+    </button>
+    <button class="btn-heart ${inWL?'active':''}" id="btn-heart-detail" aria-label="Add to watchlist">
+      <svg width="20" height="20"><use href="#i-heart"/></svg>
+    </button>`;
+
+  if(channel){
+    $('#btn-watch').addEventListener('click',()=>{
+      if(tg)tg.HapticFeedback.impactOccurred('light');
+      window.open(channel.channelLink||channel,'_blank');
+    });
+  }
+  $('#btn-heart-detail').addEventListener('click',()=>toggleWatchlist(a));
+
+  // Stats
+  const stats=[];
+  if(a.averageScore)stats.push({v:(a.averageScore/10).toFixed(1),l:'Score'});
+  if(a.popularity)stats.push({v:'#'+formatNum(a.popularity),l:'Popularity'});
+  if(a.favourites)stats.push({v:formatNum(a.favourites),l:'Favorites'});
+  if(a.episodes)stats.push({v:a.episodes,l:'Episodes'});
+  if(a.duration)stats.push({v:a.duration+'m',l:'Duration'});
+  if(a.studios?.nodes?.length)stats.push({v:a.studios.nodes[0].name,l:'Studio'});
+  $('#detail-stats').innerHTML=stats.map(s=>`<div class="stat-item"><span class="stat-value">${s.v}</span><span class="stat-label">${s.l}</span></div>`).join('');
+
+  // Tabs
+  state.detailTab='overview';
+  renderDetailTab(a);
+
+  // Related
+  if(a.relations?.edges?.length){
+    $('#detail-related-wrap').classList.remove('hidden');
+    $('#detail-related').innerHTML=a.relations.edges.filter(e=>e.node).map(e=>createAnimeCard(e.node)).join('');
+    $$('#detail-related .anime-card').forEach(c=>c.addEventListener('click',()=>openAnimeDetail(c.dataset.id)));
+  }else{$('#detail-related-wrap').classList.add('hidden')}
+}
+
+function closeAnimeDetail(){
+  $('#anime-detail').classList.remove('open');
+  state.currentAnime=null;
+  if(tg){tg.BackButton.hide()}
+}
+
+$('#detail-back').addEventListener('click',closeAnimeDetail);
+$('#detail-share').addEventListener('click',()=>{
+  if(!state.currentAnime)return;
+  const url=state.currentAnime.siteUrl||`https://anilist.co/anime/${state.currentAnime.id}`;
+  if(navigator.share){navigator.share({title:getTitle(state.currentAnime),url})}
+  else{navigator.clipboard.writeText(url);showToast('Link copied','success')}
+});
+
+// Detail tabs
+$$('#detail-tabs .tab').forEach(tab=>{
+  tab.addEventListener('click',()=>{
+    $$('#detail-tabs .tab').forEach(t=>t.classList.remove('active'));
+    tab.classList.add('active');
+    state.detailTab=tab.dataset.tab;
+    renderDetailTab(state.currentAnime);
+    // Move indicator
+    const ind=$('#tab-indicator');
+    const rect=tab.getBoundingClientRect();
+    const prect=tab.parentElement.getBoundingClientRect();
+    ind.style.left=(rect.left-prect.left)+'px';
+    ind.style.width=rect.width+'px';
+  });
+});
+
+function renderDetailTab(a){
+  if(!a)return;
+  const c=$('#detail-tab-content');
+
+  if(state.detailTab==='overview'){
+    let desc=escapeHtml(a.description||'').replace(/<br\s*\/?>/gi,'\n').replace(/<[^>]+>/g,'');
+    c.innerHTML=`<div class="description collapsed" id="desc-text">${desc}</div>
+      <span class="read-more" id="read-more">Read more</span>
+      ${a.genres?.length?`<div style="margin-top:14px"><div class="text-xs text-secondary mb-8">Genres</div><div class="flex flex-wrap gap-4">${a.genres.map(g=>`<span class="chip">${escapeHtml(g)}</span>`).join('')}</div></div>`:''}
+      ${a.tags?.length?`<div style="margin-top:14px"><div class="text-xs text-secondary mb-8">Tags</div><div class="flex flex-wrap gap-4">${a.tags.slice(0,15).map(t=>`<span class="pill">${escapeHtml(t.name)}</span>`).join('')}</div></div>`:''}
+      <div style="margin-top:16px"><div class="text-xs text-secondary mb-8">Available Languages</div><div class="flex flex-wrap gap-4" id="anime-langs"><span class="pill">Loading...</span></div></div>`;
+
+    $('#read-more').addEventListener('click',()=>{$('#desc-text').classList.toggle('collapsed');$('#read-more').textContent=$('#desc-text').classList.contains('collapsed')?'Read more':'Show less'});
+
+    // Load languages
+    db.ref('animeLanguages/'+a.id).once('value').then(snap=>{
+      const langs=snap.val();
+      if(langs&&langs.length){$('#anime-langs').innerHTML=langs.map(l=>`<span class="pill">${escapeHtml(l)}</span>`).join('')}
+      else{$('#anime-langs').innerHTML='<span class="text-sm text-secondary">No language info yet</span>'}
+    });
+  }
+
+  else if(state.detailTab==='watch'){
+    const ep=a.episodes||0;
+    if(ep>0){
+      const wl=state.watchlist[a.id];
+      const prog=(wl?.progress)||0;
+      let h=`<div style="margin-bottom:12px"><div class="text-xs text-secondary mb-8">Progress ${prog}/${ep}</div><div class="progress-bar"><div class="progress-fill" style="width:${(prog/ep*100)}%"></div></div></div>`;
+      for(let i=1;i<=Math.min(ep,50);i++){
+        const watched=wl?.progress>=i;
+        h+=`<div class="episode-item"><div class="episode-num">${i}</div><div class="episode-info"><div class="episode-title">Episode ${i}</div></div><div class="episode-check ${watched?'checked':''}" data-ep="${i}">${watched?svgIcon('check',14,14):''}</div></div>`;
+      }
+      if(ep>50)h+=`<div class="text-center text-sm text-secondary mt-12">+ ${ep-50} more episodes</div>`;
+      c.innerHTML=h;
+      $$('.episode-check').forEach(ch=>ch.addEventListener('click',()=>markWatched(a.id,parseInt(ch.dataset.ep),ch)));
+    }else{c.innerHTML='<div class="empty-state"><svg><use href="#i-play"/></svg><h3>No episode data</h3></div>'}
+  }
+
+  else if(state.detailTab==='characters'){
+    c.innerHTML='<div class="flex items-center justify-center p-16"><div class="skeleton" style="width:40px;height:40px;border-radius:50%"></div></div>';
+    aniQuery(Q_CHARACTERS,{id:a.id}).then(d=>{
+      const edges=d?.Media?.characters?.edges||[];
+      if(!edges.length){c.innerHTML='<div class="empty-state"><svg><use href="#i-user"/></svg><h3>No character data</h3></div>';return}
+      c.innerHTML=`<div class="char-grid">${edges.map(e=>{
+        const ch=e.node,va=e.voiceActors?.[0];
+        return`<div class="char-card"><img src="${ch?.image?.large||''}" alt="" loading="lazy"><div class="char-info"><div class="char-name">${escapeHtml(ch?.name?.full||'')}</div><div class="char-role">${e.role||''}</div>${va?`<div class="char-va">${escapeHtml(va.name?.full||'')} (${va.languageV2||''})</div>`:''}</div></div>`;
+      }).join('')}</div>`;
+    });
+  }
+
+  else if(state.detailTab==='staff'){
+    c.innerHTML='<div class="flex items-center justify-center p-16"><div class="skeleton" style="width:40px;height:40px;border-radius:50%"></div></div>';
+    aniQuery(Q_STAFF,{id:a.id}).then(d=>{
+      const edges=d?.Media?.staff?.edges||[];
+      if(!edges.length){c.innerHTML='<div class="empty-state"><svg><use href="#i-user"/></svg><h3>No staff data</h3></div>';return}
+      c.innerHTML=`<div class="char-grid">${edges.map(e=>`<div class="char-card"><img src="${e.node?.image?.large||''}" alt="" loading="lazy"><div class="char-info"><div class="char-name">${escapeHtml(e.node?.name?.full||'')}</div><div class="char-role">${e.role||''}</div></div></div>`).join('')}</div>`;
+    });
+  }
+}
+
+function markWatched(animeId,ep,el){
+  const uid=state.user?.id;if(!uid)return;
+  const ref=db.ref('users/'+uid+'/watchlist/'+animeId);
+  ref.once('value').then(snap=>{
+    const cur=snap.val()||{};
+    const progress=Math.max(cur.progress||0,ep);
+    ref.update({progress,status:cur.status||'watching'});
+    state.watchlist[animeId]={...state.watchlist[animeId],progress};
+    el.classList.add('checked');el.innerHTML=svgIcon('check',14,14);
+    // Check all previous
+    $$('.episode-check').forEach((c,i)=>{if(i<ep){c.classList.add('checked');c.innerHTML=svgIcon('check',14,14)}});
+    showToast('Progress saved','success');
+  });
+}
+
+// ═══════════════════════════════════════════════════
+//  WATCHLIST
+// ═══════════════════════════════════════════════════
+async function toggleWatchlist(a){
+  const uid=state.user?.id;if(!uid)return;
+  const ref=db.ref('users/'+uid+'/watchlist/'+a.id);
+  const snap=await ref.once('value');
+  if(snap.exists()){
+    ref.remove();
+    delete state.watchlist[a.id];
+    showToast('Removed from watchlist','info');
+  }else{
+    const data={title:getTitle(a),poster:getPoster(a),status:'plan to watch',progress:0,addedAt:Date.now()};
+    ref.set(data);
+    state.watchlist[a.id]=data;
+    showToast('Added to watchlist','success');
+  }
+  // Update heart button
+  const h=$('#btn-heart-detail');
+  if(h)h.classList.toggle('active',!!state.watchlist[a.id]);
+  if(state.tab==='profile')renderProfile();
+}
+
+function loadWatchlist(){
+  const uid=state.user?.id;if(!uid)return;
+  db.ref('users/'+uid+'/watchlist').on('value',snap=>{
+    state.watchlist=snap.val()||{};
+    if(state.tab==='profile')renderProfile();
+  });
+}
+
+// ═══════════════════════════════════════════════════
+//  SEARCH PAGE
+// ═══════════════════════════════════════════════════
+function renderFilterChips(){
+  const filters=[
+    {label:'Genre',key:'genre',options:['All',...GENRES]},
+    {label:'Year',key:'year',options:['All','2025','2024','2023','2022','2021','2020','Older']},
+    {label:'Status',key:'status',options:['All','Airing','Completed','Upcoming','Cancelled']},
+    {label:'Rating',key:'rating',options:['All','9+','8+','7+','6+','5+']},
+    {label:'Format',key:'format',options:['All','TV','Movie','OVA','ONA','Special','TV Short']},
+    {label:'Sort',key:'sort',options:['Popularity','Score','Trending','Newest']}
+  ];
+  let h='';filters.forEach(f=>{h+=`<div style="display:flex;flex-direction:column;gap:6px;flex-shrink:0"><span class="text-xs text-secondary">${f.label}</span><div style="display:flex;gap:6px">`;f.options.forEach(o=>{h+=`<button class="chip ${state.activeFilters[f.key]===o||(o==='All'&&!state.activeFilters[f.key])?'active':''}" data-filter="${f.key}" data-val="${o}">${o}</button>`});h+='</div></div>'});
+  $('#filter-chips').innerHTML=h;
+  $$('#filter-chips .chip').forEach(c=>c.addEventListener('click',()=>{
+    const k=c.dataset.filter,v=c.dataset.val;
+    state.activeFilters[k]=v==='All'?'':v;
+    state.searchPage=1;state.searchResults=[];doSearch();
+  }));
+}
+
+let searchDebounce;
+$('#search-input').addEventListener('input',e=>{
+  clearTimeout(searchDebounce);
+  const v=e.target.value;
+  $('#search-clear').classList.toggle('hidden',!v);
+  searchDebounce=setTimeout(()=>{state.searchPage=1;state.searchResults=[];doSearch()},300);
+});
+$('#search-clear').addEventListener('click',()=>{$('#search-input').value='';$('#search-clear').classList.add('hidden');state.searchPage=1;state.searchResults=[];doSearch()});
+
+async function doSearch(){
+  const q=$('#search-input').value.trim();
+  const f=state.activeFilters;
+  const vars={search:q||undefined,page:state.searchPage};
+  if(f.genre)vars.genre=[f.genre];
+  if(f.year){if(f.year==='Older'){vars.year=2019}else{vars.year=parseInt(f.year)}}
+  if(f.status){const map={'Airing':'RELEASING','Completed':'FINISHED','Upcoming':'NOT_YET_RELEASED','Cancelled':'CANCELLED'};vars.status=map[f.status]}
+  if(f.format)vars.format=f.format.replace(' ','_');
+  const sortMap={'Popularity':'POPULARITY_DESC','Score':'SCORE_DESC','Trending':'TRENDING_DESC','Newest':'START_DATE_DESC'};
+  vars.sort=[sortMap[f.sort]||'POPULARITY_DESC'];
+  if(f.rating)vars.averageScore_greater=parseInt(f.rating)*10;
+
+  if(!q&&!f.genre&&!f.year&&!f.status&&!f.format){
+    // Default trending
+    vars.sort=['TRENDING_DESC'];
+  }
+
+  const data=await aniQuery(Q_SEARCH,vars);
+  const media=data?.Page?.media||[];
+  if(state.searchPage===1)state.searchResults=media;else state.searchResults.push(...media);
+
+  if(!state.searchResults.length){$('#search-results').innerHTML='';$('#search-empty').classList.remove('hidden');$('#load-more-wrap').classList.add('hidden')}
+  else{
+    $('#search-empty').classList.add('hidden');
+    $('#search-results').innerHTML=state.searchResults.map(a=>createAnimeCard(a,'anime-card-grid')).join('');
+    $$('.anime-card-grid').forEach(c=>c.addEventListener('click',()=>openAnimeDetail(c.dataset.id)));
+    $('#load-more-wrap').classList.toggle('hidden',media.length<24);
+  }
+  renderFilterChips();
+}
+
+$('#load-more-btn').addEventListener('click',()=>{state.searchPage++;doSearch()});
+
+// ═══════════════════════════════════════════════════
+//  REVIEWS PAGE
+// ═══════════════════════════════════════════════════
+function renderComposerStars(){
+  let h='';for(let i=1;i<=5;i++){h+=`<svg class="${i<=state.composerRating?'star-filled':'star-empty'}" data-r="${i}"><use href="#i-star"/></svg>`}
+  $('#composer-stars').innerHTML=h;
+  $$('#composer-stars svg').forEach(s=>s.addEventListener('click',()=>{state.composerRating=parseInt(s.dataset.r);renderComposerStars()}));
+}
+
+function loadReviews(){
+  db.ref('reviews').orderByChild('timestamp').on('value',snap=>{
+    const val=snap.val()||{};
+    state.reviews=Object.entries(val).map(([id,v])=>({id,...v})).sort((a,b)=>(b.timestamp||0)-(a.timestamp||0));
+    renderReviews();
+  });
+}
+
+function renderReviews(){
+  const c=$('#reviews-feed');
+  if(!state.reviews.length){c.innerHTML='';$('#reviews-empty').classList.remove('hidden');return}
+  $('#reviews-empty').classList.add('hidden');
+  c.innerHTML=state.reviews.map(r=>createReviewCard(r)).join('');
+
+  // Like handlers
+  $$('.review-action[data-action="like"]').forEach(b=>b.addEventListener('click',()=>toggleLike(b.dataset.id)));
+  // Reply handlers
+  $$('.review-action[data-action="reply"]').forEach(b=>b.addEventListener('click',()=>toggleReply(b.dataset.id)));
+  // Post reply
+  $$('.reply-send').forEach(b=>b.addEventListener('click',()=>postReply(b.dataset.id)));
+  // Admin actions
+  $$('.admin-del-review').forEach(b=>b.addEventListener('click',()=>deleteReview(b.dataset.id)));
+  $$('.admin-ban-user').forEach(b=>b.addEventListener('click',()=>banUser(b.dataset.uid,b.dataset.name)));
+}
+
+function createReviewCard(r){
+  const likesCount=r.likes?Object.keys(r.likes).length:0;
+  const replies=r.replies||[];
+  const uid=state.user?.id;
+  const liked=r.likes&&r.likes[uid];
+  const isAuthor=r.authorId===uid;
+  const isAdm=state.isAdmin;
+  const name=escapeHtml(r.authorName||'Anonymous');
+  const anime=escapeHtml(r.animeName||'');
+  const photo=r.authorPhoto?`<img src="${escapeHtml(r.authorPhoto)}" alt="">`:(r.authorName?r.authorName.charAt(0).toUpperCase():'A');
+  const stars=Array(5).fill(0).map((_,i)=>`<svg width="14" height="14" class="${i<r.rating?'star-filled':'star-empty'}"><use href="#i-star"/></svg>`).join('');
+
+  return`<div class="review-card" data-id="${r.id}">
+    <div class="review-header">
+      <div class="review-avatar">${photo}</div>
+      <div class="review-meta">
+        <div class="review-author">${name}${r.authorAniListId?'<span style="font-size:11px;color:var(--text3);margin-left:6px">AniList</span>':''}</div>
+        <div class="review-anime">${anime}</div>
+        <div class="review-time">${timeAgo(r.timestamp)}</div>
+      </div>
+      ${isAdm?`<div class="admin-review-actions">
+        <button class="btn-icon admin-ban-user" data-uid="${r.authorId}" data-name="${name}" title="Ban user" aria-label="Ban user">${svgIcon('ban',12,12)}</button>
+        <button class="btn-icon admin-del-review" data-id="${r.id}" title="Delete review" aria-label="Delete review">${svgIcon('trash',12,12)}</button>
+      </div>`:''}
+    </div>
+    <div class="star-rating" style="margin:4px 0">${stars}</div>
+    <div class="review-text">${escapeHtml(r.text||'')}</div>
+    <div class="review-actions-bar">
+      <button class="review-action ${liked?'liked':''}" data-action="like" data-id="${r.id}">
+        <svg><use href="#i-heart"/></svg>
+        <span>${likesCount}</span>
+      </button>
+      <button class="review-action" data-action="reply" data-id="${r.id}">
+        <svg><use href="#i-message"/></svg>
+        <span>${replies.length}</span>
+      </button>
+    </div>
+    ${state.replyOpen[r.id]?`<div class="replies">
+      ${replies.map(rep=>`<div class="reply-item"><div class="reply-avatar">${rep.authorName?rep.authorName.charAt(0).toUpperCase():'U'}</div><div class="reply-content"><div class="reply-author">${escapeHtml(rep.authorName||'')}</div><div class="reply-text">${escapeHtml(rep.text||'')}</div><div class="reply-time">${timeAgo(rep.timestamp)}</div></div></div>`).join('')}
+      <div class="reply-input-wrap"><input type="text" class="reply-input" id="reply-${r.id}" placeholder="Write a reply..."><button class="reply-send" data-id="${r.id}">${svgIcon('send',14,14)}</button></div>
+    </div>`:''}
+  </div>`;
+}
+
+function toggleLike(reviewId){
+  const uid=state.user?.id;if(!uid)return;
+  const ref=db.ref('reviews/'+reviewId+'/likes/'+uid);
+  ref.once('value').then(snap=>{if(snap.exists())ref.remove();else ref.set(true)});
+}
+
+function toggleReply(id){state.replyOpen[id]=!state.replyOpen[id];renderReviews()}
+
+function postReply(reviewId){
+  const inp=$(`#reply-${reviewId}`);const text=(inp?.value||'').trim();if(!text)return;
+  const uid=state.user?.id;const name=(state.user?.firstName||'User');
+  const ref=db.ref('reviews/'+reviewId+'/replies');
+  ref.once('value').then(snap=>{
+    const replies=snap.val()||[];
+    replies.push({authorId:uid,authorName:name,text,timestamp:Date.now()});
+    ref.set(replies);
+    state.replyOpen[reviewId]=false;
+  });
+}
+
+$('#post-review-btn').addEventListener('click',()=>{
+  const anime=$('#review-anime-input').value.trim();
+  const text=$('#review-text-input').value.trim();
+  const rating=state.composerRating;
+  if(!anime){showToast('Enter anime name','error');return}
+  if(!rating){showToast('Select a rating','error');return}
+  if(!text){showToast('Write your review','error');return}
+
+  const uid=state.user?.id;
+  const name=(state.user?.firstName||'User');
+  const ref=db.ref('reviews').push();
+  ref.set({
+    animeName:anime,text,rating,authorId:uid,authorName:name,
+    authorPhoto:state.user?.photoUrl||'',
+    authorAniListId:state.user?.username||'',
+    timestamp:Date.now(),likes:{},replies:[]
+  }).then(()=>{
+    $('#review-anime-input').value='';$('#review-text-input').value='';state.composerRating=0;
+    renderComposerStars();showToast('Review posted','success');
+  });
+});
+
+function deleteReview(id){
+  if(!state.isAdmin&&!confirm('Delete this review?'))return;
+  db.ref('reviews/'+id).remove().then(()=>showToast('Review deleted','info'));
+}
+
+function banUser(uid,name){
+  if(!state.isAdmin)return;
+  openModal('Ban User',`<p>Ban <strong>${escapeHtml(name)}</strong> (${uid})?</p>`,true,()=>{
+    db.ref('bannedUsers/'+uid).set({name:name||'',bannedAt:Date.now()}).then(()=>showToast('User banned','success'));
+  });
+}
+
+// ═══════════════════════════════════════════════════
+//  PROFILE PAGE
+// ═══════════════════════════════════════════════════
+function renderProfile(){
+  const u=state.user;
+  const avatar=$('#profile-avatar');
+  if(u?.photoUrl){avatar.innerHTML=`<img src="${escapeHtml(u.photoUrl)}" alt="">`}
+  else{avatar.textContent=(u?.firstName||'G').charAt(0).toUpperCase()}
+
+  $('#profile-name').textContent=(u?.firstName+' '+u?.lastName).trim()||'Guest';
+  $('#profile-handle').textContent='@'+(u?.username||u?.firstName?.toLowerCase()||'guest');
+  $('#profile-uid').textContent='UID: '+(u?.id||'--');
+
+  // Update composer too
+  const cav=$('#composer-avatar');
+  if(u?.photoUrl)cav.innerHTML=`<img src="${escapeHtml(u.photoUrl)}" alt="">`;
+  else cav.textContent=(u?.firstName||'G').charAt(0).toUpperCase();
+  $('#composer-name').textContent=(u?.firstName+' '+u?.lastName).trim()||'Guest';
+  $('#composer-handle').textContent='@'+(u?.username||u?.firstName?.toLowerCase()||'guest');
+
+  // Stats
+  const wlKeys=Object.keys(state.watchlist);
+  $('#stat-watchlist').textContent=wlKeys.length;
+  $('#stat-reviews').textContent=state.reviews.filter(r=>r.authorId===u?.id).length;
+  $('#stat-posts').textContent=state.reviews.filter(r=>r.authorId===u?.id).length;
+
+  // Watchlist
+  const wl=$('#profile-watchlist');
+  if(!wlKeys.length){wl.innerHTML='';$('#watchlist-empty').classList.remove('hidden')}
+  else{
+    $('#watchlist-empty').classList.add('hidden');
+    wl.innerHTML=wlKeys.slice(0,20).map(id=>{
+      const item=state.watchlist[id];
+      return`<div class="watchlist-card" data-id="${id}">
+        <div class="wl-poster"><img src="${escapeHtml(item?.poster||'')}" alt="" loading="lazy"></div>
+        <div class="wl-info"><div class="wl-title">${escapeHtml(item?.title||'')}</div>
+        <span class="wl-status status-${(item?.status||'plan to watch').replace(/\s+/g,'')}">${item?.status||'Plan to Watch'}</span>
+        <div class="wl-progress"><div class="wl-progress-bar" style="width:${Math.min(((item?.progress||0)/24)*100,100)}%"></div></div>
+        </div>
+      </div>`;
+    }).join('');
+    $$('.watchlist-card').forEach(c=>c.addEventListener('click',()=>openAnimeDetail(c.dataset.id)));
+  }
+
+  // My reviews
+  const myRev=state.reviews.filter(r=>r.authorId===u?.id);
+  $('#profile-reviews').innerHTML=myRev.length?myRev.map(r=>createReviewCard(r)).join(''):'';
+}
+
+// ═══════════════════════════════════════════════════
+//  ADMIN PANEL
+// ═══════════════════════════════════════════════════
+// Logo tap handler
+$('#header-title').addEventListener('click',()=>{
+  if(state.isAdmin)return;
+  state.adminTapCount++;
+  if(state.adminTapTimer)clearTimeout(state.adminTapTimer);
+  state.adminTapTimer=setTimeout(()=>state.adminTapCount=0,2000);
+  if(state.adminTapCount>=5){
+    state.adminTapCount=0;
+    openModal('Admin Access','<input type="password" class="input-field" id="admin-pw-input" placeholder="Enter admin password">',true,()=>{
+      if($('#admin-pw-input').value===ADMIN_PASSWORD){
+        state.isAdmin=true;$('#admin-badge').classList.remove('hidden');
+        showToast('Admin access granted','success');openAdminPanel();
+      }else{showToast('Wrong password','error')}
+    });
+  }
+});
+
+function openAdminPanel(){
+  if(!state.isAdmin)return;
+  $('#admin-panel').classList.add('open');
+  loadAdminData();
+}
+
+$('#admin-badge').addEventListener('click',openAdminPanel);
+$('#admin-back').addEventListener('click',()=>{$('#admin-panel').classList.remove('open')});
+
+$$('.admin-card').forEach(c=>c.addEventListener('click',()=>showAdminSection(c.dataset.admin)));
+
+function showAdminSection(section){
+  state.currentAdminSection=section;
+  $('#admin-dashboard').classList.add('hidden');
+  $('#admin-section').classList.remove('hidden');
+  const sc=$('#admin-section-content');
+
+  if(section==='channels'){
+    sc.innerHTML=`<div class="flex items-center justify-between mb-12"><h3 style="font-family:Outfit,sans-serif;font-weight:800">Anime Channels</h3><button class="btn btn-primary btn-sm" id="add-channel-btn">${svgIcon('plus',14,14)} Add</button></div>
+      <div id="channels-list"></div>`;
+    loadChannelsList();
+    $('#add-channel-btn').addEventListener('click',showAddChannelModal);
+  }
+  else if(section==='users'){
+    sc.innerHTML=`<h3 style="font-family:Outfit,sans-serif;font-weight:800;margin-bottom:12px">Users</h3><div id="users-list"></div>`;
+    loadUsersList();
+  }
+  else if(section==='reviews'){
+    sc.innerHTML=`<h3 style="font-family:Outfit,sans-serif;font-weight:800;margin-bottom:12px">Reviews</h3><div id="admin-reviews-list"></div>`;
+    loadAdminReviews();
+  }
+  else if(section==='feed'){
+    sc.innerHTML=`<h3 style="font-family:Outfit,sans-serif;font-weight:800;margin-bottom:12px">Feed Posts</h3><div id="admin-feed-list"></div>`;
+    loadAdminFeed();
+  }
+  else if(section==='settings'){
+    sc.innerHTML=`<h3 style="font-family:Outfit,sans-serif;font-weight:800;margin-bottom:12px">Settings</h3>
+      <div class="input-wrap mb-12"><label>Default Channel Link</label><input type="text" class="input-field" id="set-default-channel" placeholder="https://t.me/..."></div>
+      <div class="input-wrap mb-12"><label>Site Title</label><input type="text" class="input-field" id="set-site-title" placeholder="IOX VAULT"></div>
+      <div class="input-wrap mb-12"><label>Announcement</label><textarea class="input-field" id="set-announcement" placeholder="Announcement text..."></textarea></div>
+      <button class="btn btn-primary" id="save-settings-btn">Save Settings</button>`;
+    loadSettings();
+    $('#save-settings-btn').addEventListener('click',saveSettings);
+  }
+  else if(section==='analytics'){
+    sc.innerHTML=`<h3 style="font-family:Outfit,sans-serif;font-weight:800;margin-bottom:12px">Analytics</h3>
+      <div class="profile-stats">
+        <div class="stat-card"><div class="num" id="a-users">0</div><div class="label">Users</div></div>
+        <div class="stat-card"><div class="num" id="a-reviews">0</div><div class="label">Reviews</div></div>
+        <div class="stat-card"><div class="num" id="a-posts">0</div><div class="label">Posts</div></div>
+      </div>
+      <div style="margin-top:16px"><div class="stat-card"><div class="text-xs text-secondary">Active Today</div><div class="num" id="a-active" style="margin-top:4px">0</div></div></div>`;
+    updateAnalytics();
+  }
+}
+
+$('#admin-section-back').addEventListener('click',()=>{$('#admin-section').classList.add('hidden');$('#admin-dashboard').classList.remove('hidden')});
+
+function loadChannelsList(){
+  db.ref('animeChannels').once('value').then(snap=>{
+    const ch=snap.val()||{};
+    const c=$('#channels-list');
+    if(!Object.keys(ch).length){c.innerHTML='<p class="text-sm text-secondary">No channels added</p>';return}
+    c.innerHTML=`<table class="admin-table"><thead><tr><th>Anime ID</th><th>Link</th><th>Actions</th></tr></thead><tbody>
+      ${Object.entries(ch).map(([id,v])=>{
+        const link=typeof v==='string'?v:v?.channelLink||'';
+        return`<tr><td>${id}</td><td style="max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"><a href="${escapeHtml(link)}" target="_blank">${escapeHtml(link)}</a></td>
+        <td class="cell-actions"><button class="btn btn-danger btn-sm admin-del-channel" data-id="${id}">${svgIcon('trash',12,12)}</button></td></tr>`;
+      }).join('')}</tbody></table>`;
+    $$('.admin-del-channel').forEach(b=>b.addEventListener('click',()=>db.ref('animeChannels/'+b.dataset.id).remove().then(()=>loadChannelsList())));
+  });
+}
+
+function showAddChannelModal(){
+  openModal('Add Channel',`<div class="input-wrap mb-12"><label>Anime ID</label><input type="number" class="input-field" id="ch-anime-id" placeholder="AniList ID"></div>
+    <div class="input-wrap"><label>Channel Link</label><input type="text" class="input-field" id="ch-link" placeholder="https://t.me/..."></div>`,true,()=>{
+      const id=$('#ch-anime-id').value.trim();const link=$('#ch-link').value.trim();
+      if(id&&link){db.ref('animeChannels/'+id).set({channelLink:link,addedBy:state.user?.id,addedAt:Date.now()}).then(()=>{showToast('Channel added','success');loadChannelsList()})}
+    });
+}
+
+function loadUsersList(){
+  db.ref('users').once('value').then(snap=>{
+    const users=snap.val()||{};
+    const c=$('#users-list');
+    if(!Object.keys(users).length){c.innerHTML='<p class="text-sm text-secondary">No users</p>';return}
+    c.innerHTML=`<table class="admin-table"><thead><tr><th>UID</th><th>Name</th><th>Username</th><th>Actions</th></tr></thead><tbody>
+      ${Object.entries(users).map(([id,v])=>`<tr><td style="font-family:monospace;font-size:11px">${id}</td><td>${escapeHtml(v?.name||'')}</td><td>${escapeHtml(v?.username||'')}</td>
+      <td class="cell-actions"><button class="btn btn-danger btn-sm admin-ban-btn" data-uid="${id}" data-name="${escapeHtml(v?.name||'')}">${svgIcon('ban',12,12)} Ban</button></td></tr>`).join('')}</tbody></table>`;
+    $$('.admin-ban-btn').forEach(b=>b.addEventListener('click',()=>banUser(b.dataset.uid,b.dataset.name)));
+  });
+}
+
+function loadAdminReviews(){
+  const c=$('#admin-reviews-list');
+  if(!state.reviews.length){c.innerHTML='<p class="text-sm text-secondary">No reviews</p>';return}
+  c.innerHTML=`<table class="admin-table"><thead><tr><th>Anime</th><th>Author</th><th>Rating</th><th>Text</th><th>Actions</th></tr></thead><tbody>
+    ${state.reviews.slice(0,50).map(r=>`<tr><td>${escapeHtml(r.animeName||'')}</td><td>${escapeHtml(r.authorName||'')}</td><td>${r.rating}/5</td><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis">${escapeHtml(r.text||'')}</td>
+    <td class="cell-actions"><button class="btn btn-danger btn-sm admin-del-review" data-id="${r.id}">${svgIcon('trash',12,12)}</button></td></tr>`).join('')}</tbody></table>`;
+  $$('.admin-del-review').forEach(b=>b.addEventListener('click',()=>deleteReview(b.dataset.id)));
+}
+
+function loadAdminFeed(){
+  db.ref('feed').once('value').then(snap=>{
+    const feed=snap.val()||{};state.feed=Object.entries(feed).map(([id,v])=>({id,...v})).sort((a,b)=>(b.timestamp||0)-(a.timestamp||0));
+    const c=$('#admin-feed-list');
+    if(!state.feed.length){c.innerHTML='<p class="text-sm text-secondary">No posts</p>';return}
+    c.innerHTML=`<table class="admin-table"><thead><tr><th>Title</th><th>Author</th><th>Actions</th></tr></thead><tbody>
+      ${state.feed.map(f=>`<tr><td>${escapeHtml(f.title||'')}</td><td>${escapeHtml(f.author||'')}</td>
+      <td class="cell-actions"><button class="btn btn-ghost btn-sm admin-pin-post" data-id="${f.id}">${svgIcon('bookmark',12,12)}</button><button class="btn btn-danger btn-sm admin-del-post" data-id="${f.id}">${svgIcon('trash',12,12)}</button></td></tr>`).join('')}</tbody></table>`;
+    $$('.admin-del-post').forEach(b=>b.addEventListener('click',()=>db.ref('feed/'+b.dataset.id).remove().then(()=>loadAdminFeed())));
+  });
+}
+
+function loadSettings(){
+  db.ref('adminSettings').once('value').then(snap=>{
+    const s=snap.val()||{};
+    $('#set-default-channel').value=s.defaultChannel||'';
+    $('#set-site-title').value=s.siteTitle||'';
+    $('#set-announcement').value=s.announcements||'';
+  });
+}
+function saveSettings(){
+  db.ref('adminSettings').set({
+    defaultChannel:$('#set-default-channel').value.trim(),
+    siteTitle:$('#set-site-title').value.trim(),
+    announcements:$('#set-announcement').value.trim()
+  }).then(()=>showToast('Settings saved','success'));
+}
+
+function updateAnalytics(){
+  db.ref('users').once('value').then(s=>{$('#a-users').textContent=Object.keys(s.val()||{}).length});
+  $('#a-reviews').textContent=state.reviews.length;
+  db.ref('feed').once('value').then(s=>{$('#a-posts').textContent=Object.keys(s.val()||{}).length});
+}
+
+function loadAdminData(){
+  db.ref('users').on('value',s=>{state.users=s.val()||{}});
+  db.ref('animeChannels').on('value',s=>{state.channels=s.val()||{}});
+  db.ref('animeLanguages').on('value',s=>{state.languages=s.val()||{}});
+}
+
+// ═══════════════════════════════════════════════════
+//  SETTINGS
+// ═══════════════════════════════════════════════════
+$('#settings-btn').addEventListener('click',()=>{
+  openModal('Settings',`<button class="btn btn-ghost w-full mb-8" id="modal-logout">Logout</button>`,false);
+  $('#modal-logout').addEventListener('click',()=>{
+    state.user=null;
+    localStorage.clear();
+    closeModal();
+    showToast('Logged out','info');
+    renderProfile();
+  });
+});
+
+// ═══════════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════════
+function initApp(){
+  // Check banned
+  if(state.user?.id!=='guest_'+state.user?.id?.split('_')[1]){
+    db.ref('bannedUsers/'+state.user.id).once('value').then(s=>{
+      if(s.exists()){document.body.innerHTML='<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;padding:20px;text-align:center"><h1 style="font-family:Outfit;font-weight:800;font-size:24px;margin-bottom:8px">Access Denied</h1><p style="color:var(--text2)">Your account has been banned.</p></div>';return}
+      continueInit();
+    });
+  }else{continueInit()}
+}
+
+function continueInit(){
+  // Save user
+  if(state.user&&state.user.id!=='guest_'+state.user.id?.split('_')[1]){
+    db.ref('users/'+state.user.id).set({
+      name:(state.user.firstName+' '+state.user.lastName).trim(),
+      username:state.user.username,
+      photoUrl:state.user.photoUrl,
+      lastSeen:Date.now()
+    });
+  }
+
+  // Show admin badge
+  $('#admin-badge').classList.toggle('hidden',!state.isAdmin);
+
+  // Init pages
+  switchTab('home');
+  loadHome();
+  renderFilterChips();
+  renderComposerStars();
+  loadWatchlist();
+  loadReviews();
+  renderProfile();
+
+  // Init detail tabs indicator position
+  setTimeout(()=>{
+    const ot=$('#detail-tabs .tab.active');
+    if(ot){const r=ot.getBoundingClientRect();const p=ot.parentElement.getBoundingClientRect();$('#tab-indicator').style.left=(r.left-p.left)+'px';$('#tab-indicator').style.width=r.width+'px'}
+  },100);
+}
+
+// ═══════════════════════════════════════════════════
+//  KEYBOARD / BACK BUTTON
+// ═══════════════════════════════════════════════════
+document.addEventListener('keydown',e=>{
+  if(e.key==='Backspace'&&state.currentAnime&&document.activeElement.tagName!=='INPUT'&&document.activeElement.tagName!=='TEXTAREA'){
+    e.preventDefault();closeAnimeDetail();
+  }
+});
+
+// ═══════════════════════════════════════════════════
+//  START
+// ═══════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded',runLoader);
+</script>
+</body>
+</html>
