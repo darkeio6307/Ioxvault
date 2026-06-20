@@ -936,68 +936,31 @@ const GENRES=['Action','Adventure','Comedy','Drama','Fantasy','Horror','Mystery'
 //  TELEGRAM WEBAPP
 // ═══════════════════════════════════════════════════
 let tg=null;
-let tgInitDataRaw=null;
 try{
-  if(window.Telegram && window.Telegram.WebApp){
-    tg=window.Telegram.WebApp;
-    tg.ready();
-    tg.expand();
-    tg.setHeaderColor('#f5f5fa');
-    tg.setBackgroundColor('#f5f5fa');
-    tgInitDataRaw=tg.initData||'';
+  tg=window.Telegram.WebApp;
+  tg.ready();
+  tg.expand();
+  tg.setHeaderColor('#f5f5fa');
+  tg.setBackgroundColor('#f5f5fa');
 
-    // Parse user from initData string (initDataUnsafe is often empty)
-    let user=null;
-    if(tgInitDataRaw){
-      try{
-        const params=new URLSearchParams(tgInitDataRaw);
-        const userJson=params.get('user');
-        if(userJson){
-          user=JSON.parse(decodeURIComponent(userJson));
-          console.log('User parsed from initData string');
-        }
-      }catch(e){console.log('initData parse error:',e);}
-    }
-    // Fallback: initDataUnsafe
-    if(!user && tg.initDataUnsafe && tg.initDataUnsafe.user){
-      user=tg.initDataUnsafe.user;
-      console.log('User from initDataUnsafe');
-    }
-
-    if(user && user.id){
-      state.user={
-        id:String(user.id),
-        firstName:user.first_name||'',
-        lastName:user.last_name||'',
-        username:user.username||'',
-        photoUrl:user.photo_url||''
-      };
-      try{localStorage.setItem('iox_user',JSON.stringify(state.user));}catch(e){}
-      if(state.user.id===ADMIN_UID) state.isAdmin=true;
-      console.log('Telegram user loaded:',state.user.id,state.user.firstName);
-    }else{
-      console.log('No user data found. initData length:',tgInitDataRaw?tgInitDataRaw.length:0);
-    }
+  // Direct access like InstaSaver Pro - no optional chaining
+  const user=tg.initDataUnsafe.user;
+  if(user){
+    state.user={
+      id:String(user.id),
+      firstName:user.first_name||'',
+      lastName:user.last_name||'',
+      username:user.username||'',
+      photoUrl:user.photo_url||''
+    };
+    try{localStorage.setItem('iox_user',JSON.stringify(state.user));}catch(e){}
+    if(state.user.id===ADMIN_UID) state.isAdmin=true;
+    console.log('Telegram user loaded:',state.user.id,state.user.firstName);
   }
-}catch(e){ console.log('Telegram WebApp error:',e); }
+}catch(e){ console.log('Telegram WebApp not available'); }
 
-// Try loading from localStorage if Telegram did not provide data
-if(!state.user || !state.user.id){
-  try{
-    const saved=localStorage.getItem('iox_user');
-    if(saved){
-      const parsed=JSON.parse(saved);
-      if(parsed && parsed.id){
-        state.user=parsed;
-        if(state.user.id===ADMIN_UID) state.isAdmin=true;
-        console.log('User loaded from localStorage');
-      }
-    }
-  }catch(e){}
-}
-
-// Final fallback
-if(!state.user || !state.user.id){
+// Fallback user
+if(!state.user){
   state.user={id:'guest_'+Date.now(),firstName:'Guest',lastName:'',username:'guest',photoUrl:''};
 }
 
@@ -1029,7 +992,7 @@ function svgIcon(name,w,h,cls){return`<svg width="${w||16}" height="${h||16}" cl
 // ═══════════════════════════════════════════════════
 //  ANILIST API
 // ═══════════════════════════════════════════════════
-async function aniQuery(query,vars){
+async function aniQuery(query,vars,maxRetries=3){
   const key=JSON.stringify({q:query,v:vars});
   // Check memory cache first
   if(state.animeCache.has(key))return state.animeCache.get(key);
@@ -1037,17 +1000,37 @@ async function aniQuery(query,vars){
   const cacheKey='ani_'+btoa(key).replace(/[^a-zA-Z0-9]/g,'').substring(0,40);
   const cached=getCache(cacheKey);
   if(cached){state.animeCache.set(key,cached);return cached;}
-  try{
-    const r=await fetch(ANILIST_URL,{
-      method:'POST',
-      headers:{'Content-Type':'application/json','Accept':'application/json'},
-      body:JSON.stringify({query,variables:vars})
-    });
-    if(!r.ok)throw new Error('HTTP '+r.status);
-    const j=await r.json();
-    if(j.data){state.animeCache.set(key,j.data);setCache(cacheKey,j.data);return j.data}
-    return null;
-  }catch(e){console.error('AniList error:',e);return null}
+
+  // Retry loop with exponential backoff
+  let lastError=null;
+  for(let attempt=0;attempt<=maxRetries;attempt++){
+    try{
+      if(attempt>0){
+        console.log('AniList retry attempt',attempt,'/',maxRetries);
+        showToast('Retrying... ('+attempt+'/'+maxRetries+')','info');
+      }
+      const r=await fetch(ANILIST_URL,{
+        method:'POST',
+        headers:{'Content-Type':'application/json','Accept':'application/json'},
+        body:JSON.stringify({query,variables:vars})
+      });
+      if(!r.ok)throw new Error('HTTP '+r.status);
+      const j=await r.json();
+      if(j.errors)throw new Error(j.errors[0]?.message||'GraphQL error');
+      if(j.data){state.animeCache.set(key,j.data);setCache(cacheKey,j.data);return j.data}
+      return null;
+    }catch(e){
+      lastError=e;
+      console.error('AniList attempt',attempt,'error:',e.message);
+      if(attempt<maxRetries){
+        const delay=Math.min(1000*Math.pow(2,attempt),5000); // 1s,2s,4s max
+        await new Promise(r=>setTimeout(r,delay));
+      }
+    }
+  }
+  console.error('AniList failed after',maxRetries+1,'attempts:',lastError);
+  showToast('Failed to load data after retries','error');
+  return null;
 }
 
 const Q_TRENDING=`query{Page(page:1,perPage:20){media(sort:TRENDING_DESC,type:ANIME){id title{english romaji native}coverImage{large}bannerImage averageScore popularity format status episodes season seasonYear genres}}}`;
@@ -1198,22 +1181,20 @@ async function loadHome(){
   renderSkeletonScroll('#toprated-scroll');
   renderSkeletonScroll('#upcoming-scroll');
 
-  // Trending
-  const t=await aniQuery(Q_TRENDING);
-  if(t?.Page?.media) $('#trending-scroll').innerHTML=t.Page.media.map(a=>createAnimeCard(a)).join('');
-
-  // Popular this season
+  // Load all sections in parallel with retry
   const now=new Date();
   const season=['WINTER','SPRING','SUMMER','FALL'][Math.floor((now.getMonth())/3)];
-  const p=await aniQuery(Q_POPULAR,{season,year:now.getFullYear()});
+
+  const [t,p,tr,u]=await Promise.all([
+    aniQuery(Q_TRENDING),
+    aniQuery(Q_POPULAR,{season,year:now.getFullYear()}),
+    aniQuery(Q_TOPRATED),
+    aniQuery(Q_UPCOMING)
+  ]);
+
+  if(t?.Page?.media) $('#trending-scroll').innerHTML=t.Page.media.map(a=>createAnimeCard(a)).join('');
   if(p?.Page?.media) $('#popular-scroll').innerHTML=p.Page.media.map(a=>createAnimeCard(a)).join('');
-
-  // Top rated
-  const tr=await aniQuery(Q_TOPRATED);
   if(tr?.Page?.media) $('#toprated-scroll').innerHTML=tr.Page.media.map(a=>createAnimeCard(a)).join('');
-
-  // Upcoming
-  const u=await aniQuery(Q_UPCOMING);
   if(u?.Page?.media) $('#upcoming-scroll').innerHTML=u.Page.media.map(a=>createAnimeCard(a)).join('');
 
   // Click handlers
@@ -1243,8 +1224,15 @@ $('#home-search-bar').addEventListener('click',()=>switchTab('search'));
 // ═══════════════════════════════════════════════════
 async function openAnimeDetail(id){
   const numId=parseInt(id);
-  // Reset current anime to prevent showing stale data
+  // FORCE clear all previous content immediately
   state.currentAnime=null;
+  $('#detail-banner').innerHTML='';
+  $('#detail-header').innerHTML='';
+  $('#detail-actions').innerHTML='';
+  $('#detail-stats').innerHTML='';
+  $('#detail-tab-content').innerHTML='';
+  $('#detail-related').innerHTML='';
+
   $('#anime-detail').classList.add('open');
   if(tg){tg.BackButton.show();tg.BackButton.onClick(closeAnimeDetail)}
 
@@ -1313,7 +1301,14 @@ async function openAnimeDetail(id){
 
 function closeAnimeDetail(){
   $('#anime-detail').classList.remove('open');
+  // Force clear all content when closing
   state.currentAnime=null;
+  $('#detail-banner').innerHTML='';
+  $('#detail-header').innerHTML='';
+  $('#detail-actions').innerHTML='';
+  $('#detail-stats').innerHTML='';
+  $('#detail-tab-content').innerHTML='';
+  $('#detail-related').innerHTML='';
   if(tg){tg.BackButton.hide()}
 }
 
