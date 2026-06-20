@@ -461,6 +461,11 @@ textarea.input-field{height:auto;padding:12px 14px;min-height:100px}
 .text-secondary{color:var(--text2)}
 .text-danger{color:var(--danger)}
 </style>
+<link rel="preconnect" href="https://graphql.anilist.co">
+<link rel="preconnect" href="https://study-ae01d-default-rtdb.firebaseio.com">
+<link rel="dns-prefetch" href="https://graphql.anilist.co">
+<link rel="dns-prefetch" href="https://study-ae01d-default-rtdb.firebaseio.com">
+<base target="_blank">
 </head>
 <body>
 
@@ -928,24 +933,52 @@ const GENRES=['Action','Adventure','Comedy','Drama','Fantasy','Horror','Mystery'
 // ═══════════════════════════════════════════════════
 let tg=null;
 try{
-  tg=window.Telegram.WebApp;
-  tg.ready();
-  tg.expand();
-  const user=tg.initDataUnsafe?.user;
-  if(user){
-    state.user={
-      id:String(user.id),
-      firstName:user.first_name||'',
-      lastName:user.last_name||'',
-      username:user.username||'',
-      photoUrl:user.photo_url||''
-    };
-    if(state.user.id===ADMIN_UID) state.isAdmin=true;
-  }
-}catch(e){ console.log('Telegram WebApp not available'); }
+  if(window.Telegram && window.Telegram.WebApp){
+    tg=window.Telegram.WebApp;
+    tg.ready();
+    tg.expand();
+    tg.setHeaderColor('#f5f5fa');
+    tg.setBackgroundColor('#f5f5fa');
 
-// Fallback user
-if(!state.user){
+    // Safe access to user data with multiple fallback checks
+    let user=null;
+    if(tg.initDataUnsafe && tg.initDataUnsafe.user){
+      user=tg.initDataUnsafe.user;
+    }else if(tg.initData && tg.initData.user){
+      user=tg.initData.user;
+    }
+
+    if(user && user.id){
+      state.user={
+        id:String(user.id),
+        firstName:user.first_name||'',
+        lastName:user.last_name||'',
+        username:user.username||'',
+        photoUrl:user.photo_url||''
+      };
+      // Save to localStorage for persistence
+      try{localStorage.setItem('iox_user',JSON.stringify(state.user));}catch(e){}
+      if(state.user.id===ADMIN_UID) state.isAdmin=true;
+    }
+  }
+}catch(e){ console.log('Telegram WebApp error:',e); }
+
+// Try loading from localStorage if Telegram did not provide data
+if(!state.user || !state.user.id){
+  try{
+    const saved=localStorage.getItem('iox_user');
+    if(saved){
+      const parsed=JSON.parse(saved);
+      if(parsed && parsed.id){
+        state.user=parsed;
+        if(state.user.id===ADMIN_UID) state.isAdmin=true;
+      }
+    }
+  }catch(e){}
+}
+
+// Final fallback
+if(!state.user || !state.user.id){
   state.user={id:'guest_'+Date.now(),firstName:'Guest',lastName:'',username:'guest',photoUrl:''};
 }
 
@@ -979,15 +1012,21 @@ function svgIcon(name,w,h,cls){return`<svg width="${w||16}" height="${h||16}" cl
 // ═══════════════════════════════════════════════════
 async function aniQuery(query,vars){
   const key=JSON.stringify({q:query,v:vars});
+  // Check memory cache first
   if(state.animeCache.has(key))return state.animeCache.get(key);
+  // Check localStorage cache
+  const cacheKey='ani_'+btoa(key).replace(/[^a-zA-Z0-9]/g,'').substring(0,40);
+  const cached=getCache(cacheKey);
+  if(cached){state.animeCache.set(key,cached);return cached;}
   try{
     const r=await fetch(ANILIST_URL,{
       method:'POST',
-      headers:{'Content-Type':'application/json'},
+      headers:{'Content-Type':'application/json','Accept':'application/json'},
       body:JSON.stringify({query,variables:vars})
     });
+    if(!r.ok)throw new Error('HTTP '+r.status);
     const j=await r.json();
-    if(j.data){state.animeCache.set(key,j.data);return j.data}
+    if(j.data){state.animeCache.set(key,j.data);setCache(cacheKey,j.data);return j.data}
     return null;
   }catch(e){console.error('AniList error:',e);return null}
 }
@@ -1001,26 +1040,47 @@ const Q_DETAIL=`query($id:Int){Media(id:$id,type:ANIME){id title{english romaji 
 const Q_CHARACTERS=`query($id:Int){Media(id:$id,type:ANIME){characters(page:1,perPage:25){edges{role node{name{full}image{large}} voiceActors{languageV2 name{full} image{large}}}}}}`;
 const Q_STAFF=`query($id:Int){Media(id:$id,type:ANIME){staff(page:1,perPage:25){edges{role node{name{full}image{large}}}}}}`;
 
+
+// ═══════════════════════════════════════════════════
+//  CACHE HELPERS (Speed Optimization)
+// ═══════════════════════════════════════════════════
+const CACHE_KEY='iox_cache_v1';
+const CACHE_TTL=1000*60*30; // 30 minutes
+function getCache(key){
+  try{
+    const raw=localStorage.getItem(CACHE_KEY+'_'+key);
+    if(!raw)return null;
+    const data=JSON.parse(raw);
+    if(Date.now()-data.ts>CACHE_TTL){localStorage.removeItem(CACHE_KEY+'_'+key);return null;}
+    return data.val;
+  }catch(e){return null;}
+}
+function setCache(key,val){
+  try{localStorage.setItem(CACHE_KEY+'_'+key,JSON.stringify({ts:Date.now(),val:val}));}catch(e){}
+}
+function clearCache(){try{for(let i=localStorage.length-1;i>=0;i--){const k=localStorage.key(i);if(k&&k.startsWith(CACHE_KEY))localStorage.removeItem(k);}}catch(e){}}
+
 // ═══════════════════════════════════════════════════
 //  SPLASH SCREEN
 // ═══════════════════════════════════════════════════
 function runLoader(){
   const av=$('#loader-avatar'),nm=$('#loader-name'),sub=$('#loader-sub');
+  // Show user data immediately if available
   setTimeout(()=>{
     if(state.user?.photoUrl){av.innerHTML=`<img src="${escapeHtml(state.user.photoUrl)}" alt="">`;}
     else{const i=(state.user?.firstName||'U').charAt(0).toUpperCase();av.textContent=i;}
     av.classList.add('visible');
-  },1300);
+  },300);
   setTimeout(()=>{
     const n=state.user?(state.user.firstName+' '+state.user.lastName).trim()||'User':'IOX VAULT';
     nm.textContent=n;nm.classList.add('visible');
-  },1600);
-  setTimeout(()=>{sub.classList.add('visible');},1800);
+  },500);
+  setTimeout(()=>{sub.classList.add('visible');},700);
   setTimeout(()=>{
     $('#loader').classList.add('hidden');
     $('#app').classList.remove('hidden');
     initApp();
-  },2500);
+  },1400);
 }
 
 // ═══════════════════════════════════════════════════
@@ -1363,6 +1423,9 @@ function loadWatchlist(){
   db.ref('users/'+uid+'/watchlist').on('value',snap=>{
     state.watchlist=snap.val()||{};
     if(state.tab==='profile')renderProfile();
+  },err=>{
+    console.error('Watchlist load error:',err);
+    state.watchlist={};
   });
 }
 
@@ -1442,6 +1505,10 @@ function loadReviews(){
   db.ref('reviews').orderByChild('timestamp').on('value',snap=>{
     const val=snap.val()||{};
     state.reviews=Object.entries(val).map(([id,v])=>({id,...v})).sort((a,b)=>(b.timestamp||0)-(a.timestamp||0));
+    renderReviews();
+  },err=>{
+    console.error('Reviews load error:',err);
+    state.reviews=[];
     renderReviews();
   });
 }
@@ -1693,13 +1760,28 @@ function loadChannelsList(){
     const ch=snap.val()||{};
     const c=$('#channels-list');
     if(!Object.keys(ch).length){c.innerHTML='<p class="text-sm text-secondary">No channels added</p>';return}
-    c.innerHTML=`<table class="admin-table"><thead><tr><th>Anime ID</th><th>Link</th><th>Actions</th></tr></thead><tbody>
+    c.innerHTML=`<table class="admin-table"><thead><tr><th>Anime ID</th><th>Link</th><th>Added By</th><th>Actions</th></tr></thead><tbody>
       ${Object.entries(ch).map(([id,v])=>{
-        const link=typeof v==='string'?v:v?.channelLink||'';
+        const link=typeof v==='string'?v:v?.channelLink||v?.link||'';
+        const addedBy=v?.addedBy||'-';
+        const addedAt=v?.addedAt?new Date(v.addedAt).toLocaleDateString():'-';
         return`<tr><td>${id}</td><td style="max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"><a href="${escapeHtml(link)}" target="_blank">${escapeHtml(link)}</a></td>
+        <td style="font-size:11px;color:var(--text3)">${addedBy}<br><span style="font-size:10px">${addedAt}</span></td>
         <td class="cell-actions"><button class="btn btn-danger btn-sm admin-del-channel" data-id="${id}">${svgIcon('trash',12,12)}</button></td></tr>`;
       }).join('')}</tbody></table>`;
-    $$('.admin-del-channel').forEach(b=>b.addEventListener('click',()=>db.ref('animeChannels/'+b.dataset.id).remove().then(()=>loadChannelsList())));
+    $$('.admin-del-channel').forEach(b=>b.addEventListener('click',()=>{
+      if(!confirm('Delete this channel?'))return;
+      db.ref('animeChannels/'+b.dataset.id).remove().then(()=>{
+        showToast('Channel deleted','info');
+        loadChannelsList();
+      }).catch(err=>{
+        console.error('Delete error:',err);
+        showToast('Delete failed','error');
+      });
+    }));
+  }).catch(err=>{
+    console.error('Load channels error:',err);
+    $('#channels-list').innerHTML='<p class="text-sm text-danger">Error loading channels. Check console.</p>';
   });
 }
 
@@ -1707,7 +1789,21 @@ function showAddChannelModal(){
   openModal('Add Channel',`<div class="input-wrap mb-12"><label>Anime ID</label><input type="number" class="input-field" id="ch-anime-id" placeholder="AniList ID"></div>
     <div class="input-wrap"><label>Channel Link</label><input type="text" class="input-field" id="ch-link" placeholder="https://t.me/..."></div>`,true,()=>{
       const id=$('#ch-anime-id').value.trim();const link=$('#ch-link').value.trim();
-      if(id&&link){db.ref('animeChannels/'+id).set({channelLink:link,addedBy:state.user?.id,addedAt:Date.now()}).then(()=>{showToast('Channel added','success');loadChannelsList()})}
+      if(!id||!link){showToast('Please fill all fields','error');return;}
+      const numId=parseInt(id);
+      if(isNaN(numId)||numId<=0){showToast('Invalid Anime ID','error');return;}
+      showToast('Saving channel...','info');
+      db.ref('animeChannels/'+numId).set({
+        channelLink:link,
+        addedBy:state.user?.id||'unknown',
+        addedAt:Date.now()
+      }).then(()=>{
+        showToast('Channel added successfully','success');
+        loadChannelsList();
+      }).catch(err=>{
+        console.error('Channel save error:',err);
+        showToast('Failed to save: '+err.message,'error');
+      });
     });
 }
 
@@ -1786,6 +1882,18 @@ $('#settings-btn').addEventListener('click',()=>{
   });
 });
 
+
+// ═══════════════════════════════════════════════════
+//  FIREBASE CONNECTION STATUS
+// ═══════════════════════════════════════════════════
+function checkFirebaseConnection(){
+  const connectedRef=db.ref('.info/connected');
+  connectedRef.on('value',snap=>{
+    const connected=snap.val()===true;
+    if(!connected)console.warn('Firebase disconnected - check network');
+  });
+}
+
 // ═══════════════════════════════════════════════════
 //  INIT
 // ═══════════════════════════════════════════════════
@@ -1800,6 +1908,7 @@ function initApp(){
 }
 
 function continueInit(){
+  checkFirebaseConnection();
   // Save user
   if(state.user&&state.user.id!=='guest_'+state.user.id?.split('_')[1]){
     db.ref('users/'+state.user.id).set({
