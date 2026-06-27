@@ -70,15 +70,16 @@ ul,ol{list-style:none}
    ═══════════════════════════════════════════ */
 #loader{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#e0f2fe 0%,#bae6fd 50%,#7dd3fc 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .6s ease,visibility .6s}
 #loader.hidden{opacity:0;visibility:hidden}
-.loader-rings{position:relative;width:100px;height:100px;margin-bottom:24px}
-.loader-ring{position:absolute;inset:0;border-radius:50%;border:3px solid transparent}
-.loader-ring:nth-child(1){border-top-color:var(--primary);animation:rotate 1.2s linear infinite}
-.loader-ring:nth-child(2){inset:10px;border-right-color:var(--accent);animation:counterRotate 1s linear infinite}
-.loader-ring:nth-child(3){inset:20px;border-bottom-color:#06b6d4;animation:rotate 0.8s linear infinite}
-.loader-avatar{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--accent));display:flex;align-items:center;justify-content:center;color:#fff;font-family:'Outfit',sans-serif;font-weight:800;font-size:28px;margin-bottom:16px;box-shadow:0 0 40px var(--primary-glow);opacity:0;transform:scale(0.5);transition:all .6s cubic-bezier(.34,1.56,.64,1);overflow:hidden}
+.loader-dots{display:flex;gap:12px;margin-bottom:40px}
+.loader-dot{width:16px;height:16px;border-radius:50%;background:var(--primary);animation:dotPulse 1.4s ease-in-out infinite both}
+.loader-dot:nth-child(1){animation-delay:-0.32s;background:var(--primary)}
+.loader-dot:nth-child(2){animation-delay:-0.16s;background:var(--accent)}
+.loader-dot:nth-child(3){animation-delay:0s;background:#06b6d4}
+@keyframes dotPulse{0%,80%,100%{transform:scale(0.6);opacity:0.5}40%{transform:scale(1);opacity:1}}
+.loader-avatar{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--accent));display:flex;align-items:center;justify-content:center;color:#fff;font-family:'Outfit',sans-serif;font-weight:800;font-size:32px;margin-bottom:20px;box-shadow:0 0 40px var(--primary-glow);opacity:0;transform:scale(0.5);transition:all .6s cubic-bezier(.34,1.56,.64,1);overflow:hidden;border:3px solid rgba(255,255,255,0.4)}
 .loader-avatar.visible{opacity:1;transform:scale(1)}
 .loader-avatar img{width:100%;height:100%;border-radius:50%;object-fit:cover}
-.loader-title{font-family:'Outfit',sans-serif;font-weight:900;font-size:28px;background:linear-gradient(90deg,var(--primary),var(--accent),var(--primary));background-size:200% auto;animation:shimmer 3s linear infinite;-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:6px;opacity:0;transition:opacity .4s ease}
+.loader-title{font-family:'Outfit',sans-serif;font-weight:900;font-size:30px;background:linear-gradient(90deg,var(--primary),var(--accent),var(--primary));background-size:200% auto;animation:shimmer 3s linear infinite;-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:6px;opacity:0;transition:opacity .4s ease}
 .loader-sub{font-size:13px;color:var(--text2);opacity:0;transition:opacity .4s ease .2s}
 .loader-title.visible,.loader-sub.visible{opacity:1}
 
@@ -568,10 +569,10 @@ textarea.input-field{height:auto;padding:12px 14px;min-height:100px}
      LOADER
      ═══════════════════════════════════════════ -->
 <div id="loader">
-  <div class="loader-rings">
-    <div class="loader-ring"></div>
-    <div class="loader-ring"></div>
-    <div class="loader-ring"></div>
+  <div class="loader-dots">
+    <div class="loader-dot"></div>
+    <div class="loader-dot"></div>
+    <div class="loader-dot"></div>
   </div>
   <div class="loader-avatar" id="loader-avatar"></div>
   <div class="loader-title" id="loader-title">IOX VAULT</div>
@@ -721,31 +722,6 @@ textarea.input-field{height:auto;padding:12px 14px;min-height:100px}
         <div class="h-scroll" id="toprated-scroll"></div>
       </div>
 
-      <!-- Trending Now -->
-      <div class="mb-16">
-        <div class="section-header">
-          <h2>Trending Now</h2>
-          <button class="view-all" data-nav="search" data-filter="trending">View All</button>
-        </div>
-        <div class="h-scroll" id="trending-scroll"></div>
-      </div>
-
-      <!-- Popular This Season -->
-      <div class="mb-16">
-        <div class="section-header">
-          <h2>Popular This Season</h2>
-        </div>
-        <div class="h-scroll" id="popular-scroll"></div>
-      </div>
-
-      <!-- Top Rated -->
-      <div class="mb-16">
-        <div class="section-header">
-          <h2>Top Rated</h2>
-        </div>
-        <div class="h-scroll" id="toprated-scroll"></div>
-      </div>
-
       <!-- Upcoming -->
       <div class="mb-16">
         <div class="section-header">
@@ -766,7 +742,7 @@ textarea.input-field{height:auto;padding:12px 14px;min-height:100px}
       </div>
     </div>
 
-    <!-- SEARCH PAGE -->
+<!-- SEARCH PAGE -->
     <div class="page" id="page-search">
       <div class="search-bar" id="search-bar">
         <svg class="search-icon" width="20" height="20"><use href="#i-search"/></svg>
@@ -1196,15 +1172,15 @@ async function aniQuery(query,vars,maxRetries=3){
 }
 
 // Queries with TV/MOVIE filter only
-const Q_TRENDING=`query{Page(page:1,perPage:20){media(sort:TRENDING_DESC,type:ANIME,format_in:[TV,MOVIE]){id title{english romaji native}coverImage{large}bannerImage averageScore popularity format status episodes season seasonYear genres}}}`;
-const Q_POPULAR=`query($season:MediaSeason,$year:Int){Page(page:1,perPage:20){media(season:$season,seasonYear:$year,sort:POPULARITY_DESC,type:ANIME,format_in:[TV,MOVIE]){id title{english romaji native}coverImage{large}bannerImage averageScore popularity format status episodes season seasonYear genres}}}`;
-const Q_TOPRATED=`query{Page(page:1,perPage:20){media(sort:SCORE_DESC,type:ANIME,format_in:[TV,MOVIE]){id title{english romaji native}coverImage{large}bannerImage averageScore popularity format status episodes season seasonYear genres}}}`;
-const Q_UPCOMING=`query{Page(page:1,perPage:20){media(status:NOT_YET_RELEASED,sort:POPULARITY_DESC,type:ANIME,format_in:[TV,MOVIE]){id title{english romaji native}coverImage{large}bannerImage averageScore popularity format status episodes season seasonYear genres}}}`;
-const Q_SEARCH=`query($search:String,$genre:[String],$year:Int,$status:MediaStatus,$sort:[MediaSort],$page:Int,$averageScore_greater:Int){Page(page:$page,perPage:24){media(search:$search,genre_in:$genre,seasonYear:$year,status:$status,sort:$sort,type:ANIME,format_in:[TV,MOVIE],averageScore_greater:$averageScore_greater){id title{english romaji native}coverImage{large}bannerImage averageScore popularity format status episodes season seasonYear genres description studios{nodes{name}}}}}`;
+const Q_TRENDING=`query{Page(page:1,perPage:20){media(sort:TRENDING_DESC,type:ANIME,format_in:[TV,MOVIE,ONA]){id title{english romaji native}coverImage{large}bannerImage averageScore popularity format status episodes season seasonYear genres}}}`;
+const Q_POPULAR=`query($season:MediaSeason,$year:Int){Page(page:1,perPage:20){media(season:$season,seasonYear:$year,sort:POPULARITY_DESC,type:ANIME,format_in:[TV,MOVIE,ONA]){id title{english romaji native}coverImage{large}bannerImage averageScore popularity format status episodes season seasonYear genres}}}`;
+const Q_TOPRATED=`query{Page(page:1,perPage:20){media(sort:SCORE_DESC,type:ANIME,format_in:[TV,MOVIE,ONA]){id title{english romaji native}coverImage{large}bannerImage averageScore popularity format status episodes season seasonYear genres}}}`;
+const Q_UPCOMING=`query{Page(page:1,perPage:20){media(status:NOT_YET_RELEASED,sort:POPULARITY_DESC,type:ANIME,format_in:[TV,MOVIE,ONA]){id title{english romaji native}coverImage{large}bannerImage averageScore popularity format status episodes season seasonYear genres}}}`;
+const Q_SEARCH=`query($search:String,$genre:[String],$year:Int,$status:MediaStatus,$sort:[MediaSort],$page:Int,$averageScore_greater:Int){Page(page:$page,perPage:24){media(search:$search,genre_in:$genre,seasonYear:$year,status:$status,sort:$sort,type:ANIME,format_in:[TV,MOVIE,ONA],averageScore_greater:$averageScore_greater){id title{english romaji native}coverImage{large}bannerImage averageScore popularity format status episodes season seasonYear genres description studios{nodes{name}}}}}`;
 const Q_DETAIL=`query($id:Int){Media(id:$id,type:ANIME){id title{english romaji native}coverImage{large medium}bannerImage averageScore popularity favourites format status episodes duration season seasonYear genres tags{name}description startDate{year month day}endDate{year month day} studios{nodes{name}} source hashtag siteUrl relations{edges{relationType node{id title{english romaji}coverImage{large}format status averageScore}}}}}`;
 const Q_CHARACTERS=`query($id:Int){Media(id:$id,type:ANIME){characters(page:1,perPage:25){edges{role node{name{full}image{large}} voiceActors{languageV2 name{full} image{large}}}}}}`;
 const Q_STAFF=`query($id:Int){Media(id:$id,type:ANIME){staff(page:1,perPage:25){edges{role node{name{full}image{large}}}}}}`;
-const Q_ADMIN_SEARCH=`query($search:String){Page(page:1,perPage:10){media(search:$search,type:ANIME,format_in:[TV,MOVIE]){id title{english romaji native}coverImage{medium}format seasonYear}}}`;
+const Q_ADMIN_SEARCH=`query($search:String){Page(page:1,perPage:10){media(search:$search,type:ANIME,format_in:[TV,MOVIE,ONA]){id title{english romaji native}coverImage{medium}format seasonYear}}}`;
 
 // ═══════════════════════════════════════════════════
 //  CACHE HELPERS
@@ -1246,7 +1222,7 @@ function runLoader(){
     $('#loader').classList.add('hidden');
     $('#app').classList.remove('hidden');
     initApp();
-  },1600);
+  },1800);
 }
 
 // ═══════════════════════════════════════════════════
@@ -1296,14 +1272,17 @@ $('#header-menu-btn').addEventListener('click',openSidebar);
 $('#sidebar-overlay').addEventListener('click',closeSidebar);
 
 // Sidebar navigation
-$('#sidebar-home').addEventListener('click',()=>{closeSidebar();switchTab('home');});
-$('#sidebar-search').addEventListener('click',()=>{closeSidebar();switchTab('search');});
-$('#sidebar-reviews').addEventListener('click',()=>{closeSidebar();switchTab('reviews');});
-$('#sidebar-profile').addEventListener('click',()=>{closeSidebar();switchTab('profile');});
-$('#sidebar-admin').addEventListener('click',()=>{closeSidebar();openAdminPanel();});
-$('#sidebar-terms').addEventListener('click',()=>{
-  closeSidebar();
-  openModal('Terms of Use','<p style="line-height:1.6">By using IOX VAULT, you agree to our community guidelines. All content is for educational purposes. We do not host any anime files. Links are user-submitted and we are not responsible for external content.</p>',false);
+$('#sidebar-home').addEventListener('click',()=>{closeSidebar();switchTab('home');
+  renderFilterChips();
+  renderComposerStars();
+  loadWatchlist();
+  loadReviews();
+  renderProfile();
+  setTimeout(()=>{
+    loadHome().then(()=>{
+      setTimeout(()=>loadAvailableAnime(),500);
+    }).catch(err=>console.error('Home load failed:',err));
+  },100);
 });
 $('#sidebar-privacy').addEventListener('click',()=>{
   closeSidebar();
@@ -1373,80 +1352,7 @@ function renderSkeletonScroll(id,n=8){
   $(id).innerHTML=h;
 }
 
-async function loadHome(attempt=1){
-  const maxRetries=5;
-  if(state.homeLoading){console.log('Home already loading, skipping');return}
-  state.homeLoading=true;
-  state.homeError=false;
-  $('#home-retry').classList.add('hidden');
 
-  // Show skeletons immediately
-  renderSkeletonScroll('#trending-scroll');
-  renderSkeletonScroll('#popular-scroll');
-  renderSkeletonScroll('#toprated-scroll');
-  renderSkeletonScroll('#upcoming-scroll');
-
-  const now=new Date();
-  const season=['WINTER','SPRING','SUMMER','FALL'][Math.floor((now.getMonth())/3)];
-
-  // Individual section loader with its own retry
-  const loadSection=async(query,vars,selector,sectionName)=>{
-    for(let i=0;i<3;i++){
-      try{
-        const data=await aniQuery(query,vars);
-        if(data?.Page?.media?.length){
-          $(selector).innerHTML=data.Page.media.map(a=>createAnimeCard(a)).join('');
-          return true;
-        }
-      }catch(e){console.log(sectionName+' attempt',i+1,'failed');}
-      if(i<2)await new Promise(r=>setTimeout(r,1500*(i+1)));
-    }
-    $(selector).innerHTML='<div class="empty-state" style="padding:20px"><p class="text-sm text-secondary">Failed to load</p><button class="btn btn-sm btn-outline mt-8" onclick="loadHome()">Retry</button></div>';
-    return false;
-  };
-
-  try{
-    // Load all sections in parallel but independently
-    const results=await Promise.allSettled([
-      loadSection(Q_TRENDING,{},'#trending-scroll','Trending'),
-      loadSection(Q_POPULAR,{season,year:now.getFullYear()},'#popular-scroll','Popular'),
-      loadSection(Q_TOPRATED,{},'#toprated-scroll','TopRated'),
-      loadSection(Q_UPCOMING,{},'#upcoming-scroll','Upcoming')
-    ]);
-
-    const hasAnySuccess=results.some(r=>r.status==='fulfilled'&&r.value===true);
-
-    // Load available anime (separate, non-blocking)
-    loadAvailableAnime();
-
-    if(!hasAnySuccess){
-      if(attempt<maxRetries){
-        console.log('Home retry',attempt+'/'+maxRetries);
-        setTimeout(()=>loadHome(attempt+1),2000*attempt);
-        return;
-      }
-      state.homeError=true;
-      $('#home-retry').classList.remove('hidden');
-    }else{
-      state.homeLoaded=true;
-    }
-
-    // Add click handlers to all cards
-    $$('.anime-card').forEach(c=>c.addEventListener('click',()=>openAnimeDetail(c.dataset.id)));
-    state.homeLoading=false;
-  }catch(e){
-    console.error('Home load error:',e);
-    state.homeLoading=false;
-    if(attempt<maxRetries){
-      setTimeout(()=>loadHome(attempt+1),2000*attempt);
-      return;
-    }
-    state.homeError=true;
-    $('#home-retry').classList.remove('hidden');
-  }
-}
-
-// Load anime that have channel links - COMPLETELY INDEPENDENT
 async function loadAvailableAnime(){
   try{
     const snap=await db.ref('animeChannels').once('value');
@@ -1456,7 +1362,7 @@ async function loadAvailableAnime(){
 
     // Fetch details for linked anime (max 20)
     const fetchIds=ids.slice(0,20);
-    const query=`query{Page(perPage:20){media(id_in:[${fetchIds.join(',')}],type:ANIME,format_in:[TV,MOVIE]){id title{english romaji native}coverImage{large}bannerImage averageScore popularity format status episodes season seasonYear genres}}}`;
+    const query=`query{Page(perPage:20){media(id_in:[${fetchIds.join(',')}],type:ANIME,format_in:[TV,MOVIE,ONA]){id title{english romaji native}coverImage{large}bannerImage averageScore popularity format status episodes season seasonYear genres}}}`;
 
     const data=await aniQuery(query,{});
     const media=data?.Page?.media||[];
@@ -1477,6 +1383,104 @@ async function loadAvailableAnime(){
 }
 
 $('#home-retry-btn').addEventListener('click',()=>loadHome(1));
+
+
+async function loadHome(attempt=1){
+  const maxRetries=5;
+  if(state.homeLoading){console.log('Home already loading, skipping');return}
+  if(state.homeLoaded&&attempt===1){console.log('Home already loaded, skipping');return}
+  state.homeLoading=true;
+  state.homeError=false;
+  $('#home-retry').classList.add('hidden');
+
+  // Show skeletons immediately
+  renderSkeletonScroll('#trending-scroll');
+  renderSkeletonScroll('#popular-scroll');
+  renderSkeletonScroll('#toprated-scroll');
+  renderSkeletonScroll('#upcoming-scroll');
+
+  const now=new Date();
+  const season=['WINTER','SPRING','SUMMER','FALL'][Math.floor((now.getMonth())/3)];
+  let hasAnySuccess=false;
+
+  try{
+    // Load Trending
+    try{
+      const t=await aniQuery(Q_TRENDING);
+      if(t?.Page?.media?.length){
+        $('#trending-scroll').innerHTML=t.Page.media.map(a=>createAnimeCard(a)).join('');
+        hasAnySuccess=true;
+      }else{$('#trending-scroll').innerHTML='<div class="empty-state" style="padding:20px"><p class="text-sm text-secondary">No trending anime</p></div>'}
+    }catch(e){
+      console.error('Trending error:',e);
+      $('#trending-scroll').innerHTML='<div class="empty-state" style="padding:20px"><p class="text-sm text-secondary">Failed to load trending</p><button class="btn btn-sm btn-outline mt-8" onclick="loadHome()">Retry</button></div>';
+    }
+
+    // Load Popular
+    try{
+      const p=await aniQuery(Q_POPULAR,{season,year:now.getFullYear()});
+      if(p?.Page?.media?.length){
+        $('#popular-scroll').innerHTML=p.Page.media.map(a=>createAnimeCard(a)).join('');
+        hasAnySuccess=true;
+      }else{$('#popular-scroll').innerHTML='<div class="empty-state" style="padding:20px"><p class="text-sm text-secondary">No popular anime</p></div>'}
+    }catch(e){
+      console.error('Popular error:',e);
+      $('#popular-scroll').innerHTML='<div class="empty-state" style="padding:20px"><p class="text-sm text-secondary">Failed to load popular</p><button class="btn btn-sm btn-outline mt-8" onclick="loadHome()">Retry</button></div>';
+    }
+
+    // Load Top Rated
+    try{
+      const tr=await aniQuery(Q_TOPRATED);
+      if(tr?.Page?.media?.length){
+        $('#toprated-scroll').innerHTML=tr.Page.media.map(a=>createAnimeCard(a)).join('');
+        hasAnySuccess=true;
+      }else{$('#toprated-scroll').innerHTML='<div class="empty-state" style="padding:20px"><p class="text-sm text-secondary">No top rated anime</p></div>'}
+    }catch(e){
+      console.error('TopRated error:',e);
+      $('#toprated-scroll').innerHTML='<div class="empty-state" style="padding:20px"><p class="text-sm text-secondary">Failed to load top rated</p><button class="btn btn-sm btn-outline mt-8" onclick="loadHome()">Retry</button></div>';
+    }
+
+    // Load Upcoming
+    try{
+      const u=await aniQuery(Q_UPCOMING);
+      if(u?.Page?.media?.length){
+        $('#upcoming-scroll').innerHTML=u.Page.media.map(a=>createAnimeCard(a)).join('');
+        hasAnySuccess=true;
+      }else{$('#upcoming-scroll').innerHTML='<div class="empty-state" style="padding:20px"><p class="text-sm text-secondary">No upcoming anime</p></div>'}
+    }catch(e){
+      console.error('Upcoming error:',e);
+      $('#upcoming-scroll').innerHTML='<div class="empty-state" style="padding:20px"><p class="text-sm text-secondary">Failed to load upcoming</p><button class="btn btn-sm btn-outline mt-8" onclick="loadHome()">Retry</button></div>';
+    }
+
+    // Add click handlers to all cards
+    $$('.anime-card').forEach(c=>c.addEventListener('click',()=>openAnimeDetail(c.dataset.id)));
+
+    if(!hasAnySuccess){
+      if(attempt<maxRetries){
+        console.log('Home retry',attempt+'/'+maxRetries);
+        state.homeLoading=false;
+        setTimeout(()=>loadHome(attempt+1),2000*attempt);
+        return;
+      }
+      state.homeError=true;
+      $('#home-retry').classList.remove('hidden');
+    }else{
+      state.homeLoaded=true;
+      if(attempt>1)showToast('Loaded successfully!','success');
+    }
+
+    state.homeLoading=false;
+  }catch(e){
+    console.error('Home load error:',e);
+    state.homeLoading=false;
+    if(attempt<maxRetries){
+      setTimeout(()=>loadHome(attempt+1),2000*attempt);
+      return;
+    }
+    state.homeError=true;
+    $('#home-retry').classList.remove('hidden');
+  }
+}
 
 // Quick access chips
 $$('.chip').forEach(chip=>{
@@ -2294,15 +2298,18 @@ async function initApp(){
   $('#sidebar-admin-section').style.display=state.isAdmin?'block':'none';
 
   switchTab('home');
-  // Load home sections first
-  loadHome().then(()=>{
-    // After home loads, load available anime separately
-    setTimeout(()=>loadAvailableAnime(),800);
-  }).catch(()=>{
-    // If first load fails, retry automatically after 3 seconds
-    setTimeout(()=>loadHome(),3000);
-  });
   renderFilterChips();
+  renderComposerStars();
+  loadWatchlist();
+  loadReviews();
+  renderProfile();
+  // Load home sections
+  loadHome().then(()=>{
+    // After home loads successfully, load available anime
+    setTimeout(()=>loadAvailableAnime(),600);
+  }).catch(err=>{
+    console.error('Home load failed:',err);
+  });
   renderComposerStars();
   loadWatchlist();
   loadReviews();
