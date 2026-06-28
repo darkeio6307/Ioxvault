@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-<meta name="theme-color" content="#e0f2fe">
+<meta name="theme-color" content="#0f172a">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>IOX VAULT</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
@@ -17,15 +17,16 @@
    ═══════════════════════════════════════════ */
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html{font-size:16px;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
-body{font-family:'Inter',sans-serif;background:linear-gradient(135deg,#e0f2fe 0%,#f0f9ff 50%,#dbeafe 100%);background-attachment:fixed;color:#0f172a;line-height:1.5;overflow-x:hidden;min-height:100dvh;scrollbar-width:none}
+body{font-family:'Inter',sans-serif;background:linear-gradient(135deg,#0f172a 0%,#1e293b 50%,#0f172a 100%);background-attachment:fixed;color:#f1f5f9;line-height:1.5;overflow-x:hidden;min-height:100dvh;scrollbar-width:none}
 body::-webkit-scrollbar{width:0;height:0}
 :root{
-  --bg:#f0f9ff;--bg2:rgba(255,255,255,0.72);--bg3:#e0f2fe;--surface:rgba(255,255,255,0.65);
-  --glass-border:rgba(255,255,255,0.5);--glass-shadow:0 8px 32px rgba(31,38,135,0.1);
-  --primary:#0ea5e9;--primary-glow:rgba(14,165,233,0.35);--accent:#8b5cf6;--accent-glow:rgba(139,92,246,0.3);
-  --success:#22c55e;--danger:#ef4444;--warning:#f59e0b;
-  --text:#0f172a;--text2:#475569;--text3:#94a3b8;--text-inverse:#ffffff;
+  --bg:#0f172a;--bg2:rgba(30,41,59,0.8);--bg3:#1e293b;--surface:rgba(30,41,59,0.65);
+  --glass-border:rgba(255,255,255,0.08);--glass-shadow:0 8px 32px rgba(0,0,0,0.3);
+  --primary:#38bdf8;--primary-glow:rgba(56,189,248,0.35);--accent:#a78bfa;--accent-glow:rgba(167,139,250,0.3);
+  --success:#4ade80;--danger:#f87171;--warning:#fbbf24;
+  --text:#f1f5f9;--text2:#94a3b8;--text3:#64748b;--text-inverse:#0f172a;
   --header-h:56px;--nav-h:64px;--radius:16px;--radius-lg:20px;--radius-sm:10px;
+  --card:#1e293b;
 }
 img{max-width:100%;display:block}
 button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
@@ -38,8 +39,8 @@ ul,ol{list-style:none}
    ANIMATIONS
    ═══════════════════════════════════════════ */
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
-@keyframes fadeInUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
-@keyframes scaleIn{from{transform:scale(0.9);opacity:0}to{transform:scale(1);opacity:1}}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes scaleIn{from{transform:scale(0.92);opacity:0}to{transform:scale(1);opacity:1}}
 @keyframes slideRight{from{transform:translateX(100%)}to{transform:translateX(0)}}
 @keyframes slideRightOut{from{transform:translateX(0)}to{transform:translateX(100%)}}
 @keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
@@ -53,35 +54,49 @@ ul,ol{list-style:none}
 @keyframes shimmerLoad{0%{background-position:-200% 0}100%{background-position:200% 0}}
 @keyframes rotate{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 @keyframes counterRotate{from{transform:rotate(0deg)}to{transform:rotate(-360deg)}}
+@keyframes svgPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.08);opacity:0.85}}
+@keyframes svgGlow{0%,100%{filter:drop-shadow(0 0 8px var(--primary-glow))}50%{filter:drop-shadow(0 0 20px var(--primary-glow)) drop-shadow(0 0 30px var(--accent-glow))}}
+@keyframes slideInUp{from{transform:translateY(30px);opacity:0}to{transform:translateY(0);opacity:1}}
+@keyframes slideInLeft{from{transform:translateX(-20px);opacity:0}to{transform:translateX(0);opacity:1}}
+@keyframes tabLoad{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes cardPop{from{transform:scale(0.95);opacity:0}to{transform:scale(1);opacity:1}}
+@keyframes enterPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.03)}}
+@keyframes shimmerCard{0%{background-position:-200% 0}100%{background-position:200% 0}}
+@keyframes sidebarItemIn{from{transform:translateX(20px);opacity:0}to{transform:translateX(0);opacity:1}}
+@keyframes commentSlide{from{transform:translateY(15px);opacity:0}to{transform:translateY(0);opacity:1}}
 
 .anim-fade{animation:fadeIn .3s ease}
 .anim-fade-up{animation:fadeInUp .4s ease}
 .anim-scale{animation:scaleIn .3s ease}
+.anim-tab-load{animation:tabLoad .35s ease}
+.anim-card-pop{animation:cardPop .35s ease}
+.anim-comment-slide{animation:commentSlide .3s ease}
 
 /* ═══════════════════════════════════════════
    GLASSMORPHISM UTILITIES
    ═══════════════════════════════════════════ */
 .glass{background:var(--surface);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--glass-border);box-shadow:var(--glass-shadow)}
-.glass-card{background:rgba(255,255,255,0.72);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.6);box-shadow:0 4px 24px rgba(0,0,0,0.06);border-radius:var(--radius)}
-.glass-strong{background:rgba(255,255,255,0.85);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,0.7)}
+.glass-card{background:rgba(30,41,59,0.75);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.08);box-shadow:0 4px 24px rgba(0,0,0,0.2);border-radius:var(--radius)}
+.glass-strong{background:rgba(30,41,59,0.9);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,0.1)}
 
 /* ═══════════════════════════════════════════
-   LOADER / SPLASH SCREEN
+   LOADER / SPLASH SCREEN with SVG
    ═══════════════════════════════════════════ */
-#loader{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#e0f2fe 0%,#bae6fd 50%,#7dd3fc 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .6s ease,visibility .6s}
-#loader.hidden{opacity:0;visibility:hidden}
-.loader-dots{display:flex;gap:12px;margin-bottom:40px}
-.loader-dot{width:16px;height:16px;border-radius:50%;background:var(--primary);animation:dotPulse 1.4s ease-in-out infinite both}
-.loader-dot:nth-child(1){animation-delay:-0.32s;background:var(--primary)}
-.loader-dot:nth-child(2){animation-delay:-0.16s;background:var(--accent)}
-.loader-dot:nth-child(3){animation-delay:0s;background:#06b6d4}
-@keyframes dotPulse{0%,80%,100%{transform:scale(0.6);opacity:0.5}40%{transform:scale(1);opacity:1}}
-.loader-avatar{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--accent));display:flex;align-items:center;justify-content:center;color:#fff;font-family:'Outfit',sans-serif;font-weight:800;font-size:32px;margin-bottom:20px;box-shadow:0 0 40px var(--primary-glow);opacity:0;transform:scale(0.5);transition:all .6s cubic-bezier(.34,1.56,.64,1);overflow:hidden;border:3px solid rgba(255,255,255,0.4)}
-.loader-avatar.visible{opacity:1;transform:scale(1)}
-.loader-avatar img{width:100%;height:100%;border-radius:50%;object-fit:cover}
-.loader-title{font-family:'Outfit',sans-serif;font-weight:900;font-size:30px;background:linear-gradient(90deg,var(--primary),var(--accent),var(--primary));background-size:200% auto;animation:shimmer 3s linear infinite;-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:6px;opacity:0;transition:opacity .4s ease}
-.loader-sub{font-size:13px;color:var(--text2);opacity:0;transition:opacity .4s ease .2s}
-.loader-title.visible,.loader-sub.visible{opacity:1}
+#loader{position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#0f172a 0%,#1e293b 50%,#0f172a 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .7s ease,visibility .7s ease}
+#loader.hidden{opacity:0;visibility:hidden;pointer-events:none}
+.loader-svg-wrap{width:100px;height:100px;margin-bottom:24px;position:relative;animation:svgPulse 2s ease-in-out infinite}
+.loader-svg-wrap svg{width:100%;height:100%;animation:svgGlow 2s ease-in-out infinite}
+.loader-svg-ring{position:absolute;inset:-12px;border:2px solid transparent;border-top-color:var(--primary);border-right-color:var(--accent);border-radius:50%;animation:rotate 2s linear infinite}
+.loader-title{font-family:'Outfit',sans-serif;font-weight:900;font-size:32px;background:linear-gradient(90deg,var(--primary),var(--accent),var(--primary));background-size:200% auto;animation:shimmer 3s linear infinite;-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px;opacity:0;transform:translateY(10px);transition:all .5s ease}
+.loader-title.visible{opacity:1;transform:translateY(0)}
+.loader-sub{font-size:13px;color:var(--text2);opacity:0;transition:opacity .4s ease .2s;font-weight:500}
+.loader-sub.visible{opacity:1}
+.loader-version{position:absolute;bottom:24px;font-size:11px;color:var(--text3);letter-spacing:1px;font-family:monospace}
+
+/* Enter button on loader */
+#loader-enter-btn{margin-top:28px;padding:14px 40px;background:linear-gradient(135deg,var(--primary),var(--accent));color:#fff;font-family:'Outfit',sans-serif;font-weight:700;font-size:15px;border-radius:30px;box-shadow:0 4px 20px var(--primary-glow);opacity:0;transform:translateY(10px);transition:all .4s ease;animation:enterPulse 2s ease-in-out infinite;cursor:pointer;border:none}
+#loader-enter-btn.visible{opacity:1;transform:translateY(0)}
+#loader-enter-btn:active{transform:scale(0.96)}
 
 /* ═══════════════════════════════════════════
    APP SHELL
@@ -93,37 +108,44 @@ ul,ol{list-style:none}
    ═══════════════════════════════════════════ */
 #header{position:fixed;top:0;left:0;right:0;height:var(--header-h);z-index:100;display:flex;align-items:center;padding:0 16px;gap:12px}
 .header-logo-wrap{display:flex;align-items:center;gap:8px;flex:1}
-.header-logo-icon{width:32px;height:32px;background:linear-gradient(135deg,var(--primary),var(--accent));border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff}
+.header-logo-icon{width:32px;height:32px;background:linear-gradient(135deg,var(--primary),var(--accent));border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;box-shadow:0 0 16px var(--primary-glow)}
 .header-title{font-family:'Outfit',sans-serif;font-weight:800;font-size:18px;letter-spacing:-0.5px}
 .header-actions{display:flex;align-items:center;gap:10px}
 .header-btn{width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:var(--bg2);border:1px solid var(--glass-border);color:var(--text);transition:all .2s}
 .header-btn:active{transform:scale(0.92);background:var(--bg3)}
-.header-admin-badge{background:var(--warning);color:#fff;font-size:10px;font-weight:800;padding:2px 8px;border-radius:10px;margin-left:8px;letter-spacing:.5px}
+.header-admin-badge{background:linear-gradient(135deg,var(--warning),#f59e0b);color:#0f172a;font-size:10px;font-weight:800;padding:2px 8px;border-radius:10px;margin-left:8px;letter-spacing:.5px}
 
 /* ═══════════════════════════════════════════
-   SIDEBAR
+   SIDEBAR - PRO with subtle animations
    ═══════════════════════════════════════════ */
-#sidebar-overlay{position:fixed;inset:0;z-index:250;background:rgba(15,23,42,0.4);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);opacity:0;visibility:hidden;transition:all .3s ease}
+#sidebar-overlay{position:fixed;inset:0;z-index:250;background:rgba(0,0,0,0.5);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);opacity:0;visibility:hidden;transition:all .35s ease}
 #sidebar-overlay.open{opacity:1;visibility:visible}
-#sidebar{position:fixed;top:0;right:0;bottom:0;width:280px;z-index:260;background:linear-gradient(180deg,rgba(255,255,255,0.95),rgba(240,249,255,0.98));backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-left:1px solid var(--glass-border);transform:translateX(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column}
+#sidebar{position:fixed;top:0;right:0;bottom:0;width:300px;z-index:260;background:linear-gradient(180deg,rgba(15,23,42,0.98),rgba(30,41,59,0.98));backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);border-left:1px solid var(--glass-border);transform:translateX(100%);transition:transform .4s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;box-shadow:-10px 0 40px rgba(0,0,0,0.3)}
 #sidebar.open{transform:translateX(0)}
-.sidebar-header{display:flex;align-items:center;padding:16px;border-bottom:1px solid var(--glass-border);gap:12px}
-.sidebar-avatar{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--accent));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:18px;overflow:hidden;flex-shrink:0}
+.sidebar-header{display:flex;align-items:center;padding:20px 16px;border-bottom:1px solid var(--glass-border);gap:14px;position:relative;overflow:hidden}
+.sidebar-header::before{content:'';position:absolute;top:-50px;right:-50px;width:150px;height:150px;background:radial-gradient(circle,var(--primary-glow),transparent 70%);opacity:0.3;pointer-events:none}
+.sidebar-avatar{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--accent));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:20px;overflow:hidden;flex-shrink:0;box-shadow:0 0 20px var(--primary-glow);border:2px solid rgba(255,255,255,0.1);position:relative;z-index:1}
 .sidebar-avatar img{width:100%;height:100%;object-fit:cover}
-.sidebar-user-info{flex:1;min-width:0}
-.sidebar-name{font-weight:700;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sidebar-user-info{flex:1;min-width:0;position:relative;z-index:1}
+.sidebar-name{font-weight:700;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text)}
 .sidebar-handle{font-size:12px;color:var(--text3)}
-.sidebar-uid{font-family:monospace;font-size:10px;color:var(--text3);background:var(--bg3);padding:2px 6px;border-radius:8px;margin-top:4px;display:inline-block}
+.sidebar-uid{font-family:monospace;font-size:10px;color:var(--text3);background:var(--bg3);padding:2px 8px;border-radius:8px;margin-top:4px;display:inline-block}
 .sidebar-body{flex:1;overflow-y:auto;padding:12px 0}
-.sidebar-section{margin-bottom:8px}
-.sidebar-section-title{font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;padding:8px 16px}
-.sidebar-item{display:flex;align-items:center;gap:12px;padding:12px 16px;font-size:14px;font-weight:600;color:var(--text2);cursor:pointer;transition:all .2s}
-.sidebar-item:hover{background:var(--bg3);color:var(--text)}
-.sidebar-item svg{width:20px;height:20px;color:var(--text3);flex-shrink:0}
+.sidebar-section{margin-bottom:6px;opacity:0;transform:translateX(20px);transition:all .3s ease}
+#sidebar.open .sidebar-section{opacity:1;transform:translateX(0)}
+#sidebar.open .sidebar-section:nth-child(1){transition-delay:0.05s}
+#sidebar.open .sidebar-section:nth-child(2){transition-delay:0.1s}
+#sidebar.open .sidebar-section:nth-child(3){transition-delay:0.15s}
+#sidebar.open .sidebar-section:nth-child(4){transition-delay:0.2s}
+.sidebar-section-title{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:1px;padding:10px 16px 6px}
+.sidebar-item{display:flex;align-items:center;gap:12px;padding:12px 16px;font-size:14px;font-weight:600;color:var(--text2);cursor:pointer;transition:all .2s ease;border-radius:0;margin:0 8px;border-left:3px solid transparent}
+.sidebar-item:hover{background:rgba(56,189,248,0.08);color:var(--text);border-left-color:var(--primary)}
+.sidebar-item svg{width:20px;height:20px;color:var(--text3);flex-shrink:0;transition:color .2s}
 .sidebar-item:hover svg{color:var(--primary)}
+.sidebar-item:active{transform:scale(0.98)}
 .sidebar-footer{padding:16px;border-top:1px solid var(--glass-border);font-size:11px;color:var(--text3);text-align:center;line-height:1.6}
 .sidebar-dev-card{background:var(--bg2);border:1px solid var(--glass-border);border-radius:var(--radius);padding:12px;margin:0 12px 12px}
-.sidebar-dev-card h4{font-family:'Outfit',sans-serif;font-size:13px;font-weight:800;margin-bottom:4px}
+.sidebar-dev-card h4{font-family:'Outfit',sans-serif;font-size:13px;font-weight:800;margin-bottom:4px;color:var(--text)}
 .sidebar-dev-card p{font-size:11px;color:var(--text2);line-height:1.5}
 .sidebar-dev-card a{color:var(--primary);font-weight:600}
 
@@ -131,13 +153,14 @@ ul,ol{list-style:none}
    BOTTOM NAV
    ═══════════════════════════════════════════ */
 #bottom-nav{position:fixed;bottom:0;left:0;right:0;height:var(--nav-h);z-index:100;padding-bottom:env(safe-area-inset-bottom,0);display:flex;align-items:center;justify-content:space-around;border-top:1px solid var(--glass-border);background:var(--surface);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
-.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;height:100%;transition:all .2s;position:relative;color:var(--text3)}
-.nav-item svg{width:22px;height:22px;transition:all .2s}
-.nav-item span{font-size:11px;font-weight:600}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;height:100%;transition:all .25s ease;position:relative;color:var(--text3)}
+.nav-item svg{width:22px;height:22px;transition:all .25s ease}
+.nav-item span{font-size:11px;font-weight:600;transition:all .25s ease}
 .nav-item.active{color:var(--primary)}
-.nav-item.active svg{transform:translateY(-2px);filter:drop-shadow(0 2px 4px var(--primary-glow))}
+.nav-item.active svg{transform:translateY(-2px);filter:drop-shadow(0 2px 6px var(--primary-glow))}
+.nav-item.active span{font-weight:700}
 .nav-item:active{opacity:.7}
-.nav-indicator{position:absolute;bottom:8px;width:20px;height:3px;border-radius:2px;background:var(--primary);transition:all .3s cubic-bezier(.4,0,.2,1);opacity:0}
+.nav-indicator{position:absolute;bottom:8px;width:24px;height:3px;border-radius:2px;background:linear-gradient(90deg,var(--primary),var(--accent));transition:all .3s cubic-bezier(.4,0,.2,1);opacity:0;box-shadow:0 0 8px var(--primary-glow)}
 .nav-item.active .nav-indicator{opacity:1}
 
 /* ═══════════════════════════════════════════
@@ -145,48 +168,56 @@ ul,ol{list-style:none}
    ═══════════════════════════════════════════ */
 #main-content{flex:1;margin-top:var(--header-h);margin-bottom:var(--nav-h);overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;contain:layout;scrollbar-width:none}
 #main-content::-webkit-scrollbar{width:0;height:0}
-.page{padding:16px;display:none;animation:fadeInUp .3s ease}
+.page{padding:16px;display:none;animation:fadeInUp .35s ease}
 .page.active{display:block}
 .container{width:100%;max-width:1200px;margin:0 auto;padding:0 16px}
 @media(min-width:768px){.container{padding:0 24px}}
 
 /* ═══════════════════════════════════════════
-   CARDS & COMPONENTS
+   CARDS & COMPONENTS - PRO LEVEL
    ═══════════════════════════════════════════ */
 .card{background:var(--card);border:1px solid var(--glass-border);border-radius:var(--radius);overflow:hidden;transition:all .3s cubic-bezier(.4,0,.2,1);contain:layout style paint}
 .card-hover:active{transform:scale(0.97)}
-@media(hover:hover){.card-hover:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(14,165,233,0.15)}}
+@media(hover:hover){.card-hover:hover{transform:translateY(-5px);box-shadow:0 16px 48px rgba(56,189,248,0.12)}}
 
 /* Score badge */
-.score-badge{position:absolute;top:8px;right:8px;background:linear-gradient(135deg,var(--warning),#fbbf24);color:#fff;font-size:11px;font-weight:800;padding:4px 10px;border-radius:10px;z-index:2;box-shadow:0 2px 8px rgba(245,158,11,0.3)}
+.score-badge{position:absolute;top:8px;right:8px;background:linear-gradient(135deg,var(--warning),#fbbf24);color:#0f172a;font-size:11px;font-weight:800;padding:4px 10px;border-radius:10px;z-index:2;box-shadow:0 2px 12px rgba(251,191,36,0.35)}
 
 /* Format badge */
-.format-badge{position:absolute;bottom:8px;left:8px;background:rgba(15,23,42,0.7);backdrop-filter:blur(8px);color:#fff;font-size:10px;font-weight:700;padding:3px 8px;border-radius:6px;z-index:2}
+.format-badge{position:absolute;bottom:8px;left:8px;background:rgba(15,23,42,0.8);backdrop-filter:blur(8px);color:#f1f5f9;font-size:10px;font-weight:700;padding:3px 10px;border-radius:6px;z-index:2;border:1px solid rgba(255,255,255,0.08)}
 
 /* Status badge */
-.status-badge{font-size:10px;font-weight:700;padding:3px 8px;border-radius:6px;text-transform:uppercase;letter-spacing:.3px}
-.status-RELEASING{background:rgba(34,197,94,0.12);color:#16a34a}
-.status-FINISHED{background:rgba(59,130,246,0.12);color:#2563eb}
-.status-NOT_YET_RELEASED{background:rgba(139,92,246,0.12);color:#7c3aed}
-.status-CANCELLED{background:rgba(239,68,68,0.12);color:#dc2626}
-.status-HIATUS{background:rgba(245,158,11,0.12);color:#d97706}
+.status-badge{font-size:10px;font-weight:700;padding:3px 10px;border-radius:6px;text-transform:uppercase;letter-spacing:.3px}
+.status-RELEASING{background:rgba(74,222,128,0.12);color:#4ade80}
+.status-FINISHED{background:rgba(56,189,248,0.12);color:#38bdf8}
+.status-NOT_YET_RELEASED{background:rgba(167,139,250,0.12);color:#a78bfa}
+.status-CANCELLED{background:rgba(248,113,113,0.12);color:#f87171}
+.status-HIATUS{background:rgba(251,191,36,0.12);color:#fbbf24}
 
-/* Anime card (horizontal scroll) */
-.anime-card{width:150px;flex-shrink:0;cursor:pointer}
-.anime-card .poster-wrap{position:relative;border-radius:var(--radius);overflow:hidden;aspect-ratio:2/3;background:var(--bg3);box-shadow:0 4px 16px rgba(0,0,0,0.08)}
-.anime-card .poster-wrap img{width:100%;height:100%;object-fit:cover;transition:transform .3s ease}
-.anime-card:hover .poster-wrap img{transform:scale(1.05)}
+/* PRO Anime card (horizontal scroll) */
+.anime-card{width:150px;flex-shrink:0;cursor:pointer;transition:all .3s ease}
+.anime-card .poster-wrap{position:relative;border-radius:var(--radius);overflow:hidden;aspect-ratio:2/3;background:linear-gradient(135deg,var(--bg3),#334155);box-shadow:0 6px 20px rgba(0,0,0,0.3);transition:all .3s ease}
+.anime-card .poster-wrap::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(15,23,42,0.6) 0%,transparent 50%);opacity:0;transition:opacity .3s ease;pointer-events:none}
+.anime-card:hover .poster-wrap{transform:translateY(-4px);box-shadow:0 12px 32px rgba(56,189,248,0.15)}
+.anime-card:hover .poster-wrap::after{opacity:1}
+.anime-card .poster-wrap img{width:100%;height:100%;object-fit:cover;transition:transform .4s ease}
+.anime-card:hover .poster-wrap img{transform:scale(1.08)}
 .anime-card .card-title{margin-top:10px;font-size:13px;font-weight:700;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;color:var(--text);font-family:'Outfit',sans-serif}
 .anime-card .card-meta{font-size:11px;color:var(--text3);margin-top:4px;font-weight:500}
+.anime-card .card-score{display:flex;align-items:center;gap:3px;margin-top:4px;font-size:11px;color:var(--warning);font-weight:700}
 @media(min-width:480px){.anime-card{width:170px}}
 
-/* Anime card (grid) */
-.anime-card-grid{cursor:pointer}
-.anime-card-grid .poster-wrap{position:relative;border-radius:var(--radius);overflow:hidden;aspect-ratio:2/3;background:var(--bg3);box-shadow:0 4px 16px rgba(0,0,0,0.08)}
-.anime-card-grid .poster-wrap img{width:100%;height:100%;object-fit:cover;transition:transform .3s ease}
-.anime-card-grid:hover .poster-wrap img{transform:scale(1.05)}
+/* PRO Anime card (grid) */
+.anime-card-grid{cursor:pointer;transition:all .3s ease}
+.anime-card-grid .poster-wrap{position:relative;border-radius:var(--radius);overflow:hidden;aspect-ratio:2/3;background:linear-gradient(135deg,var(--bg3),#334155);box-shadow:0 6px 20px rgba(0,0,0,0.3);transition:all .3s ease}
+.anime-card-grid .poster-wrap::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(15,23,42,0.6) 0%,transparent 50%);opacity:0;transition:opacity .3s ease;pointer-events:none}
+.anime-card-grid:hover .poster-wrap{transform:translateY(-5px);box-shadow:0 14px 40px rgba(56,189,248,0.15)}
+.anime-card-grid:hover .poster-wrap::after{opacity:1}
+.anime-card-grid .poster-wrap img{width:100%;height:100%;object-fit:cover;transition:transform .4s ease}
+.anime-card-grid:hover .poster-wrap img{transform:scale(1.08)}
 .anime-card-grid .card-title{margin-top:10px;font-size:13px;font-weight:700;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;color:var(--text);font-family:'Outfit',sans-serif}
 .anime-card-grid .card-meta{font-size:11px;color:var(--text3);margin-top:4px;font-weight:500}
+.anime-card-grid .card-score{display:flex;align-items:center;gap:3px;margin-top:4px;font-size:11px;color:var(--warning);font-weight:700}
 
 /* Horizontal scroll section */
 .h-scroll{display:flex;gap:14px;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;padding-bottom:12px;margin:0 -16px;padding-left:16px;padding-right:16px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
@@ -195,12 +226,13 @@ ul,ol{list-style:none}
 
 /* Section header */
 .section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
-.section-header h2{font-family:'Outfit',sans-serif;font-weight:800;font-size:20px;letter-spacing:-0.3px}
-.section-header .view-all{font-size:13px;font-weight:600;color:var(--primary);display:flex;align-items:center;gap:4px}
+.section-header h2{font-family:'Outfit',sans-serif;font-weight:800;font-size:20px;letter-spacing:-0.3px;color:var(--text)}
+.section-header .view-all{font-size:13px;font-weight:600;color:var(--primary);display:flex;align-items:center;gap:4px;transition:all .2s}
+.section-header .view-all:active{transform:scale(0.95)}
 
 /* Chip */
 .chip{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:24px;font-size:13px;font-weight:600;white-space:nowrap;transition:all .2s;border:1px solid var(--glass-border);background:var(--bg2);color:var(--text2);cursor:pointer;user-select:none;backdrop-filter:blur(8px)}
-.chip.active{background:linear-gradient(135deg,var(--primary),#06b6d4);color:#fff;border-color:transparent;box-shadow:0 4px 16px var(--primary-glow)}
+.chip.active{background:linear-gradient(135deg,var(--primary),#818cf8);color:#fff;border-color:transparent;box-shadow:0 4px 16px var(--primary-glow)}
 .chip:active{transform:scale(0.95)}
 
 /* Chips scroll */
@@ -208,15 +240,15 @@ ul,ol{list-style:none}
 .chips-scroll::-webkit-scrollbar{display:none}
 
 /* Pills */
-.pill{display:inline-flex;align-items:center;gap:4px;padding:5px 12px;border-radius:12px;font-size:12px;font-weight:600;background:var(--bg3);color:var(--text2)}
+.pill{display:inline-flex;align-items:center;gap:4px;padding:5px 12px;border-radius:12px;font-size:12px;font-weight:600;background:var(--bg3);color:var(--text2);border:1px solid var(--glass-border)}
 
 /* Buttons */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 20px;border-radius:var(--radius-sm);font-size:14px;font-weight:600;transition:all .2s;white-space:nowrap;border:1px solid transparent}
-.btn-primary{background:linear-gradient(135deg,var(--primary),#06b6d4);color:#fff;box-shadow:0 4px 16px var(--primary-glow)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 20px;border-radius:var(--radius-sm);font-size:14px;font-weight:600;transition:all .2s;white-space:nowrap;border:1px solid transparent;cursor:pointer}
+.btn-primary{background:linear-gradient(135deg,var(--primary),#818cf8);color:#fff;box-shadow:0 4px 16px var(--primary-glow)}
 .btn-primary:active{transform:scale(0.97);opacity:.9}
 .btn-accent{background:var(--accent);color:#fff}
 .btn-danger{background:var(--danger);color:#fff}
-.btn-ghost{background:var(--bg3);color:var(--text)}
+.btn-ghost{background:var(--bg3);color:var(--text);border:1px solid var(--glass-border)}
 .btn-outline{border:1px solid var(--glass-border);color:var(--text);background:var(--bg2)}
 .btn-sm{padding:6px 14px;font-size:12px}
 .btn-lg{padding:14px 28px;font-size:15px}
@@ -230,59 +262,59 @@ ul,ol{list-style:none}
    ═══════════════════════════════════════════ */
 .search-bar{display:flex;align-items:center;gap:10px;background:var(--bg2);border:1px solid var(--glass-border);border-radius:var(--radius-lg);padding:0 16px;height:48px;transition:all .2s;position:sticky;top:0;z-index:10;margin-bottom:12px;backdrop-filter:blur(12px)}
 .search-bar:focus-within{border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-glow)}
-.search-bar input{flex:1;height:100%;font-size:15px;background:transparent}
+.search-bar input{flex:1;height:100%;font-size:15px;background:transparent;color:var(--text)}
 .search-bar .search-icon{color:var(--text3);flex-shrink:0}
 
 /* Input fields */
 .input-wrap{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
 .input-wrap label{font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.6px}
-.input-field{width:100%;height:44px;padding:0 14px;background:var(--bg2);border:1px solid var(--glass-border);border-radius:var(--radius-sm);font-size:14px;transition:all .2s}
+.input-field{width:100%;height:44px;padding:0 14px;background:var(--bg2);border:1px solid var(--glass-border);border-radius:var(--radius-sm);font-size:14px;transition:all .2s;color:var(--text)}
 .input-field:focus{border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-glow)}
 textarea.input-field{height:auto;padding:12px 14px;min-height:100px}
 
 /* Admin search dropdown */
-.admin-search-results{max-height:200px;overflow-y:auto;background:var(--bg2);border:1px solid var(--glass-border);border-radius:var(--radius-sm);margin-top:4px;box-shadow:0 8px 24px rgba(0,0,0,0.1)}
-.admin-search-item{padding:10px 14px;cursor:pointer;font-size:13px;font-weight:600;border-bottom:1px solid var(--glass-border);transition:background .2s;display:flex;align-items:center;gap:10px}
+.admin-search-results{max-height:200px;overflow-y:auto;background:var(--bg2);border:1px solid var(--glass-border);border-radius:var(--radius-sm);margin-top:4px;box-shadow:0 8px 24px rgba(0,0,0,0.3);z-index:20;position:relative}
+.admin-search-item{padding:10px 14px;cursor:pointer;font-size:13px;font-weight:600;border-bottom:1px solid var(--glass-border);transition:background .2s;display:flex;align-items:center;gap:10px;color:var(--text)}
 .admin-search-item:hover{background:var(--bg3)}
 .admin-search-item img{width:32px;height:48px;object-fit:cover;border-radius:6px}
 .admin-search-item .asi-info{flex:1;min-width:0}
-.admin-search-item .asi-title{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.admin-search-item .asi-title{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text)}
 .admin-search-item .asi-meta{font-size:11px;color:var(--text3);font-weight:500}
 
 /* ═══════════════════════════════════════════
-   ANIME DETAIL PAGE
+   ANIME DETAIL PAGE - PRO
    ═══════════════════════════════════════════ */
-#anime-detail{position:fixed;inset:0;z-index:200;background:var(--bg);transform:translateX(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);overflow-y:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+#anime-detail{position:fixed;inset:0;z-index:200;background:var(--bg);transform:translateX(100%);transition:transform .4s cubic-bezier(.4,0,.2,1);overflow-y:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
 #anime-detail::-webkit-scrollbar{width:0}
 #anime-detail.open{transform:translateX(0)}
-.detail-banner{position:relative;height:240px;overflow:hidden}
-.detail-banner .banner-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:blur(10px) brightness(0.5);transform:scale(1.1)}
+.detail-banner{position:relative;height:260px;overflow:hidden}
+.detail-banner .banner-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:blur(8px) brightness(0.35);transform:scale(1.1);transition:all .5s ease}
 .detail-banner .banner-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 0%,var(--bg) 100%)}
-.detail-header{position:relative;display:flex;gap:16px;padding:0 16px;margin-top:-70px}
-.detail-poster{width:130px;height:195px;border-radius:var(--radius);overflow:hidden;flex-shrink:0;box-shadow:0 12px 40px rgba(0,0,0,0.25);border:3px solid var(--bg);transition:transform .3s ease}
-.detail-poster:hover{transform:perspective(1000px) rotateY(-5deg) rotateX(5deg) scale(1.02)}
+.detail-header{position:relative;display:flex;gap:16px;padding:0 16px;margin-top:-80px}
+.detail-poster{width:130px;height:195px;border-radius:var(--radius);overflow:hidden;flex-shrink:0;box-shadow:0 16px 48px rgba(0,0,0,0.5);border:2px solid rgba(255,255,255,0.08);transition:all .3s ease;position:relative;z-index:2}
+.detail-poster:hover{transform:perspective(1000px) rotateY(-5deg) rotateX(5deg) scale(1.02);box-shadow:0 20px 56px rgba(56,189,248,0.2)}
 .detail-poster img{width:100%;height:100%;object-fit:cover}
-.detail-title-wrap{flex:1;padding-top:70px}
-.detail-title{font-family:'Outfit',sans-serif;font-weight:800;font-size:22px;line-height:1.2;margin-bottom:8px}
+.detail-title-wrap{flex:1;padding-top:80px}
+.detail-title{font-family:'Outfit',sans-serif;font-weight:800;font-size:22px;line-height:1.2;margin-bottom:8px;color:var(--text)}
 .detail-badges{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
 .detail-actions{display:flex;gap:10px;padding:16px}
 .detail-actions .btn-watch{flex:1}
 .detail-actions .btn-heart{width:48px;height:48px;padding:0;display:flex;align-items:center;justify-content:center;border-radius:var(--radius-sm);background:var(--bg2);border:1px solid var(--glass-border);color:var(--text2);transition:all .2s}
-.detail-actions .btn-heart.active{color:var(--danger);background:rgba(239,68,68,0.08);border-color:rgba(239,68,68,0.2)}
+.detail-actions .btn-heart.active{color:var(--danger);background:rgba(248,113,113,0.1);border-color:rgba(248,113,113,0.2)}
 .detail-actions .btn-heart:active{transform:scale(0.9)}
 
 /* Stats bar */
 .stats-bar{display:flex;gap:16px;padding:0 16px 16px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
 .stats-bar::-webkit-scrollbar{display:none}
-.stat-item{display:flex;flex-direction:column;align-items:center;gap:2px;min-width:60px}
+.stat-item{display:flex;flex-direction:column;align-items:center;gap:2px;min-width:60px;padding:8px 12px;background:var(--bg2);border-radius:var(--radius-sm);border:1px solid var(--glass-border)}
 .stat-value{font-family:'Outfit',sans-serif;font-weight:800;font-size:16px;color:var(--text)}
 .stat-label{font-size:11px;color:var(--text3);font-weight:500}
 
 /* Tabs */
 .tabs{display:flex;border-bottom:1px solid var(--glass-border);position:sticky;top:0;background:var(--bg);z-index:5;backdrop-filter:blur(12px)}
-.tab{flex:1;padding:14px 8px;text-align:center;font-size:13px;font-weight:600;color:var(--text3);position:relative;transition:color .2s;cursor:pointer;white-space:nowrap}
+.tab{flex:1;padding:14px 8px;text-align:center;font-size:12px;font-weight:600;color:var(--text3);position:relative;transition:color .2s;cursor:pointer;white-space:nowrap}
 .tab.active{color:var(--primary)}
-.tab-indicator{position:absolute;bottom:0;height:3px;background:linear-gradient(90deg,var(--primary),var(--accent));border-radius:3px 3px 0 0;transition:all .3s cubic-bezier(.4,0,.2,1)}
+.tab-indicator{position:absolute;bottom:0;height:3px;background:linear-gradient(90deg,var(--primary),var(--accent));border-radius:3px 3px 0 0;transition:all .3s cubic-bezier(.4,0,.2,1);box-shadow:0 0 8px var(--primary-glow)}
 
 /* Description */
 .description{font-size:14px;line-height:1.65;color:var(--text2)}
@@ -290,72 +322,90 @@ textarea.input-field{height:auto;padding:12px 14px;min-height:100px}
 .read-more{font-size:13px;font-weight:600;color:var(--primary);cursor:pointer;margin-top:4px;display:inline-block}
 
 /* ═══════════════════════════════════════════
-   REVIEWS
+   COMMENTS SECTION (per anime) - RICH FORMAT
    ═══════════════════════════════════════════ */
-.composer-card{background:var(--card);border:1px solid var(--glass-border);border-radius:var(--radius);padding:16px;margin-bottom:16px}
-.composer-header{display:flex;align-items:center;gap:10px;margin-bottom:12px}
-.composer-avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--accent));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:15px;flex-shrink:0;overflow:hidden}
-.composer-avatar img{width:100%;height:100%;object-fit:cover}
-.composer-info{flex:1}
-.composer-name{font-weight:700;font-size:14px}
-.composer-handle{font-size:12px;color:var(--text3)}
+.comments-section{padding:16px 0}
+.comments-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.comments-header h3{font-family:'Outfit',sans-serif;font-weight:800;font-size:16px}
+.comments-count{font-size:12px;color:var(--text3);background:var(--bg3);padding:3px 10px;border-radius:10px;font-weight:600}
 
-/* Star rating */
-.star-rating{display:flex;gap:4px;margin:8px 0}
-.star-rating svg{width:24px;height:24px;cursor:pointer;transition:transform .15s}
-.star-rating svg:active{transform:scale(0.85)}
-.star-filled{color:var(--warning);fill:var(--warning);stroke:var(--warning)}
-.star-empty{color:var(--text3);stroke:var(--text3)}
+/* Comment composer */
+.comment-composer{background:var(--card);border:1px solid var(--glass-border);border-radius:var(--radius);padding:14px;margin-bottom:16px;transition:all .2s}
+.comment-composer:focus-within{border-color:var(--primary);box-shadow:0 0 0 2px var(--primary-glow)}
+.comment-composer-header{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.comment-composer-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--accent));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:14px;flex-shrink:0;overflow:hidden}
+.comment-composer-avatar img{width:100%;height:100%;object-fit:cover}
+.comment-composer-name{font-weight:700;font-size:13px;color:var(--text)}
+.comment-composer-input{width:100%;min-height:60px;padding:10px 12px;background:var(--bg3);border:1px solid var(--glass-border);border-radius:var(--radius-sm);font-size:14px;color:var(--text);resize:vertical;margin-bottom:8px;transition:all .2s}
+.comment-composer-input:focus{border-color:var(--primary);box-shadow:0 0 0 2px var(--primary-glow)}
+.comment-toolbar{display:flex;align-items:center;gap:6px;margin-bottom:8px;flex-wrap:wrap}
+.comment-tool-btn{width:30px;height:30px;display:flex;align-items:center;justify-content:center;border-radius:6px;background:var(--bg3);border:1px solid var(--glass-border);color:var(--text2);font-size:13px;font-weight:700;cursor:pointer;transition:all .2s}
+.comment-tool-btn:hover{background:var(--primary);color:#fff;border-color:var(--primary)}
+.comment-tool-btn:active{transform:scale(0.92)}
+.comment-submit{display:flex;justify-content:flex-end}
+.comment-submit-btn{padding:8px 18px;background:linear-gradient(135deg,var(--primary),#818cf8);color:#fff;font-size:13px;font-weight:700;border-radius:var(--radius-sm);border:none;cursor:pointer;transition:all .2s}
+.comment-submit-btn:active{transform:scale(0.95)}
 
-/* Review card */
-.review-card{background:var(--card);border:1px solid var(--glass-border);border-radius:var(--radius);padding:16px;margin-bottom:12px}
-.review-header{display:flex;align-items:center;gap:10px;margin-bottom:10px}
-.review-avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--accent));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:15px;flex-shrink:0;overflow:hidden}
-.review-avatar img{width:100%;height:100%;object-fit:cover}
-.review-meta{flex:1}
-.review-author{font-weight:700;font-size:14px;display:flex;align-items:center;gap:6px}
-.review-anime{font-size:13px;color:var(--primary);font-weight:600;margin-top:2px;cursor:pointer}
-.review-time{font-size:12px;color:var(--text3)}
-.review-text{font-size:14px;line-height:1.6;color:var(--text);margin:10px 0;white-space:pre-wrap}
-.review-actions-bar{display:flex;align-items:center;gap:16px;padding-top:10px;border-top:1px solid var(--glass-border)}
-.review-action{display:flex;align-items:center;gap:5px;font-size:13px;color:var(--text3);font-weight:600;cursor:pointer;padding:4px 8px;border-radius:8px;transition:all .2s}
-.review-action:hover{background:var(--bg3)}
-.review-action svg{width:18px;height:18px}
-.review-action.liked{color:var(--danger)}
-.review-action.liked svg{fill:var(--danger);stroke:var(--danger)}
+/* Comment card */
+.comment-card{background:var(--card);border:1px solid var(--glass-border);border-radius:var(--radius);padding:14px;margin-bottom:12px;transition:all .2s}
+.comment-card:hover{border-color:rgba(56,189,248,0.2)}
+.comment-card-header{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.comment-avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--accent));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:14px;flex-shrink:0;overflow:hidden}
+.comment-avatar img{width:100%;height:100%;object-fit:cover}
+.comment-meta{flex:1;min-width:0}
+.comment-author{font-weight:700;font-size:14px;display:flex;align-items:center;gap:6px;color:var(--text)}
+.comment-author .admin-tag{font-size:9px;background:linear-gradient(135deg,var(--warning),#f59e0b);color:#0f172a;padding:1px 6px;border-radius:4px;font-weight:800;text-transform:uppercase;letter-spacing:0.5px}
+.comment-time{font-size:11px;color:var(--text3);margin-top:1px}
+.comment-text{font-size:14px;line-height:1.6;color:var(--text);margin:8px 0;white-space:pre-wrap;word-break:break-word}
+.comment-text b{font-weight:700;color:var(--primary)}
+.comment-text i{font-style:italic;color:var(--text2)}
+.comment-text a{color:var(--primary);text-decoration:underline}
+.comment-text .mention{color:var(--accent);font-weight:600}
+.comment-actions-bar{display:flex;align-items:center;gap:16px;padding-top:10px;border-top:1px solid var(--glass-border)}
+.comment-action{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--text3);font-weight:600;cursor:pointer;padding:4px 8px;border-radius:8px;transition:all .2s;border:none;background:none}
+.comment-action:hover{background:var(--bg3);color:var(--text)}
+.comment-action svg{width:16px;height:16px}
+.comment-action.liked{color:var(--danger)}
+.comment-action.liked svg{fill:var(--danger);stroke:var(--danger)}
 
-/* Reply section */
-.replies{margin-top:12px;padding-left:16px;border-left:2px solid var(--glass-border)}
-.reply-item{display:flex;gap:10px;margin-bottom:10px}
-.reply-avatar{width:32px;height:32px;border-radius:50%;background:var(--bg3);display:flex;align-items:center;justify-content:center;color:var(--text2);font-weight:700;font-size:12px;flex-shrink:0;overflow:hidden}
-.reply-avatar img{width:100%;height:100%;object-fit:cover}
-.reply-content{flex:1}
-.reply-author{font-weight:700;font-size:13px}
-.reply-text{font-size:13px;color:var(--text2);margin-top:2px;line-height:1.5}
-.reply-time{font-size:11px;color:var(--text3);margin-top:2px}
-.reply-input-wrap{display:flex;gap:8px;margin-top:10px;align-items:center}
-.reply-input{flex:1;height:38px;padding:0 14px;background:var(--bg3);border-radius:19px;font-size:13px;border:1px solid var(--glass-border)}
-.reply-send{width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:linear-gradient(135deg,var(--primary),#06b6d4);color:#fff;flex-shrink:0;transition:all .2s}
-.reply-send:active{transform:scale(0.9)}
+/* Admin actions on comments */
+.admin-comment-actions{display:flex;gap:6px;margin-left:auto}
+.admin-comment-actions .btn-icon{width:26px;height:26px;background:transparent;border:1px solid var(--glass-border);color:var(--text3);border-radius:6px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s}
+.admin-comment-actions .btn-icon:hover{background:var(--danger);color:#fff;border-color:var(--danger)}
 
-/* Admin actions on reviews */
-.admin-review-actions{display:flex;gap:6px;margin-left:auto}
-.admin-review-actions .btn-icon{width:28px;height:28px;background:transparent;border:1px solid var(--glass-border);color:var(--text3)}
-.admin-review-actions .btn-icon:hover{background:var(--danger);color:#fff;border-color:var(--danger)}
+/* Comment reply section */
+.comment-replies{margin-top:12px;padding-left:16px;border-left:2px solid var(--glass-border)}
+.comment-reply-item{display:flex;gap:10px;margin-bottom:10px;padding:10px;background:var(--bg3);border-radius:var(--radius-sm)}
+.comment-reply-avatar{width:30px;height:30px;border-radius:50%;background:var(--bg);display:flex;align-items:center;justify-content:center;color:var(--text2);font-weight:700;font-size:11px;flex-shrink:0;overflow:hidden}
+.comment-reply-avatar img{width:100%;height:100%;object-fit:cover}
+.comment-reply-content{flex:1;min-width:0}
+.comment-reply-author{font-weight:700;font-size:13px;color:var(--text)}
+.comment-reply-text{font-size:13px;color:var(--text2);margin-top:2px;line-height:1.5}
+.comment-reply-time{font-size:10px;color:var(--text3);margin-top:2px}
+.comment-reply-input-wrap{display:flex;gap:8px;margin-top:10px;align-items:center}
+.comment-reply-input{flex:1;height:36px;padding:0 14px;background:var(--bg3);border-radius:18px;font-size:13px;border:1px solid var(--glass-border);color:var(--text)}
+.comment-reply-input:focus{border-color:var(--primary)}
+.comment-reply-send{width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:linear-gradient(135deg,var(--primary),#818cf8);color:#fff;flex-shrink:0;transition:all .2s;border:none;cursor:pointer}
+.comment-reply-send:active{transform:scale(0.9)}
 
 /* ═══════════════════════════════════════════
-   PROFILE
+   PROFILE - PRO LEVEL
    ═══════════════════════════════════════════ */
-.profile-hero{display:flex;flex-direction:column;align-items:center;padding:28px 16px;text-align:center;position:relative}
-.profile-hero::before{content:'';position:absolute;top:-56px;left:0;right:0;height:200px;background:linear-gradient(180deg,rgba(14,165,233,0.15),transparent);pointer-events:none}
-.profile-avatar{width:96px;height:96px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--accent));display:flex;align-items:center;justify-content:center;color:#fff;font-family:'Outfit',sans-serif;font-weight:800;font-size:36px;box-shadow:0 0 40px var(--primary-glow);overflow:hidden;flex-shrink:0;position:relative;z-index:1;border:3px solid rgba(255,255,255,0.5)}
+.profile-hero{display:flex;flex-direction:column;align-items:center;padding:32px 16px;text-align:center;position:relative;overflow:hidden}
+.profile-hero::before{content:'';position:absolute;top:-60px;left:0;right:0;height:220px;background:linear-gradient(180deg,rgba(56,189,248,0.12),transparent);pointer-events:none}
+.profile-hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:80px;background:linear-gradient(to top,var(--bg),transparent);pointer-events:none}
+.profile-avatar-wrap{position:relative;z-index:1}
+.profile-avatar{width:100px;height:100px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--accent));display:flex;align-items:center;justify-content:center;color:#fff;font-family:'Outfit',sans-serif;font-weight:800;font-size:38px;box-shadow:0 0 50px var(--primary-glow);overflow:hidden;flex-shrink:0;border:3px solid rgba(255,255,255,0.1);position:relative}
 .profile-avatar img{width:100%;height:100%;object-fit:cover}
-.profile-name{font-family:'Outfit',sans-serif;font-weight:800;font-size:22px;margin-top:14px;position:relative;z-index:1}
+.profile-status-dot{position:absolute;bottom:4px;right:4px;width:16px;height:16px;background:var(--success);border-radius:50%;border:3px solid var(--bg);box-shadow:0 0 8px var(--success)}
+.profile-name{font-family:'Outfit',sans-serif;font-weight:800;font-size:22px;margin-top:14px;position:relative;z-index:1;color:var(--text)}
 .profile-handle{font-size:13px;color:var(--text3);margin-top:2px;position:relative;z-index:1}
-.profile-uid{font-family:monospace;font-size:11px;color:var(--text3);background:var(--bg3);padding:3px 10px;border-radius:10px;margin-top:6px;position:relative;z-index:1}
+.profile-uid{font-family:monospace;font-size:11px;color:var(--text3);background:var(--bg3);padding:3px 10px;border-radius:10px;margin-top:6px;position:relative;z-index:1;display:inline-block}
 .profile-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:0 16px 16px}
-.stat-card{background:var(--card);border:1px solid var(--glass-border);border-radius:var(--radius);padding:16px;text-align:center;transition:transform .2s}
+.stat-card{background:var(--card);border:1px solid var(--glass-border);border-radius:var(--radius);padding:16px;text-align:center;transition:all .2s;position:relative;overflow:hidden}
 .stat-card:active{transform:scale(0.97)}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--primary),var(--accent));opacity:0;transition:opacity .2s}
+.stat-card:hover::before{opacity:1}
 .stat-card .num{font-family:'Outfit',sans-serif;font-weight:800;font-size:22px;background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 .stat-card .label{font-size:12px;color:var(--text3);margin-top:4px;font-weight:500}
 
@@ -364,22 +414,42 @@ textarea.input-field{height:auto;padding:12px 14px;min-height:100px}
 .watchlist-card{background:var(--card);border:1px solid var(--glass-border);border-radius:var(--radius);overflow:hidden;cursor:pointer;transition:all .2s}
 .watchlist-card:active{transform:scale(0.97)}
 .watchlist-card .wl-poster{aspect-ratio:2/3;overflow:hidden;position:relative}
-.watchlist-card .wl-poster img{width:100%;height:100%;object-fit:cover}
+.watchlist-card .wl-poster img{width:100%;height:100%;object-fit:cover;transition:transform .3s ease}
+.watchlist-card:hover .wl-poster img{transform:scale(1.05)}
 .watchlist-card .wl-info{padding:12px}
-.watchlist-card .wl-title{font-size:13px;font-weight:700;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:6px;font-family:'Outfit',sans-serif}
+.watchlist-card .wl-title{font-size:13px;font-weight:700;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:6px;font-family:'Outfit',sans-serif;color:var(--text)}
 .watchlist-card .wl-status{font-size:11px;font-weight:700;padding:3px 10px;border-radius:6px;display:inline-block;margin-bottom:6px}
-.status-watching{background:rgba(34,197,94,0.12);color:#16a34a}
-.status-completed{background:rgba(59,130,246,0.12);color:#2563eb}
-.status-onhold{background:rgba(245,158,11,0.12);color:#d97706}
-.status-dropped{background:rgba(239,68,68,0.12);color:#dc2626}
-.status-plantowatch{background:rgba(139,92,246,0.12);color:#7c3aed}
+.status-watching{background:rgba(74,222,128,0.12);color:#4ade80}
+.status-completed{background:rgba(56,189,248,0.12);color:#38bdf8}
+.status-onhold{background:rgba(251,191,36,0.12);color:#fbbf24}
+.status-dropped{background:rgba(248,113,113,0.12);color:#f87171}
+.status-plantowatch{background:rgba(167,139,250,0.12);color:#a78bfa}
 .wl-progress{height:5px;background:var(--bg3);border-radius:3px;margin-top:8px;overflow:hidden}
 .wl-progress-bar{height:100%;background:linear-gradient(90deg,var(--primary),var(--accent));border-radius:3px;transition:width .3s}
 
 /* ═══════════════════════════════════════════
+   SCHEDULE PAGE
+   ═══════════════════════════════════════════ */
+.schedule-note{background:linear-gradient(135deg,rgba(56,189,248,0.1),rgba(167,139,250,0.1));border:1px solid var(--glass-border);border-radius:var(--radius);padding:12px 14px;margin-bottom:16px;display:flex;align-items:flex-start;gap:10px;font-size:12px;color:var(--text2);line-height:1.5}
+.schedule-note svg{flex-shrink:0;margin-top:1px;color:var(--primary)}
+.schedule-grid{display:flex;flex-direction:column;gap:10px}
+.schedule-item{display:flex;gap:12px;background:var(--card);border:1px solid var(--glass-border);border-radius:var(--radius);padding:12px;transition:all .2s;cursor:pointer;position:relative;overflow:hidden}
+.schedule-item:active{transform:scale(0.98)}
+.schedule-item::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(180deg,var(--primary),var(--accent));opacity:0;transition:opacity .2s}
+.schedule-item:hover::before{opacity:1}
+.schedule-item:hover{border-color:rgba(56,189,248,0.2)}
+.schedule-poster{width:70px;height:100px;border-radius:var(--radius-sm);overflow:hidden;flex-shrink:0;background:var(--bg3)}
+.schedule-poster img{width:100%;height:100%;object-fit:cover}
+.schedule-info{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center}
+.schedule-title{font-size:14px;font-weight:700;color:var(--text);font-family:'Outfit',sans-serif;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:4px}
+.schedule-meta{font-size:12px;color:var(--text3);margin-bottom:2px}
+.schedule-time{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:700;color:var(--primary);background:rgba(56,189,248,0.1);padding:3px 10px;border-radius:8px;margin-top:4px;width:fit-content}
+.schedule-episode{font-size:11px;color:var(--text3);margin-top:2px}
+
+/* ═══════════════════════════════════════════
    ADMIN PANEL
    ═══════════════════════════════════════════ */
-#admin-panel{position:fixed;inset:0;z-index:300;background:var(--bg);transform:translateX(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);overflow-y:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+#admin-panel{position:fixed;inset:0;z-index:300;background:var(--bg);transform:translateX(100%);transition:transform .4s cubic-bezier(.4,0,.2,1);overflow-y:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
 #admin-panel::-webkit-scrollbar{width:0}
 #admin-panel.open{transform:translateX(0)}
 .admin-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:16px}
@@ -389,7 +459,7 @@ textarea.input-field{height:auto;padding:12px 14px;min-height:100px}
 .admin-card .admin-label{font-size:13px;font-weight:700;color:var(--text)}
 
 /* Admin tables */
-.admin-table{width:100%;border-collapse:collapse;font-size:13px}
+.admin-table{width:100%;border-collapse:collapse;font-size:13px;color:var(--text)}
 .admin-table th{text-align:left;padding:10px 12px;background:var(--bg3);font-weight:700;color:var(--text2);font-size:11px;text-transform:uppercase;letter-spacing:.4px;position:sticky;top:0}
 .admin-table td{padding:10px 12px;border-bottom:1px solid var(--glass-border);vertical-align:middle}
 .admin-table tr:last-child td{border-bottom:none}
@@ -398,15 +468,15 @@ textarea.input-field{height:auto;padding:12px 14px;min-height:100px}
 /* ═══════════════════════════════════════════
    MODALS
    ═══════════════════════════════════════════ */
-.modal-overlay{position:fixed;inset:0;z-index:400;background:rgba(15,23,42,0.4);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;visibility:hidden;transition:all .25s ease}
+.modal-overlay{position:fixed;inset:0;z-index:400;background:rgba(0,0,0,0.5);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;visibility:hidden;transition:all .3s ease}
 .modal-overlay.open{opacity:1;visibility:visible}
-.modal-content{background:var(--card);border-radius:var(--radius-lg);width:100%;max-width:420px;max-height:85vh;overflow-y:auto;transform:scale(0.92);transition:transform .25s cubic-bezier(.4,0,.2,1);box-shadow:0 20px 60px rgba(0,0,0,0.15);border:1px solid var(--glass-border)}
+.modal-content{background:var(--card);border-radius:var(--radius-lg);width:100%;max-width:420px;max-height:85vh;overflow-y:auto;transform:scale(0.9);transition:transform .3s cubic-bezier(.4,0,.2,1);box-shadow:0 24px 64px rgba(0,0,0,0.4);border:1px solid var(--glass-border)}
 .modal-overlay.open .modal-content{transform:scale(1)}
 .modal-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--glass-border)}
-.modal-header h3{font-family:'Outfit',sans-serif;font-weight:800;font-size:18px}
-.modal-close{width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:50%;transition:background .2s;color:var(--text2)}
+.modal-header h3{font-family:'Outfit',sans-serif;font-weight:800;font-size:18px;color:var(--text)}
+.modal-close{width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:50%;transition:background .2s;color:var(--text2);cursor:pointer}
 .modal-close:active{background:var(--bg3)}
-.modal-body{padding:20px}
+.modal-body{padding:20px;color:var(--text);line-height:1.6}
 .modal-footer{display:flex;gap:10px;padding:16px 20px;border-top:1px solid var(--glass-border)}
 .modal-footer .btn{flex:1}
 
@@ -414,9 +484,9 @@ textarea.input-field{height:auto;padding:12px 14px;min-height:100px}
    TOASTS
    ═══════════════════════════════════════════ */
 #toast-container{position:fixed;bottom:calc(var(--nav-h) + 16px);left:0;right:0;z-index:500;display:flex;flex-direction:column;align-items:center;gap:8px;pointer-events:none;padding:0 16px}
-.toast{display:flex;align-items:center;gap:10px;padding:12px 20px;border-radius:var(--radius-lg);font-size:13px;font-weight:600;color:#fff;box-shadow:0 8px 30px rgba(0,0,0,0.15);animation:toastIn .35s ease;pointer-events:auto;max-width:100%}
+.toast{display:flex;align-items:center;gap:10px;padding:12px 20px;border-radius:var(--radius-lg);font-size:13px;font-weight:600;color:#fff;box-shadow:0 8px 30px rgba(0,0,0,0.3);animation:toastIn .35s ease;pointer-events:auto;max-width:100%}
 .toast.toast-out{animation:toastOut .3s ease forwards}
-.toast-success{background:var(--success)}
+.toast-success{background:var(--success);color:#0f172a}
 .toast-error{background:var(--danger)}
 .toast-info{background:var(--primary)}
 
@@ -431,10 +501,14 @@ textarea.input-field{height:auto;padding:12px 14px;min-height:100px}
 /* ═══════════════════════════════════════════
    SKELETON LOADING
    ═══════════════════════════════════════════ */
-.skeleton{background:linear-gradient(90deg,var(--bg3) 25%,rgba(255,255,255,0.8) 50%,var(--bg3) 75%);background-size:200% 100%;animation:shimmerLoad 1.5s infinite;border-radius:var(--radius-sm)}
+.skeleton{background:linear-gradient(90deg,var(--bg3) 25%,rgba(56,189,248,0.08) 50%,var(--bg3) 75%);background-size:200% 100%;animation:shimmerLoad 1.5s infinite;border-radius:var(--radius-sm)}
 .skeleton-poster{aspect-ratio:2/3;border-radius:var(--radius)}
 .skeleton-text{height:14px;border-radius:6px;margin-top:8px}
 .skeleton-text.short{width:60%}
+.skeleton-circle{width:40px;height:40px;border-radius:50%}
+
+/* Tab loading skeleton */
+.tab-skeleton{display:flex;flex-direction:column;gap:12px;padding:16px}
 
 /* ═══════════════════════════════════════════
    EPISODE LIST
@@ -443,18 +517,19 @@ textarea.input-field{height:auto;padding:12px 14px;min-height:100px}
 .episode-item:hover{background:var(--bg3)}
 .episode-num{width:36px;height:36px;display:flex;align-items:center;justify-content:center;background:var(--bg3);border-radius:var(--radius-sm);font-family:'Outfit',sans-serif;font-weight:800;font-size:14px;color:var(--text2);flex-shrink:0}
 .episode-info{flex:1}
-.episode-title{font-size:13px;font-weight:600}
+.episode-title{font-size:13px;font-weight:600;color:var(--text)}
 .episode-check{width:22px;height:22px;border-radius:6px;border:2px solid var(--text3);display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;transition:all .2s}
-.episode-check.checked{background:var(--success);border-color:var(--success);color:#fff}
+.episode-check.checked{background:var(--success);border-color:var(--success);color:#0f172a}
 
 /* ═══════════════════════════════════════════
    CHARACTER / STAFF CARDS
    ═══════════════════════════════════════════ */
 .char-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-.char-card{display:flex;gap:10px;background:var(--card);border:1px solid var(--glass-border);border-radius:var(--radius);overflow:hidden}
+.char-card{display:flex;gap:10px;background:var(--card);border:1px solid var(--glass-border);border-radius:var(--radius);overflow:hidden;transition:all .2s}
+.char-card:hover{border-color:rgba(56,189,248,0.2)}
 .char-card img{width:60px;height:80px;object-fit:cover;flex-shrink:0}
 .char-info{padding:10px 10px 10px 0;flex:1;min-width:0}
-.char-name{font-size:13px;font-weight:700;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.char-name{font-size:13px;font-weight:700;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;color:var(--text)}
 .char-role{font-size:11px;color:var(--text3);margin-top:2px}
 .char-va{font-size:11px;color:var(--text2);margin-top:4px;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}
 
@@ -473,12 +548,33 @@ textarea.input-field{height:auto;padding:12px 14px;min-height:100px}
 .progress-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--primary),var(--accent));transition:width .4s ease}
 
 /* ═══════════════════════════════════════════
-   HOME RETRY BUTTON
+   HOME ENTER / REFRESH BUTTON
    ═══════════════════════════════════════════ */
+.home-enter-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 20px;text-align:center;min-height:50vh}
+.home-enter-wrap svg{width:64px;height:64px;color:var(--primary);margin-bottom:20px;filter:drop-shadow(0 0 16px var(--primary-glow));animation:float 3s ease-in-out infinite}
+.home-enter-wrap h3{font-family:'Outfit',sans-serif;font-weight:800;font-size:22px;margin-bottom:8px;color:var(--text)}
+.home-enter-wrap p{font-size:14px;color:var(--text2);margin-bottom:24px;max-width:280px;line-height:1.5}
+.home-enter-btn{padding:10px 24px;background:var(--bg3);color:var(--text);font-family:'Inter',sans-serif;font-weight:600;font-size:14px;border-radius:var(--radius-sm);border:1px solid var(--glass-border);cursor:pointer;transition:all .2s}
+.home-enter-btn:active{transform:scale(0.96);background:var(--bg2)}
+
+/* Retry button */
 .retry-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 20px;text-align:center}
 .retry-wrap svg{width:48px;height:48px;color:var(--text3);margin-bottom:16px}
-.retry-wrap h3{font-family:'Outfit',sans-serif;font-weight:700;font-size:18px;margin-bottom:8px}
+.retry-wrap h3{font-family:'Outfit',sans-serif;font-weight:700;font-size:18px;margin-bottom:8px;color:var(--text)}
 .retry-wrap p{font-size:13px;color:var(--text2);margin-bottom:20px;max-width:280px}
+
+/* ═══════════════════════════════════════════
+   PRIVACY & TERMS PROFESSIONAL CARDS
+   ═══════════════════════════════════════════ */
+.legal-card{background:var(--card);border:1px solid var(--glass-border);border-radius:var(--radius);padding:20px;margin-bottom:16px;transition:all .2s}
+.legal-card:hover{border-color:rgba(56,189,248,0.15)}
+.legal-card h3{font-family:'Outfit',sans-serif;font-weight:800;font-size:16px;margin-bottom:12px;color:var(--text);display:flex;align-items:center;gap:8px}
+.legal-card h3 svg{color:var(--primary);width:20px;height:20px}
+.legal-card p{font-size:13px;color:var(--text2);line-height:1.7;margin-bottom:10px}
+.legal-card ul{margin:8px 0 8px 18px;list-style:disc}
+.legal-card ul li{font-size:13px;color:var(--text2);line-height:1.7;margin-bottom:4px}
+.legal-card strong{color:var(--text)}
+.legal-section-title{font-family:'Outfit',sans-serif;font-weight:700;font-size:14px;color:var(--text);margin:14px 0 8px;padding-bottom:6px;border-bottom:1px solid var(--glass-border)}
 
 /* ═══════════════════════════════════════════
    REDUCED MOTION
@@ -562,25 +658,36 @@ textarea.input-field{height:auto;padding:12px 14px;min-height:100px}
     <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="12" y1="16" x2="12" y2="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="12" y1="8" x2="12.01" y2="8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
     <symbol id="i-mail" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><polyline points="22,6 12,13 2,6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
     <symbol id="i-refresh" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><polyline points="1 20 1 14 7 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-schedule" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="16" y1="2" x2="16" y2="6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="8" y1="2" x2="8" y2="6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="3" y1="10" x2="21" y2="10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01M16 18h.01" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-comment" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-bold" viewBox="0 0 24 24"><path d="M6 4h8a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 12h9a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-italic" viewBox="0 0 24 24"><line x1="19" y1="4" x2="10" y2="4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="14" y1="20" x2="5" y2="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="15" y1="4" x2="9" y2="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-at" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-3.92 7.94" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-loader" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.2"/></symbol>
   </defs>
 </svg>
 
 <!-- ═══════════════════════════════════════════
-     LOADER
+     LOADER WITH SVG ICON
      ═══════════════════════════════════════════ -->
 <div id="loader">
-  <div class="loader-dots">
-    <div class="loader-dot"></div>
-    <div class="loader-dot"></div>
-    <div class="loader-dot"></div>
+  <div class="loader-svg-wrap">
+    <svg viewBox="0 0 24 24" fill="none" stroke="url(#loaderGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <defs><linearGradient id="loaderGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#38bdf8"/><stop offset="100%" style="stop-color:#a78bfa"/></linearGradient></defs>
+      <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+    </svg>
+    <div class="loader-svg-ring"></div>
   </div>
-  <div class="loader-avatar" id="loader-avatar"></div>
   <div class="loader-title" id="loader-title">IOX VAULT</div>
-  <div class="loader-sub" id="loader-sub">Preparing your vault...</div>
+  <div class="loader-sub" id="loader-sub">Your Anime Universe</div>
+  <!-- Auto-enter enabled -->
+  <div class="loader-version">v3.0 PRO</div>
 </div>
 
+
 <!-- ═══════════════════════════════════════════
-     SIDEBAR OVERLAY
+     SIDEBAR OVERLAY & SIDEBAR
      ═══════════════════════════════════════════ -->
 <div id="sidebar-overlay"></div>
 <div id="sidebar">
@@ -603,9 +710,9 @@ textarea.input-field{height:auto;padding:12px 14px;min-height:100px}
         <svg><use href="#i-search"/></svg>
         <span>Search</span>
       </div>
-      <div class="sidebar-item" id="sidebar-reviews">
-        <svg><use href="#i-star"/></svg>
-        <span>Reviews</span>
+      <div class="sidebar-item" id="sidebar-schedule">
+        <svg><use href="#i-schedule"/></svg>
+        <span>Schedule</span>
       </div>
       <div class="sidebar-item" id="sidebar-profile">
         <svg><use href="#i-user"/></svg>
@@ -620,7 +727,7 @@ textarea.input-field{height:auto;padding:12px 14px;min-height:100px}
       </div>
     </div>
     <div class="sidebar-section">
-      <div class="sidebar-section-title">Information</div>
+      <div class="sidebar-section-title">Legal</div>
       <div class="sidebar-item" id="sidebar-terms">
         <svg><use href="#i-info"/></svg>
         <span>Terms of Use</span>
@@ -645,7 +752,7 @@ textarea.input-field{height:auto;padding:12px 14px;min-height:100px}
     </div>
   </div>
   <div class="sidebar-footer">
-    IOX VAULT v2.0<br>Built with passion for anime
+    IOX VAULT v3.0 PRO<br>Built with passion for anime
   </div>
 </div>
 
@@ -676,61 +783,72 @@ textarea.input-field{height:auto;padding:12px 14px;min-height:100px}
   <!-- Main Content -->
   <main id="main-content">
 
-    <!-- HOME PAGE -->
+    <!-- ═══════════════════ HOME PAGE ═══════════════════ -->
     <div class="page" id="page-home">
-      <!-- Quick Access Chips -->
-      <div class="chips-scroll mb-12">
-        <button class="chip active" data-filter="trending"><svg width="14" height="14"><use href="#i-trending"/></svg>Trending</button>
-        <button class="chip" data-filter="movies"><svg width="14" height="14"><use href="#i-film"/></svg>Movies</button>
-        <button class="chip" data-filter="tv"><svg width="14" height="14"><use href="#i-tv"/></svg>TV</button>
-        <button class="chip" data-filter="new"><svg width="14" height="14"><use href="#i-sparkles"/></svg>New</button>
-        <button class="chip" data-filter="top"><svg width="14" height="14"><use href="#i-star"/></svg>Top 100</button>
-        <button class="chip" data-filter="az"><svg width="14" height="14"><use href="#i-globe"/></svg>A-Z</button>
+      <!-- Enter / Refresh Button (shown first) -->
+      <div class="home-enter-wrap" id="home-enter-wrap">
+        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        <h3>Welcome to IOX VAULT</h3>
+        <p>Discover trending anime, explore new releases, and manage your watchlist.</p>
+        <button class="home-enter-btn" id="home-enter-btn">Explore Now</button>
       </div>
 
-      <!-- Available Now (Linked Anime) -->
-      <div class="mb-16" id="available-now-section" style="display:none">
-        <div class="section-header">
-          <h2>Available Now</h2>
-          <span class="view-all" style="font-size:11px;color:var(--success);font-weight:700">● With Links</span>
+      <!-- Home Content (hidden until enter clicked) -->
+      <div id="home-content" style="display:none">
+        <!-- Quick Access Chips -->
+        <div class="chips-scroll mb-12">
+          <button class="chip active" data-filter="trending"><svg width="14" height="14"><use href="#i-trending"/></svg>Trending</button>
+          <button class="chip" data-filter="movies"><svg width="14" height="14"><use href="#i-film"/></svg>Movies</button>
+          <button class="chip" data-filter="tv"><svg width="14" height="14"><use href="#i-tv"/></svg>TV</button>
+          <button class="chip" data-filter="new"><svg width="14" height="14"><use href="#i-sparkles"/></svg>New</button>
+          <button class="chip" data-filter="top"><svg width="14" height="14"><use href="#i-star"/></svg>Top 100</button>
+          <button class="chip" data-filter="az"><svg width="14" height="14"><use href="#i-globe"/></svg>A-Z</button>
         </div>
-        <div class="h-scroll" id="available-scroll"></div>
-      </div>
 
-      <!-- Trending Now -->
-      <div class="mb-16">
-        <div class="section-header">
-          <h2>Trending Now</h2>
-          <button class="view-all" data-nav="search" data-filter="trending">View All</button>
+        <!-- Available Now -->
+        <div class="mb-16" id="available-now-section" style="display:none">
+          <div class="section-header">
+            <h2>Available Now</h2>
+            <span class="view-all" style="font-size:11px;color:var(--success);font-weight:700">● With Links</span>
+          </div>
+          <div class="h-scroll" id="available-scroll"></div>
         </div>
-        <div class="h-scroll" id="trending-scroll"></div>
-      </div>
 
-      <!-- Popular This Season -->
-      <div class="mb-16">
-        <div class="section-header">
-          <h2>Popular This Season</h2>
+        <!-- Trending Now -->
+        <div class="mb-16">
+          <div class="section-header">
+            <h2>Trending Now</h2>
+            <button class="view-all" data-nav="search" data-filter="trending">View All</button>
+          </div>
+          <div class="h-scroll" id="trending-scroll"></div>
         </div>
-        <div class="h-scroll" id="popular-scroll"></div>
-      </div>
 
-      <!-- Top Rated -->
-      <div class="mb-16">
-        <div class="section-header">
-          <h2>Top Rated</h2>
+        <!-- Popular This Season -->
+        <div class="mb-16">
+          <div class="section-header">
+            <h2>Popular This Season</h2>
+          </div>
+          <div class="h-scroll" id="popular-scroll"></div>
         </div>
-        <div class="h-scroll" id="toprated-scroll"></div>
-      </div>
 
-      <!-- Upcoming -->
-      <div class="mb-16">
-        <div class="section-header">
-          <h2>Upcoming</h2>
+        <!-- Top Rated -->
+        <div class="mb-16">
+          <div class="section-header">
+            <h2>Top Rated</h2>
+          </div>
+          <div class="h-scroll" id="toprated-scroll"></div>
         </div>
-        <div class="h-scroll" id="upcoming-scroll"></div>
+
+        <!-- Upcoming -->
+        <div class="mb-16">
+          <div class="section-header">
+            <h2>Upcoming</h2>
+          </div>
+          <div class="h-scroll" id="upcoming-scroll"></div>
+        </div>
       </div>
 
-      <!-- Retry Section (hidden by default) -->
+      <!-- Retry Section -->
       <div class="retry-wrap hidden" id="home-retry">
         <svg><use href="#i-refresh"/></svg>
         <h3>Failed to load</h3>
@@ -742,11 +860,11 @@ textarea.input-field{height:auto;padding:12px 14px;min-height:100px}
       </div>
     </div>
 
-<!-- SEARCH PAGE -->
+    <!-- ═══════════════════ SEARCH PAGE ═══════════════════ -->
     <div class="page" id="page-search">
       <div class="search-bar" id="search-bar">
         <svg class="search-icon" width="20" height="20"><use href="#i-search"/></svg>
-        <input type="text" placeholder="Search anime..." id="search-input">
+        <input type="text" placeholder="Search anime... (e.g. Witch Hat Atelier)" id="search-input">
         <div class="search-actions">
           <button class="btn-icon btn-icon-sm hidden" id="search-clear" aria-label="Clear">
             <svg width="16" height="16"><use href="#i-x"/></svg>
@@ -756,9 +874,6 @@ textarea.input-field{height:auto;padding:12px 14px;min-height:100px}
 
       <!-- Filter Chips -->
       <div class="chips-scroll mb-12" id="filter-chips"></div>
-
-      <!-- Active Filters -->
-      <div class="flex flex-wrap gap-8 mb-12 hidden" id="active-filters"></div>
 
       <!-- Results -->
       <div class="anime-grid" id="search-results"></div>
@@ -776,38 +891,43 @@ textarea.input-field{height:auto;padding:12px 14px;min-height:100px}
       </div>
     </div>
 
-    <!-- REVIEWS PAGE -->
-    <div class="page" id="page-reviews">
-      <!-- Review Composer -->
-      <div class="composer-card">
-        <div class="composer-header">
-          <div class="composer-avatar" id="composer-avatar"></div>
-          <div class="composer-info">
-            <div class="composer-name" id="composer-name">Guest</div>
-            <div class="composer-handle" id="composer-handle">@guest</div>
-          </div>
-        </div>
-        <input type="text" class="input-field mb-8" id="review-anime-input" placeholder="Anime name you're reviewing...">
-        <div class="star-rating" id="composer-stars"></div>
-        <textarea class="input-field" id="review-text-input" placeholder="Share your thoughts..."></textarea>
-        <button class="btn btn-primary w-full mt-12" id="post-review-btn">Post Review</button>
+    <!-- ═══════════════════ SCHEDULE PAGE ═══════════════════ -->
+    <div class="page" id="page-schedule">
+      <div class="section-header">
+        <h2>Today's Schedule</h2>
+        <span class="view-all" id="schedule-date" style="font-size:11px;color:var(--text3)"></span>
       </div>
 
-      <!-- Reviews Feed -->
-      <div id="reviews-feed"></div>
+      <!-- Note about Japanese dub -->
+      <div class="schedule-note">
+        <svg width="16" height="16"><use href="#i-info"/></svg>
+        <span><strong>Note:</strong> These are the Japanese Dub release schedules. Hindi, English, or other dubbed versions may release at different times or dates depending on the streaming platform.</span>
+      </div>
+
+      <!-- Schedule List -->
+      <div class="schedule-grid" id="schedule-list">
+        <div class="tab-skeleton">
+          <div class="skeleton" style="height:100px;border-radius:var(--radius)"></div>
+          <div class="skeleton" style="height:100px;border-radius:var(--radius)"></div>
+          <div class="skeleton" style="height:100px;border-radius:var(--radius)"></div>
+        </div>
+      </div>
 
       <!-- Empty State -->
-      <div class="empty-state hidden" id="reviews-empty">
-        <svg><use href="#i-message"/></svg>
-        <h3>No reviews yet</h3>
-        <p>Be the first to share your thoughts</p>
+      <div class="empty-state hidden" id="schedule-empty">
+        <svg><use href="#i-calendar"/></svg>
+        <h3>No schedule data</h3>
+        <p>Could not fetch today's airing schedule</p>
       </div>
     </div>
 
-    <!-- PROFILE PAGE -->
+    <!-- ═══════════════════ PROFILE PAGE ═══════════════════ -->
     <div class="page" id="page-profile">
       <div class="profile-hero">
-        <div class="profile-avatar" id="profile-avatar"></div>
+        <div class="profile-avatar-wrap">
+          <div class="profile-avatar" id="profile-avatar"></div>
+          <div class="profile-status-dot" id="profile-status-dot" style="display:none"></div>
+        </div>
         <div class="profile-name" id="profile-name">Guest</div>
         <div class="profile-handle" id="profile-handle">@guest</div>
         <div class="profile-uid" id="profile-uid">--</div>
@@ -815,16 +935,16 @@ textarea.input-field{height:auto;padding:12px 14px;min-height:100px}
 
       <div class="profile-stats">
         <div class="stat-card">
-          <div class="num" id="stat-reviews">0</div>
-          <div class="label">Reviews</div>
+          <div class="num" id="stat-comments">0</div>
+          <div class="label">Comments</div>
         </div>
         <div class="stat-card">
           <div class="num" id="stat-watchlist">0</div>
           <div class="label">Watchlist</div>
         </div>
         <div class="stat-card">
-          <div class="num" id="stat-posts">0</div>
-          <div class="label">Posts</div>
+          <div class="num" id="stat-likes">0</div>
+          <div class="label">Likes Given</div>
         </div>
       </div>
 
@@ -842,9 +962,9 @@ textarea.input-field{height:auto;padding:12px 14px;min-height:100px}
 
       <div class="p-16">
         <div class="section-header mb-12">
-          <h2>My Reviews</h2>
+          <h2>My Comments</h2>
         </div>
-        <div id="profile-reviews"></div>
+        <div id="profile-comments-list"></div>
       </div>
 
       <div class="p-16" style="padding-bottom:32px">
@@ -854,9 +974,114 @@ textarea.input-field{height:auto;padding:12px 14px;min-height:100px}
         </button>
       </div>
     </div>
+
+    <!-- ═══════════════════ TERMS PAGE ═══════════════════ -->
+    <div class="page" id="page-terms">
+      <div class="section-header">
+        <h2>Terms of Use</h2>
+      </div>
+
+      <div class="legal-card">
+        <h3><svg><use href="#i-info"/></svg>Agreement to Terms</h3>
+        <p>By accessing or using <strong>IOX VAULT</strong>, you agree to be bound by these Terms of Use. If you do not agree with any part of these terms, please discontinue use of the application immediately.</p>
+      </div>
+
+      <div class="legal-card">
+        <h3><svg><use href="#i-shield"/></svg>Use of Service</h3>
+        <p>IOX VAULT is an anime discovery and tracking platform. All anime data, including titles, descriptions, images, and metadata, is sourced from <strong>AniList</strong> and other public APIs. We do not host, store, or distribute any anime video content.</p>
+        <div class="legal-section-title">Prohibited Activities</div>
+        <ul>
+          <li>Using the service for any illegal purposes or to violate any laws</li>
+          <li>Attempting to gain unauthorized access to any part of the service</li>
+          <li>Interfering with or disrupting the service or servers</li>
+          <li>Harassing, abusing, or harming other users through comments or reviews</li>
+          <li>Uploading malicious content, spam, or inappropriate material</li>
+        </ul>
+      </div>
+
+      <div class="legal-card">
+        <h3><svg><use href="#i-user"/></svg>User Accounts</h3>
+        <p>IOX VAULT uses Telegram authentication for user login. You are responsible for maintaining the confidentiality of your account information. We reserve the right to suspend or terminate accounts that violate these terms or engage in prohibited activities.</p>
+      </div>
+
+      <div class="legal-card">
+        <h3><svg><use href="#i-zap"/></svg>Intellectual Property</h3>
+        <p>All anime-related content (titles, images, descriptions) belongs to their respective owners and licensors. IOX VAULT claims no ownership over third-party anime content. The IOX VAULT name, logo, and original software code are the property of the developer.</p>
+      </div>
+
+      <div class="legal-card">
+        <h3><svg><use href="#i-mail"/></svg>Contact & Disputes</h3>
+        <p>For any questions regarding these Terms of Use, please contact us at <a href="mailto:moharshad687@gmail.com">moharshad687@gmail.com</a>. These terms are governed by the laws of India.</p>
+        <p style="margin-top:10px;font-size:12px;color:var(--text3)">Last Updated: June 28, 2026</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════ PRIVACY PAGE ═══════════════════ -->
+    <div class="page" id="page-privacy">
+      <div class="section-header">
+        <h2>Privacy Policy</h2>
+      </div>
+
+      <div class="legal-card">
+        <h3><svg><use href="#i-shield"/></svg>Introduction</h3>
+        <p>At <strong>IOX VAULT</strong>, we take your privacy seriously. This Privacy Policy explains what information we collect, how we use it, and your rights regarding your data. By using our service, you consent to the practices described in this policy.</p>
+      </div>
+
+      <div class="legal-card">
+        <h3><svg><use href="#i-user"/></svg>Information We Collect</h3>
+        <div class="legal-section-title">From Telegram Login</div>
+        <ul>
+          <li>Telegram User ID (unique identifier)</li>
+          <li>First name and last name (as set in Telegram)</li>
+          <li>Telegram username (if available)</li>
+          <li>Profile photo URL (if publicly available)</li>
+        </ul>
+        <div class="legal-section-title">User-Generated Content</div>
+        <ul>
+          <li>Comments posted on anime pages</li>
+          <li>Watchlist entries and watch progress</li>
+          <li>Like interactions with comments</li>
+        </ul>
+      </div>
+
+      <div class="legal-card">
+        <h3><svg><use href="#i-settings"/></svg>How We Use Your Data</h3>
+        <ul>
+          <li>To provide and maintain the core functionality of IOX VAULT</li>
+          <li>To personalize your experience (watchlist, progress tracking)</li>
+          <li>To display your profile information to other users (comments, public profile)</li>
+          <li>To improve our service through analytics</li>
+          <li>To enforce our Terms of Use and prevent abuse</li>
+        </ul>
+      </div>
+
+      <div class="legal-card">
+        <h3><svg><use href="#i-globe"/></svg>Data Storage & Security</h3>
+        <p>Your data is stored securely using <strong>Firebase</strong> (Google Cloud infrastructure). We implement industry-standard security measures to protect your personal information. However, no method of electronic storage is 100% secure, and we cannot guarantee absolute security.</p>
+        <p style="margin-top:8px"><strong>We do not sell, trade, or rent your personal information</strong> to third parties under any circumstances.</p>
+      </div>
+
+      <div class="legal-card">
+        <h3><svg><use href="#i-bookmark"/></svg>Your Rights</h3>
+        <ul>
+          <li><strong>Access:</strong> You can view all data associated with your account</li>
+          <li><strong>Correction:</strong> Update your profile information through Telegram</li>
+          <li><strong>Deletion:</strong> Clear app data or contact us to delete your account</li>
+          <li><strong>Opt-out:</strong> You can stop using the service at any time</li>
+        </ul>
+      </div>
+
+      <div class="legal-card">
+        <h3><svg><use href="#i-mail"/></svg>Contact Us</h3>
+        <p>If you have any questions about this Privacy Policy or your data, please contact:</p>
+        <p style="margin-top:6px"><strong>Email:</strong> <a href="mailto:moharshad687@gmail.com">moharshad687@gmail.com</a></p>
+        <p><strong>GitHub:</strong> <a href="https://github.com/darkeio6307" target="_blank">darkeio6307</a></p>
+        <p style="margin-top:10px;font-size:12px;color:var(--text3)">Last Updated: June 28, 2026</p>
+      </div>
+    </div>
   </main>
 
-  <!-- Bottom Nav -->
+  <!-- ═══════════════════ BOTTOM NAV ═══════════════════ -->
   <nav id="bottom-nav" class="glass">
     <button class="nav-item active" data-tab="home" aria-label="Home">
       <svg><use href="#i-home"/></svg>
@@ -868,9 +1093,9 @@ textarea.input-field{height:auto;padding:12px 14px;min-height:100px}
       <span>Search</span>
       <div class="nav-indicator" style="opacity:0"></div>
     </button>
-    <button class="nav-item" data-tab="reviews" aria-label="Reviews">
-      <svg><use href="#i-star"/></svg>
-      <span>Reviews</span>
+    <button class="nav-item" data-tab="schedule" aria-label="Schedule">
+      <svg><use href="#i-schedule"/></svg>
+      <span>Schedule</span>
       <div class="nav-indicator" style="opacity:0"></div>
     </button>
     <button class="nav-item" data-tab="profile" aria-label="Profile">
@@ -882,7 +1107,7 @@ textarea.input-field{height:auto;padding:12px 14px;min-height:100px}
 </div>
 
 <!-- ═══════════════════════════════════════════
-     ANIME DETAIL OVERLAY
+     ANIME DETAIL OVERLAY WITH COMMENTS TAB
      ═══════════════════════════════════════════ -->
 <div id="anime-detail">
   <div class="glass" style="position:sticky;top:0;z-index:10;display:flex;align-items:center;padding:0 16px;height:var(--header-h);gap:12px">
@@ -908,12 +1133,13 @@ textarea.input-field{height:auto;padding:12px 14px;min-height:100px}
     <!-- Stats -->
     <div class="stats-bar" id="detail-stats"></div>
 
-    <!-- Tabs -->
+    <!-- Tabs with Comments -->
     <div class="tabs" id="detail-tabs">
       <button class="tab active" data-tab="overview">Overview</button>
       <button class="tab" data-tab="watch">Watch</button>
       <button class="tab" data-tab="characters">Characters</button>
       <button class="tab" data-tab="staff">Staff</button>
+      <button class="tab" data-tab="comments">Comments</button>
       <div class="tab-indicator" id="tab-indicator"></div>
     </div>
 
@@ -929,6 +1155,7 @@ textarea.input-field{height:auto;padding:12px 14px;min-height:100px}
     </div>
   </div>
 </div>
+
 
 <!-- ═══════════════════════════════════════════
      ADMIN PANEL
@@ -951,9 +1178,9 @@ textarea.input-field{height:auto;padding:12px 14px;min-height:100px}
         <svg><use href="#i-user"/></svg>
         <div class="admin-label">Users</div>
       </div>
-      <div class="admin-card" data-admin="reviews">
-        <svg><use href="#i-star"/></svg>
-        <div class="admin-label">Reviews</div>
+      <div class="admin-card" data-admin="comments">
+        <svg><use href="#i-comment"/></svg>
+        <div class="admin-label">Comments</div>
       </div>
       <div class="admin-card" data-admin="feed">
         <svg><use href="#i-message"/></svg>
@@ -1014,7 +1241,7 @@ textarea.input-field{height:auto;padding:12px 14px;min-height:100px}
      ═══════════════════════════════════════════ -->
 <script>
 // ═══════════════════════════════════════════════════
-//  FIREBASE CONFIG
+//  FIREBASE CONFIG (SAME AS ORIGINAL)
 // ═══════════════════════════════════════════════════
 const firebaseConfig={
   apiKey:"AIzaSyC-psUKqTO9u5kCuA3OUqWT63Ey0IvDei4",
@@ -1035,7 +1262,7 @@ const db=firebase.database();
 const ADMIN_UID="8644584624";
 const ADMIN_PASSWORD="ioxvault2024";
 const ANILIST_URL="https://graphql.anilist.co";
-const FORMAT_FILTER=["TV","MOVIE"]; // Only TV and Movie
+const FORMAT_FILTER=["TV","MOVIE","ONA","OVA","SPECIAL"];
 
 const state={
   tab:'home',
@@ -1043,7 +1270,7 @@ const state={
   isAdmin:false,
   user:null,
   watchlist:{},
-  reviews:[],
+  comments:{},
   animeCache:new Map(),
   searchResults:[],
   searchPage:1,
@@ -1052,20 +1279,22 @@ const state={
   adminTapCount:0,
   adminTapTimer:null,
   activeFilters:{genre:'',year:'',status:'',rating:'',sort:'POPULARITY_DESC'},
-  composerRating:0,
-  replyOpen:{},
+  commentReplyOpen:{},
   currentAdminSection:'',
   feed:[],
   users:{},
   channels:{},
   languages:{},
-  analytics:{users:0,reviews:0,posts:0,active:0},
+  analytics:{users:0,comments:0,posts:0,active:0},
   homeLoaded:false,
   homeError:false,
-  homeLoading:false
+  homeLoading:false,
+  homeEntered:false,
+  scheduleData:[],
+  likedComments:{}
 };
 
-const tabs=['home','search','reviews','profile'];
+const tabs=['home','search','schedule','profile'];
 const GENRES=['Action','Adventure','Comedy','Drama','Fantasy','Horror','Mystery','Romance','Sci-Fi','Slice of Life','Sports','Supernatural','Thriller'];
 
 // ═══════════════════════════════════════════════════
@@ -1076,8 +1305,8 @@ try{
   tg=window.Telegram.WebApp;
   tg.ready();
   tg.expand();
-  tg.setHeaderColor('#e0f2fe');
-  tg.setBackgroundColor('#e0f2fe');
+  tg.setHeaderColor('#0f172a');
+  tg.setBackgroundColor('#0f172a');
   const user=tg.initDataUnsafe.user;
   if(user){
     state.user={
@@ -1121,7 +1350,7 @@ function svgIcon(name,w,h,cls){return`<svg width="${w||16}" height="${h||16}" cl
 function isGuest(){return state.user?.id?.startsWith('guest_')}
 
 // ═══════════════════════════════════════════════════
-//  SAFE CACHE KEY (no btoa on unicode)
+//  SAFE CACHE KEY
 // ═══════════════════════════════════════════════════
 function hashKey(str){
   let h=0;
@@ -1145,9 +1374,7 @@ async function aniQuery(query,vars,maxRetries=3){
   let lastError=null;
   for(let attempt=0;attempt<=maxRetries;attempt++){
     try{
-      if(attempt>0){
-        console.log('AniList retry',attempt+'/'+maxRetries);
-      }
+      if(attempt>0){console.log('AniList retry',attempt+'/'+maxRetries);}
       const r=await fetch(ANILIST_URL,{
         method:'POST',
         headers:{'Content-Type':'application/json','Accept':'application/json'},
@@ -1171,21 +1398,24 @@ async function aniQuery(query,vars,maxRetries=3){
   throw lastError;
 }
 
-// Queries with TV/MOVIE filter only
-const Q_TRENDING=`query{Page(page:1,perPage:20){media(sort:TRENDING_DESC,type:ANIME,format_in:[TV,MOVIE,ONA]){id title{english romaji native}coverImage{large}bannerImage averageScore popularity format status episodes season seasonYear genres}}}`;
-const Q_POPULAR=`query($season:MediaSeason,$year:Int){Page(page:1,perPage:20){media(season:$season,seasonYear:$year,sort:POPULARITY_DESC,type:ANIME,format_in:[TV,MOVIE,ONA]){id title{english romaji native}coverImage{large}bannerImage averageScore popularity format status episodes season seasonYear genres}}}`;
-const Q_TOPRATED=`query{Page(page:1,perPage:20){media(sort:SCORE_DESC,type:ANIME,format_in:[TV,MOVIE,ONA]){id title{english romaji native}coverImage{large}bannerImage averageScore popularity format status episodes season seasonYear genres}}}`;
-const Q_UPCOMING=`query{Page(page:1,perPage:20){media(status:NOT_YET_RELEASED,sort:POPULARITY_DESC,type:ANIME,format_in:[TV,MOVIE,ONA]){id title{english romaji native}coverImage{large}bannerImage averageScore popularity format status episodes season seasonYear genres}}}`;
-const Q_SEARCH=`query($search:String,$genre:[String],$year:Int,$status:MediaStatus,$sort:[MediaSort],$page:Int,$averageScore_greater:Int){Page(page:$page,perPage:24){media(search:$search,genre_in:$genre,seasonYear:$year,status:$status,sort:$sort,type:ANIME,format_in:[TV,MOVIE,ONA],averageScore_greater:$averageScore_greater){id title{english romaji native}coverImage{large}bannerImage averageScore popularity format status episodes season seasonYear genres description studios{nodes{name}}}}}`;
+// Queries - FIX: Broader format filter for search to find newer anime
+const Q_TRENDING=`query{Page(page:1,perPage:20){media(sort:TRENDING_DESC,type:ANIME,format_in:[TV,MOVIE,ONA,OVA,SPECIAL]){id title{english romaji native}coverImage{large medium}bannerImage averageScore popularity format status episodes season seasonYear genres}}}`;
+const Q_POPULAR=`query($season:MediaSeason,$year:Int){Page(page:1,perPage:20){media(season:$season,seasonYear:$year,sort:POPULARITY_DESC,type:ANIME,format_in:[TV,MOVIE,ONA,OVA,SPECIAL]){id title{english romaji native}coverImage{large medium}bannerImage averageScore popularity format status episodes season seasonYear genres}}}`;
+const Q_TOPRATED=`query{Page(page:1,perPage:20){media(sort:SCORE_DESC,type:ANIME,format_in:[TV,MOVIE,ONA,OVA,SPECIAL]){id title{english romaji native}coverImage{large medium}bannerImage averageScore popularity format status episodes season seasonYear genres}}}`;
+const Q_UPCOMING=`query{Page(page:1,perPage:20){media(status:NOT_YET_RELEASED,sort:POPULARITY_DESC,type:ANIME,format_in:[TV,MOVIE,ONA,OVA,SPECIAL]){id title{english romaji native}coverImage{large medium}bannerImage averageScore popularity format status episodes season seasonYear genres}}}`;
+const Q_SEARCH=`query($search:String,$genre:[String],$year:Int,$status:MediaStatus,$sort:[MediaSort],$page:Int,$averageScore_greater:Int){Page(page:$page,perPage:24){media(search:$search,genre_in:$genre,seasonYear:$year,status:$status,sort:$sort,type:ANIME,format_in:[TV,MOVIE,ONA,OVA,SPECIAL],averageScore_greater:$averageScore_greater){id title{english romaji native}coverImage{large medium}bannerImage averageScore popularity format status episodes season seasonYear genres description studios{nodes{name}}}}}`;
 const Q_DETAIL=`query($id:Int){Media(id:$id,type:ANIME){id title{english romaji native}coverImage{large medium}bannerImage averageScore popularity favourites format status episodes duration season seasonYear genres tags{name}description startDate{year month day}endDate{year month day} studios{nodes{name}} source hashtag siteUrl relations{edges{relationType node{id title{english romaji}coverImage{large}format status averageScore}}}}}`;
 const Q_CHARACTERS=`query($id:Int){Media(id:$id,type:ANIME){characters(page:1,perPage:25){edges{role node{name{full}image{large}} voiceActors{languageV2 name{full} image{large}}}}}}`;
 const Q_STAFF=`query($id:Int){Media(id:$id,type:ANIME){staff(page:1,perPage:25){edges{role node{name{full}image{large}}}}}}`;
-const Q_ADMIN_SEARCH=`query($search:String){Page(page:1,perPage:10){media(search:$search,type:ANIME,format_in:[TV,MOVIE,ONA]){id title{english romaji native}coverImage{medium}format seasonYear}}}`;
+const Q_ADMIN_SEARCH=`query($search:String){Page(page:1,perPage:10){media(search:$search,type:ANIME,format_in:[TV,MOVIE,ONA,OVA,SPECIAL]){id title{english romaji native}coverImage{medium}format seasonYear}}}`;
+
+// Schedule query - get today's airing anime
+const Q_SCHEDULE=`query($start:Int,$end:Int){Page(page:1,perPage:50){airingSchedule(airingAt_greater:$start,airingAt_lesser:$end){id airingAt episode media{id title{english romaji native}coverImage{large medium}format status episodes}}}}`;
 
 // ═══════════════════════════════════════════════════
 //  CACHE HELPERS
 // ═══════════════════════════════════════════════════
-const CACHE_KEY='iox_cache_v2';
+const CACHE_KEY='iox_cache_v3';
 const CACHE_TTL=1000*60*30;
 function getCache(key){
   try{
@@ -1204,20 +1434,14 @@ function clearCache(){
 }
 
 // ═══════════════════════════════════════════════════
-//  SPLASH SCREEN
+//  SPLASH SCREEN - Tap to Enter
 // ═══════════════════════════════════════════════════
 function runLoader(){
-  const av=$('#loader-avatar'),nm=$('#loader-title'),sub=$('#loader-sub');
-  setTimeout(()=>{
-    if(state.user?.photoUrl){av.innerHTML=`<img src="${escapeHtml(state.user.photoUrl)}" alt="">`;}
-    else{const i=(state.user?.firstName||'U').charAt(0).toUpperCase();av.textContent=i;}
-    av.classList.add('visible');
-  },300);
-  setTimeout(()=>{
-    const n=state.user?(state.user.firstName+' '+state.user.lastName).trim()||'User':'IOX VAULT';
-    nm.textContent=n;nm.classList.add('visible');
-  },500);
-  setTimeout(()=>{sub.classList.add('visible');},700);
+  const nm=$('#loader-title'),sub=$('#loader-sub'),btn=$('#loader-enter-btn');
+  setTimeout(()=>{nm.classList.add('visible');},300);
+  setTimeout(()=>{sub.classList.add('visible');},500);
+  setTimeout(()=>{btn.classList.add('visible');},700);
+  
   setTimeout(()=>{
     $('#loader').classList.add('hidden');
     $('#app').classList.remove('hidden');
@@ -1272,21 +1496,22 @@ $('#header-menu-btn').addEventListener('click',openSidebar);
 $('#sidebar-overlay').addEventListener('click',closeSidebar);
 
 // Sidebar navigation
-$('#sidebar-home').addEventListener('click',()=>{closeSidebar();switchTab('home');
-  renderFilterChips();
-  renderComposerStars();
-  loadWatchlist();
-  loadReviews();
-  renderProfile();
-  setTimeout(()=>{
-    loadHome().then(()=>{
-      setTimeout(()=>loadAvailableAnime(),500);
-    }).catch(err=>console.error('Home load failed:',err));
-  },100);
+$('#sidebar-home').addEventListener('click',()=>{closeSidebar();switchTab('home');});
+$('#sidebar-search').addEventListener('click',()=>{closeSidebar();switchTab('search');});
+$('#sidebar-schedule').addEventListener('click',()=>{closeSidebar();switchTab('schedule');loadSchedule();});
+$('#sidebar-profile').addEventListener('click',()=>{closeSidebar();switchTab('profile');renderProfile();});
+$('#sidebar-admin').addEventListener('click',()=>{closeSidebar();openAdminPanel();});
+
+// Legal pages
+$('#sidebar-terms').addEventListener('click',()=>{
+  closeSidebar();
+  switchTab('terms');
+  $('#header-title').textContent='Terms of Use';
 });
 $('#sidebar-privacy').addEventListener('click',()=>{
   closeSidebar();
-  openModal('Privacy Policy','<p style="line-height:1.6">IOX VAULT collects minimal data (Telegram ID, username) solely for app functionality. We do not sell your data. Firebase is used for real-time database services.</p>',false);
+  switchTab('privacy');
+  $('#header-title').textContent='Privacy Policy';
 });
 $('#sidebar-contact').addEventListener('click',()=>{
   closeSidebar();
@@ -1294,7 +1519,7 @@ $('#sidebar-contact').addEventListener('click',()=>{
 });
 
 // ═══════════════════════════════════════════════════
-//  NAVIGATION
+//  NAVIGATION WITH LOADING EFFECTS
 // ═══════════════════════════════════════════════════
 function switchTab(tab){
   if(tab===state.tab&&tab!=='search')return;
@@ -1309,14 +1534,22 @@ function switchTab(tab){
 
   $$('.page').forEach(p=>p.classList.remove('active'));
   const tp=$(`#page-${tab}`);
-  if(tp){tp.classList.add('active');tp.style.animation='none';tp.offsetHeight;tp.style.animation=''}
+  if(tp){
+    tp.classList.add('active');
+    tp.style.animation='none';
+    tp.offsetHeight;
+    tp.style.animation='';
+    // Add tab loading animation
+    tp.classList.add('anim-tab-load');
+    setTimeout(()=>tp.classList.remove('anim-tab-load'),350);
+  }
 
-  const titles={home:'IOX VAULT',search:'Search',reviews:'Reviews',profile:'Profile'};
+  const titles={home:'IOX VAULT',search:'Search',schedule:'Schedule',profile:'Profile',terms:'Terms of Use',privacy:'Privacy Policy'};
   $('#header-title').textContent=titles[tab]||'IOX VAULT';
   $('#admin-badge').classList.toggle('hidden',!state.isAdmin);
   $('#sidebar-admin-section').style.display=state.isAdmin?'block':'none';
 
-  if(tab==='reviews') loadReviews();
+  if(tab==='schedule') loadSchedule();
   if(tab==='profile') renderProfile();
   if(tab==='search'){$('#search-input').focus()}
 
@@ -1327,7 +1560,7 @@ $$('.nav-item').forEach(n=>n.addEventListener('click',()=>switchTab(n.dataset.ta
 $('#header-search-btn').addEventListener('click',()=>switchTab('search'));
 
 // ═══════════════════════════════════════════════════
-//  HOME PAGE
+//  HOME PAGE - Enter Button Logic
 // ═══════════════════════════════════════════════════
 function createAnimeCard(a,cls){
   const title=escapeHtml(getTitle(a));
@@ -1336,7 +1569,8 @@ function createAnimeCard(a,cls){
   const c=cls||'anime-card';
   const year=a.seasonYear||'';
   const format=a.format||'';
-  return`<div class="${c} card-hover" data-id="${a.id}">
+  const scoreHtml=score!==null?`<div class="card-score"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>${score}</div>`:'';
+  return`<div class="${c} card-hover anim-card-pop" data-id="${a.id}">
     <div class="poster-wrap">
       ${poster?`<img src="${poster}" alt="${title}" loading="lazy" decoding="async">`:'<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:var(--text3);font-size:12px">No Image</div>'}
       ${score!==null?`<div class="score-badge">${score}</div>`:''}
@@ -1344,14 +1578,32 @@ function createAnimeCard(a,cls){
     </div>
     <div class="card-title">${title}</div>
     ${year?`<div class="card-meta">${year}</div>`:''}
+    ${scoreHtml}
   </div>`;
 }
 
 function renderSkeletonScroll(id,n=8){
   let h='';for(let i=0;i<n;i++)h+=`<div class="anime-card"><div class="poster-wrap skeleton skeleton-poster"></div><div class="skeleton skeleton-text"></div></div>`;
-  $(id).innerHTML=h;
+  const el=$(id);if(el)el.innerHTML=h;
 }
 
+function renderSkeletonGrid(id,n=8){
+  let h='';for(let i=0;i<n;i++)h+=`<div class="anime-card-grid"><div class="poster-wrap skeleton skeleton-poster"></div><div class="skeleton skeleton-text"></div></div>`;
+  const el=$(id);if(el)el.innerHTML=h;
+}
+
+// Home enter button
+$('#home-enter-btn').addEventListener('click',()=>{
+  state.homeEntered=true;
+  $('#home-enter-wrap').style.display='none';
+  $('#home-content').style.display='block';
+  loadHome().then(()=>{
+    setTimeout(()=>loadAvailableAnime(),600);
+  }).catch(err=>console.error('Home load failed:',err));
+});
+
+// Home retry
+$('#home-retry-btn').addEventListener('click',()=>loadHome(1));
 
 async function loadAvailableAnime(){
   try{
@@ -1360,9 +1612,8 @@ async function loadAvailableAnime(){
     const ids=Object.keys(channels).map(Number).filter(n=>!isNaN(n));
     if(!ids.length){$('#available-now-section').style.display='none';return}
 
-    // Fetch details for linked anime (max 20)
     const fetchIds=ids.slice(0,20);
-    const query=`query{Page(perPage:20){media(id_in:[${fetchIds.join(',')}],type:ANIME,format_in:[TV,MOVIE,ONA]){id title{english romaji native}coverImage{large}bannerImage averageScore popularity format status episodes season seasonYear genres}}}`;
+    const query=`query{Page(perPage:20){media(id_in:[${fetchIds.join(',')}],type:ANIME,format_in:[TV,MOVIE,ONA,OVA,SPECIAL]){id title{english romaji native}coverImage{large}bannerImage averageScore popularity format status episodes season seasonYear genres}}}`;
 
     const data=await aniQuery(query,{});
     const media=data?.Page?.media||[];
@@ -1382,9 +1633,6 @@ async function loadAvailableAnime(){
   }
 }
 
-$('#home-retry-btn').addEventListener('click',()=>loadHome(1));
-
-
 async function loadHome(attempt=1){
   const maxRetries=5;
   if(state.homeLoading){console.log('Home already loading, skipping');return}
@@ -1393,7 +1641,6 @@ async function loadHome(attempt=1){
   state.homeError=false;
   $('#home-retry').classList.add('hidden');
 
-  // Show skeletons immediately
   renderSkeletonScroll('#trending-scroll');
   renderSkeletonScroll('#popular-scroll');
   renderSkeletonScroll('#toprated-scroll');
@@ -1404,7 +1651,6 @@ async function loadHome(attempt=1){
   let hasAnySuccess=false;
 
   try{
-    // Load Trending
     try{
       const t=await aniQuery(Q_TRENDING);
       if(t?.Page?.media?.length){
@@ -1416,7 +1662,6 @@ async function loadHome(attempt=1){
       $('#trending-scroll').innerHTML='<div class="empty-state" style="padding:20px"><p class="text-sm text-secondary">Failed to load trending</p><button class="btn btn-sm btn-outline mt-8" onclick="loadHome()">Retry</button></div>';
     }
 
-    // Load Popular
     try{
       const p=await aniQuery(Q_POPULAR,{season,year:now.getFullYear()});
       if(p?.Page?.media?.length){
@@ -1428,7 +1673,6 @@ async function loadHome(attempt=1){
       $('#popular-scroll').innerHTML='<div class="empty-state" style="padding:20px"><p class="text-sm text-secondary">Failed to load popular</p><button class="btn btn-sm btn-outline mt-8" onclick="loadHome()">Retry</button></div>';
     }
 
-    // Load Top Rated
     try{
       const tr=await aniQuery(Q_TOPRATED);
       if(tr?.Page?.media?.length){
@@ -1440,7 +1684,6 @@ async function loadHome(attempt=1){
       $('#toprated-scroll').innerHTML='<div class="empty-state" style="padding:20px"><p class="text-sm text-secondary">Failed to load top rated</p><button class="btn btn-sm btn-outline mt-8" onclick="loadHome()">Retry</button></div>';
     }
 
-    // Load Upcoming
     try{
       const u=await aniQuery(Q_UPCOMING);
       if(u?.Page?.media?.length){
@@ -1452,7 +1695,6 @@ async function loadHome(attempt=1){
       $('#upcoming-scroll').innerHTML='<div class="empty-state" style="padding:20px"><p class="text-sm text-secondary">Failed to load upcoming</p><button class="btn btn-sm btn-outline mt-8" onclick="loadHome()">Retry</button></div>';
     }
 
-    // Add click handlers to all cards
     $$('.anime-card').forEach(c=>c.addEventListener('click',()=>openAnimeDetail(c.dataset.id)));
 
     if(!hasAnySuccess){
@@ -1488,7 +1730,6 @@ $$('.chip').forEach(chip=>{
     $$('.chip').forEach(c=>c.classList.remove('active'));
     chip.classList.add('active');
     const f=chip.dataset.filter;
-    // Reset filters first
     state.activeFilters={genre:'',year:'',status:'',rating:'',sort:'POPULARITY_DESC'};
     if(f==='movies'){state.activeFilters.sort='POPULARITY_DESC';}
     else if(f==='tv'){state.activeFilters.sort='TRENDING_DESC';}
@@ -1503,18 +1744,29 @@ $$('.chip').forEach(chip=>{
   });
 });
 
+
 // ═══════════════════════════════════════════════════
-//  ANIME DETAIL
+//  ANIME DETAIL WITH COMMENTS TAB
 // ═══════════════════════════════════════════════════
 async function openAnimeDetail(id){
   const numId=parseInt(id);
+  if(isNaN(numId)){showToast('Invalid anime ID','error');return}
   state.currentAnime=null;
-  $('#detail-banner').innerHTML='';
+  state.detailTab='overview';
+  state.commentReplyOpen={};
+  
+  // Reset all detail sections
+  $('#detail-banner').innerHTML='<div class="skeleton" style="height:100%;width:100%"></div>';
   $('#detail-header').innerHTML='';
   $('#detail-actions').innerHTML='';
   $('#detail-stats').innerHTML='';
-  $('#detail-tab-content').innerHTML='';
+  $('#detail-tab-content').innerHTML='<div class="flex items-center justify-center p-16"><div class="skeleton skeleton-circle"></div></div>';
   $('#detail-related').innerHTML='';
+  
+  // Reset tabs
+  $$('#detail-tabs .tab').forEach(t=>t.classList.remove('active'));
+  $('#detail-tabs .tab[data-tab="overview"]').classList.add('active');
+  updateTabIndicator();
 
   $('#anime-detail').classList.add('open');
   if(tg){tg.BackButton.show();tg.BackButton.onClick(closeAnimeDetail)}
@@ -1570,9 +1822,10 @@ async function openAnimeDetail(id){
 
     state.detailTab='overview';
     renderDetailTab(a);
+    loadComments(numId);
 
     if(a.relations?.edges?.length){
-      const related=a.relations.edges.filter(e=>e.node&&['TV','MOVIE'].includes(e.node.format));
+      const related=a.relations.edges.filter(e=>e.node&&['TV','MOVIE','ONA','OVA','SPECIAL'].includes(e.node.format));
       if(related.length){
         $('#detail-related-wrap').classList.remove('hidden');
         $('#detail-related').innerHTML=related.map(e=>createAnimeCard(e.node)).join('');
@@ -1588,6 +1841,7 @@ async function openAnimeDetail(id){
 function closeAnimeDetail(){
   $('#anime-detail').classList.remove('open');
   state.currentAnime=null;
+  state.commentReplyOpen={};
   $('#detail-banner').innerHTML='';
   $('#detail-header').innerHTML='';
   $('#detail-actions').innerHTML='';
@@ -1611,13 +1865,19 @@ $$('#detail-tabs .tab').forEach(tab=>{
     tab.classList.add('active');
     state.detailTab=tab.dataset.tab;
     renderDetailTab(state.currentAnime);
-    const ind=$('#tab-indicator');
-    const rect=tab.getBoundingClientRect();
-    const prect=tab.parentElement.getBoundingClientRect();
-    ind.style.left=(rect.left-prect.left)+'px';
-    ind.style.width=rect.width+'px';
+    updateTabIndicator();
   });
 });
+
+function updateTabIndicator(){
+  const ind=$('#tab-indicator');
+  const active=$('#detail-tabs .tab.active');
+  if(!active||!ind)return;
+  const rect=active.getBoundingClientRect();
+  const prect=active.parentElement.getBoundingClientRect();
+  ind.style.left=(rect.left-prect.left)+'px';
+  ind.style.width=rect.width+'px';
+}
 
 function renderDetailTab(a){
   if(!a)return;
@@ -1657,7 +1917,7 @@ function renderDetailTab(a){
   }
 
   else if(state.detailTab==='characters'){
-    c.innerHTML='<div class="flex items-center justify-center p-16"><div class="skeleton" style="width:40px;height:40px;border-radius:50%"></div></div>';
+    c.innerHTML='<div class="flex items-center justify-center p-16"><div class="skeleton skeleton-circle"></div></div>';
     aniQuery(Q_CHARACTERS,{id:a.id}).then(d=>{
       const edges=d?.Media?.characters?.edges||[];
       if(!edges.length){c.innerHTML='<div class="empty-state"><svg><use href="#i-user"/></svg><h3>No character data</h3></div>';return}
@@ -1669,12 +1929,16 @@ function renderDetailTab(a){
   }
 
   else if(state.detailTab==='staff'){
-    c.innerHTML='<div class="flex items-center justify-center p-16"><div class="skeleton" style="width:40px;height:40px;border-radius:50%"></div></div>';
+    c.innerHTML='<div class="flex items-center justify-center p-16"><div class="skeleton skeleton-circle"></div></div>';
     aniQuery(Q_STAFF,{id:a.id}).then(d=>{
       const edges=d?.Media?.staff?.edges||[];
       if(!edges.length){c.innerHTML='<div class="empty-state"><svg><use href="#i-user"/></svg><h3>No staff data</h3></div>';return}
       c.innerHTML=`<div class="char-grid">${edges.map(e=>`<div class="char-card"><img src="${e.node?.image?.large||''}" alt="" loading="lazy"><div class="char-info"><div class="char-name">${escapeHtml(e.node?.name?.full||'')}</div><div class="char-role">${e.role||''}</div></div></div>`).join('')}</div>`;
     }).catch(()=>{c.innerHTML='<div class="empty-state"><h3>Error loading staff</h3></div>'});
+  }
+
+  else if(state.detailTab==='comments'){
+    renderCommentsSection(a.id);
   }
 }
 
@@ -1690,6 +1954,204 @@ function markWatched(animeId,ep,el){
     $$('.episode-check').forEach((c,i)=>{if(i<ep){c.classList.add('checked');c.innerHTML=svgIcon('check',14,14)}});
     showToast('Progress saved','success');
   });
+}
+
+// ═══════════════════════════════════════════════════
+//  COMMENTS SYSTEM - Rich Format, Likeable, Replyable, Admin Removable
+// ═══════════════════════════════════════════════════
+function renderCommentsSection(animeId){
+  const c=$('#detail-tab-content');
+  const comments=state.comments[animeId]||[];
+  
+  let h=`<div class="comments-section">
+    <div class="comments-header">
+      <h3>Comments</h3>
+      <span class="comments-count">${comments.length}</span>
+    </div>`;
+  
+  // Composer
+  if(!isGuest()){
+    h+=`<div class="comment-composer">
+      <div class="comment-composer-header">
+        <div class="comment-composer-avatar">${state.user?.photoUrl?`<img src="${escapeHtml(state.user.photoUrl)}" alt="">`:(state.user?.firstName||'U').charAt(0).toUpperCase()}</div>
+        <div class="comment-composer-name">${escapeHtml((state.user?.firstName||'')+' '+(state.user?.lastName||'')).trim()||'User'}</div>
+      </div>
+      <textarea class="comment-composer-input" id="comment-input-${animeId}" placeholder="Share your thoughts about this anime... (use **bold**, *italic*)"></textarea>
+      <div class="comment-toolbar">
+        <button class="comment-tool-btn" onclick="insertFormat('comment-input-${animeId}','**','**')" title="Bold"><svg width="14" height="14"><use href="#i-bold"/></svg></button>
+        <button class="comment-tool-btn" onclick="insertFormat('comment-input-${animeId}','*','*')" title="Italic"><svg width="14" height="14"><use href="#i-italic"/></svg></button>
+      </div>
+      <div class="comment-submit">
+        <button class="comment-submit-btn" onclick="postComment(${animeId})">Post Comment</button>
+      </div>
+    </div>`;
+  }else{
+    h+=`<div class="comment-composer" style="text-align:center;padding:20px">
+      <p class="text-sm text-secondary">Login with Telegram to post comments</p>
+    </div>`;
+  }
+  
+  h+=`<div id="comments-list-${animeId}">`;
+  if(!comments.length){
+    h+=`<div class="empty-state"><svg><use href="#i-comment"/></svg><h3>No comments yet</h3><p>Be the first to share your thoughts</p></div>`;
+  }else{
+    comments.forEach(comment=>{
+      h+=createCommentCard(comment,animeId);
+    });
+  }
+  h+=`</div></div>`;
+  
+  c.innerHTML=h;
+  
+  // Attach event listeners
+  comments.forEach(comment=>{
+    const likeBtn=document.getElementById(`comment-like-${comment.id}`);
+    if(likeBtn)likeBtn.addEventListener('click',()=>toggleCommentLike(animeId,comment.id));
+    
+    const replyBtn=document.getElementById(`comment-reply-btn-${comment.id}`);
+    if(replyBtn)replyBtn.addEventListener('click',()=>toggleCommentReply(comment.id));
+    
+    const replySend=document.getElementById(`comment-reply-send-${comment.id}`);
+    if(replySend)replySend.addEventListener('click',()=>postCommentReply(animeId,comment.id));
+    
+    if(state.isAdmin){
+      const delBtn=document.getElementById(`comment-del-${comment.id}`);
+      if(delBtn)delBtn.addEventListener('click',()=>deleteComment(animeId,comment.id));
+    }
+  });
+}
+
+function createCommentCard(comment,animeId){
+  const likesCount=comment.likes?Object.keys(comment.likes).length:0;
+  const replies=comment.replies||[];
+  const uid=state.user?.id;
+  const liked=comment.likes&&comment.likes[uid];
+  const isAdm=state.isAdmin;
+  const name=escapeHtml(comment.authorName||'Anonymous');
+  const photo=comment.authorPhoto?`<img src="${escapeHtml(comment.authorPhoto)}" alt="">`:(comment.authorName?comment.authorName.charAt(0).toUpperCase():'A');
+  const formattedText=formatCommentText(escapeHtml(comment.text||''));
+  const isAdminComment=comment.authorId===ADMIN_UID;
+  
+  return`<div class="comment-card anim-comment-slide" id="comment-card-${comment.id}">
+    <div class="comment-card-header">
+      <div class="comment-avatar">${photo}</div>
+      <div class="comment-meta">
+        <div class="comment-author">${name}${isAdminComment?'<span class="admin-tag">ADMIN</span>':''}</div>
+        <div class="comment-time">${timeAgo(comment.timestamp)}</div>
+      </div>
+      ${isAdm?`<div class="admin-comment-actions">
+        <button class="btn-icon" id="comment-del-${comment.id}" title="Delete comment" aria-label="Delete comment">${svgIcon('trash',12,12)}</button>
+      </div>`:''}
+    </div>
+    <div class="comment-text">${formattedText}</div>
+    <div class="comment-actions-bar">
+      <button class="comment-action ${liked?'liked':''}" id="comment-like-${comment.id}">
+        <svg><use href="#i-heart"/></svg>
+        <span>${likesCount}</span>
+      </button>
+      <button class="comment-action" id="comment-reply-btn-${comment.id}">
+        <svg><use href="#i-message"/></svg>
+        <span>${replies.length}</span>
+      </button>
+    </div>
+    ${state.commentReplyOpen[comment.id]?`<div class="comment-replies">
+      ${replies.map(rep=>`<div class="comment-reply-item"><div class="comment-reply-avatar">${rep.authorPhoto?`<img src="${escapeHtml(rep.authorPhoto)}" alt="">`:(rep.authorName?rep.authorName.charAt(0).toUpperCase():'U')}</div><div class="comment-reply-content"><div class="comment-reply-author">${escapeHtml(rep.authorName||'')}</div><div class="comment-reply-text">${formatCommentText(escapeHtml(rep.text||''))}</div><div class="comment-reply-time">${timeAgo(rep.timestamp)}</div></div></div>`).join('')}
+      ${!isGuest()?`<div class="comment-reply-input-wrap"><input type="text" class="comment-reply-input" id="comment-reply-input-${comment.id}" placeholder="Write a reply..."><button class="comment-reply-send" id="comment-reply-send-${comment.id}">${svgIcon('send',14,14)}</button></div>`:''}
+    </div>`:''}
+  </div>`;
+}
+
+function formatCommentText(text){
+  // Bold: **text**
+  text=text.replace(/\*\*(.+?)\*\*/g,'<b>$1</b>');
+  // Italic: *text*
+  text=text.replace(/\*(.+?)\*/g,'<i>$1</i>');
+  // Mentions: @username
+  text=text.replace(/@(\w+)/g,'<span class="mention">@$1</span>');
+  // URLs
+  text=text.replace(/(https?:\/\/[^\s]+)/g,'<a href="$1" target="_blank">$1</a>');
+  return text;
+}
+
+function insertFormat(inputId,before,after){
+  const input=document.getElementById(inputId);
+  if(!input)return;
+  const start=input.selectionStart;
+  const end=input.selectionEnd;
+  const val=input.value;
+  const selected=val.substring(start,end);
+  input.value=val.substring(0,start)+before+selected+after+val.substring(end);
+  input.focus();
+  input.setSelectionRange(start+before.length,end+before.length);
+}
+
+function postComment(animeId){
+  const input=document.getElementById(`comment-input-${animeId}`);
+  if(!input)return;
+  const text=input.value.trim();
+  if(!text){showToast('Write a comment first','error');return}
+  if(isGuest()){showToast('Login to post comments','info');return}
+  
+  const uid=state.user?.id;
+  const name=(state.user?.firstName||'User');
+  const ref=db.ref('comments/'+animeId).push();
+  ref.set({
+    text,authorId:uid,authorName:name,
+    authorPhoto:state.user?.photoUrl||'',
+    timestamp:Date.now(),likes:{},replies:[]
+  }).then(()=>{
+    input.value='';
+    showToast('Comment posted','success');
+  }).catch(err=>showToast('Failed: '+err.message,'error'));
+}
+
+function toggleCommentLike(animeId,commentId){
+  const uid=state.user?.id;if(!uid||isGuest()){showToast('Login to like','info');return}
+  const ref=db.ref('comments/'+animeId+'/'+commentId+'/likes/'+uid);
+  ref.once('value').then(snap=>{
+    if(snap.exists())ref.remove();
+    else ref.set(true);
+  });
+}
+
+function toggleCommentReply(commentId){
+  state.commentReplyOpen[commentId]=!state.commentReplyOpen[commentId];
+  if(state.currentAnime)renderCommentsSection(state.currentAnime.id);
+}
+
+function postCommentReply(animeId,commentId){
+  const input=document.getElementById(`comment-reply-input-${commentId}`);
+  if(!input)return;
+  const text=input.value.trim();
+  if(!text)return;
+  if(isGuest())return;
+  
+  const uid=state.user?.id;
+  const name=(state.user?.firstName||'User');
+  const ref=db.ref('comments/'+animeId+'/'+commentId+'/replies');
+  ref.once('value').then(snap=>{
+    const replies=snap.val()||[];
+    replies.push({authorId:uid,authorName:name,authorPhoto:state.user?.photoUrl||'',text,timestamp:Date.now()});
+    ref.set(replies);
+  });
+}
+
+function deleteComment(animeId,commentId){
+  if(!state.isAdmin&&!confirm('Delete this comment?'))return;
+  db.ref('comments/'+animeId+'/'+commentId).remove().then(()=>{
+    showToast('Comment deleted','info');
+    loadComments(animeId);
+  });
+}
+
+function loadComments(animeId){
+  db.ref('comments/'+animeId).on('value',snap=>{
+    const val=snap.val()||{};
+    state.comments[animeId]=Object.entries(val).map(([id,v])=>({id,...v})).sort((a,b)=>(b.timestamp||0)-(a.timestamp||0));
+    if(state.currentAnime&&state.currentAnime.id==animeId&&state.detailTab==='comments'){
+      renderCommentsSection(animeId);
+    }
+  },err=>{console.error('Comments error:',err);state.comments[animeId]=[];});
 }
 
 // ═══════════════════════════════════════════════════
@@ -1723,12 +2185,12 @@ function loadWatchlist(){
 }
 
 // ═══════════════════════════════════════════════════
-//  SEARCH PAGE
+//  SEARCH PAGE - Fixed for newer anime
 // ═══════════════════════════════════════════════════
 function renderFilterChips(){
   const filters=[
     {label:'Genre',key:'genre',options:['All',...GENRES]},
-    {label:'Year',key:'year',options:['All','2025','2024','2023','2022','2021','2020','Older']},
+    {label:'Year',key:'year',options:['All','2026','2025','2024','2023','2022','2021','2020','Older']},
     {label:'Status',key:'status',options:['All','Airing','Completed','Upcoming','Cancelled']},
     {label:'Rating',key:'rating',options:['All','9+','8+','7+','6+','5+']},
     {label:'Sort',key:'sort',options:['Popularity','Score','Trending','Newest']}
@@ -1758,11 +2220,10 @@ async function doSearch(){
   if(f.genre)vars.genre=[f.genre];
   if(f.year){if(f.year==='Older'){vars.year=2019}else{vars.year=parseInt(f.year)}}
   if(f.status){const map={'Airing':'RELEASING','Completed':'FINISHED','Upcoming':'NOT_YET_RELEASED','Cancelled':'CANCELLED'};vars.status=map[f.status]}
-  // format_in is hardcoded in Q_SEARCH as [TV,MOVIE], no need to pass format variable
   const sortMap={'Popularity':'POPULARITY_DESC','Score':'SCORE_DESC','Trending':'TRENDING_DESC','Newest':'START_DATE_DESC'};
   vars.sort=[sortMap[f.sort]||'POPULARITY_DESC'];
   if(f.rating)vars.averageScore_greater=parseInt(f.rating)*10;
-  if(!q&&!f.genre&&!f.year&&!f.status&&!f.format){vars.sort=['TRENDING_DESC']}
+  if(!q&&!f.genre&&!f.year&&!f.status){vars.sort=['TRENDING_DESC']}
 
   try{
     const data=await aniQuery(Q_SEARCH,vars);
@@ -1785,136 +2246,79 @@ async function doSearch(){
 $('#load-more-btn').addEventListener('click',()=>{state.searchPage++;doSearch()});
 
 // ═══════════════════════════════════════════════════
-//  REVIEWS PAGE
+//  SCHEDULE PAGE - Today's Airing Anime
 // ═══════════════════════════════════════════════════
-function renderComposerStars(){
-  let h='';for(let i=1;i<=5;i++){h+=`<svg class="${i<=state.composerRating?'star-filled':'star-empty'}" data-r="${i}"><use href="#i-star"/></svg>`}
-  $('#composer-stars').innerHTML=h;
-  $$('#composer-stars svg').forEach(s=>s.addEventListener('click',()=>{state.composerRating=parseInt(s.dataset.r);renderComposerStars()}));
+let scheduleLoaded=false;
+
+function getTodayRange(){
+  const now=new Date();
+  const start=Math.floor(Date.UTC(now.getFullYear(),now.getMonth(),now.getDate(),0,0,0)/1000);
+  const end=Math.floor(Date.UTC(now.getFullYear(),now.getMonth(),now.getDate(),23,59,59)/1000);
+  return{start,end};
 }
 
-function loadReviews(){
-  db.ref('reviews').orderByChild('timestamp').on('value',snap=>{
-    const val=snap.val()||{};
-    state.reviews=Object.entries(val).map(([id,v])=>({id,...v})).sort((a,b)=>(b.timestamp||0)-(a.timestamp||0));
-    renderReviews();
-  },err=>{console.error('Reviews error:',err);state.reviews=[];renderReviews();});
+function formatTime(timestamp){
+  const date=new Date(timestamp*1000);
+  return date.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:true});
 }
 
-function renderReviews(){
-  const c=$('#reviews-feed');
-  if(!state.reviews.length){c.innerHTML='';$('#reviews-empty').classList.remove('hidden');return}
-  $('#reviews-empty').classList.add('hidden');
-  c.innerHTML=state.reviews.map(r=>createReviewCard(r)).join('');
-
-  $$('.review-action[data-action="like"]').forEach(b=>b.addEventListener('click',()=>toggleLike(b.dataset.id)));
-  $$('.review-action[data-action="reply"]').forEach(b=>b.addEventListener('click',()=>toggleReply(b.dataset.id)));
-  $$('.reply-send').forEach(b=>b.addEventListener('click',()=>postReply(b.dataset.id)));
-  $$('.admin-del-review').forEach(b=>b.addEventListener('click',()=>deleteReview(b.dataset.id)));
-  $$('.admin-ban-user').forEach(b=>b.addEventListener('click',()=>banUser(b.dataset.uid,b.dataset.name)));
-}
-
-function createReviewCard(r){
-  const likesCount=r.likes?Object.keys(r.likes).length:0;
-  const replies=r.replies||[];
-  const uid=state.user?.id;
-  const liked=r.likes&&r.likes[uid];
-  const isAdm=state.isAdmin;
-  const name=escapeHtml(r.authorName||'Anonymous');
-  const anime=escapeHtml(r.animeName||'');
-  const photo=r.authorPhoto?`<img src="${escapeHtml(r.authorPhoto)}" alt="">`:(r.authorName?r.authorName.charAt(0).toUpperCase():'A');
-  const stars=Array(5).fill(0).map((_,i)=>`<svg width="14" height="14" class="${i<r.rating?'star-filled':'star-empty'}"><use href="#i-star"/></svg>`).join('');
-
-  return`<div class="review-card" data-id="${r.id}">
-    <div class="review-header">
-      <div class="review-avatar">${photo}</div>
-      <div class="review-meta">
-        <div class="review-author">${name}${r.authorAniListId?'<span style="font-size:11px;color:var(--text3);margin-left:6px">AniList</span>':''}</div>
-        <div class="review-anime">${anime}</div>
-        <div class="review-time">${timeAgo(r.timestamp)}</div>
-      </div>
-      ${isAdm?`<div class="admin-review-actions">
-        <button class="btn-icon admin-ban-user" data-uid="${r.authorId}" data-name="${name}" title="Ban user" aria-label="Ban user">${svgIcon('ban',12,12)}</button>
-        <button class="btn-icon admin-del-review" data-id="${r.id}" title="Delete review" aria-label="Delete review">${svgIcon('trash',12,12)}</button>
-      </div>`:''}
-    </div>
-    <div class="star-rating" style="margin:4px 0">${stars}</div>
-    <div class="review-text">${escapeHtml(r.text||'')}</div>
-    <div class="review-actions-bar">
-      <button class="review-action ${liked?'liked':''}" data-action="like" data-id="${r.id}">
-        <svg><use href="#i-heart"/></svg>
-        <span>${likesCount}</span>
-      </button>
-      <button class="review-action" data-action="reply" data-id="${r.id}">
-        <svg><use href="#i-message"/></svg>
-        <span>${replies.length}</span>
-      </button>
-    </div>
-    ${state.replyOpen[r.id]?`<div class="replies">
-      ${replies.map(rep=>`<div class="reply-item"><div class="reply-avatar">${rep.authorName?rep.authorName.charAt(0).toUpperCase():'U'}</div><div class="reply-content"><div class="reply-author">${escapeHtml(rep.authorName||'')}</div><div class="reply-text">${escapeHtml(rep.text||'')}</div><div class="reply-time">${timeAgo(rep.timestamp)}</div></div></div>`).join('')}
-      <div class="reply-input-wrap"><input type="text" class="reply-input" id="reply-${r.id}" placeholder="Write a reply..."><button class="reply-send" data-id="${r.id}">${svgIcon('send',14,14)}</button></div>
-    </div>`:''}
+async function loadSchedule(){
+  if(scheduleLoaded&&state.scheduleData.length>0)return;
+  
+  const now=new Date();
+  $('#schedule-date').textContent=now.toLocaleDateString('en-US',{weekday:'long',month:'short',day:'numeric'});
+  
+  // Show skeleton
+  $('#schedule-list').innerHTML=`<div class="tab-skeleton">
+    <div class="skeleton" style="height:100px;border-radius:var(--radius)"></div>
+    <div class="skeleton" style="height:100px;border-radius:var(--radius)"></div>
+    <div class="skeleton" style="height:100px;border-radius:var(--radius)"></div>
   </div>`;
-}
-
-function toggleLike(reviewId){
-  const uid=state.user?.id;if(!uid||isGuest())return;
-  const ref=db.ref('reviews/'+reviewId+'/likes/'+uid);
-  ref.once('value').then(snap=>{if(snap.exists())ref.remove();else ref.set(true)});
-}
-
-function toggleReply(id){state.replyOpen[id]=!state.replyOpen[id];renderReviews()}
-
-function postReply(reviewId){
-  const inp=$(`#reply-${reviewId}`);const text=(inp?.value||'').trim();if(!text)return;
-  const uid=state.user?.id;if(!uid||isGuest())return;
-  const name=(state.user?.firstName||'User');
-  const ref=db.ref('reviews/'+reviewId+'/replies');
-  ref.once('value').then(snap=>{
-    const replies=snap.val()||[];
-    replies.push({authorId:uid,authorName:name,text,timestamp:Date.now()});
-    ref.set(replies);
-    state.replyOpen[reviewId]=false;
-  });
-}
-
-$('#post-review-btn').addEventListener('click',()=>{
-  const anime=$('#review-anime-input').value.trim();
-  const text=$('#review-text-input').value.trim();
-  const rating=state.composerRating;
-  if(!anime){showToast('Enter anime name','error');return}
-  if(!rating){showToast('Select a rating','error');return}
-  if(!text){showToast('Write your review','error');return}
-  if(isGuest()){showToast('Login to post reviews','info');return}
-
-  const uid=state.user?.id;
-  const name=(state.user?.firstName||'User');
-  const ref=db.ref('reviews').push();
-  ref.set({
-    animeName:anime,text,rating,authorId:uid,authorName:name,
-    authorPhoto:state.user?.photoUrl||'',
-    authorAniListId:state.user?.username||'',
-    timestamp:Date.now(),likes:{},replies:[]
-  }).then(()=>{
-    $('#review-anime-input').value='';$('#review-text-input').value='';state.composerRating=0;
-    renderComposerStars();showToast('Review posted','success');
-  });
-});
-
-function deleteReview(id){
-  if(!state.isAdmin&&!confirm('Delete this review?'))return;
-  db.ref('reviews/'+id).remove().then(()=>showToast('Review deleted','info'));
-}
-
-function banUser(uid,name){
-  if(!state.isAdmin)return;
-  openModal('Ban User',`<p>Ban <strong>${escapeHtml(name)}</strong> (${uid})?</p>`,true,()=>{
-    db.ref('bannedUsers/'+uid).set({name:name||'',bannedAt:Date.now()}).then(()=>showToast('User banned','success'));
-  });
+  $('#schedule-empty').classList.add('hidden');
+  
+  try{
+    const range=getTodayRange();
+    const data=await aniQuery(Q_SCHEDULE,range);
+    const schedule=data?.Page?.airingSchedule||[];
+    
+    // Filter valid entries with media
+    const validSchedule=schedule.filter(s=>s.media&&s.media.id);
+    state.scheduleData=validSchedule;
+    scheduleLoaded=true;
+    
+    if(!validSchedule.length){
+      $('#schedule-list').innerHTML='';
+      $('#schedule-empty').classList.remove('hidden');
+      return;
+    }
+    
+    $('#schedule-list').innerHTML=validSchedule.map(s=>{
+      const a=s.media;
+      const title=escapeHtml(getTitle(a));
+      const poster=escapeHtml(getPoster(a));
+      const time=formatTime(s.airingAt);
+      const ep=s.episode||'?';
+      return`<div class="schedule-item" data-id="${a.id}">
+        <div class="schedule-poster">${poster?`<img src="${poster}" alt="" loading="lazy">`:''}</div>
+        <div class="schedule-info">
+          <div class="schedule-title">${title}</div>
+          <div class="schedule-meta">${a.format||'TV'} ${a.episodes?`· ${a.episodes} eps`:''}</div>
+          <div class="schedule-time"><svg width="14" height="14"><use href="#i-clock"/></svg>${time}</div>
+          <div class="schedule-episode">Episode ${ep}</div>
+        </div>
+      </div>`;
+    }).join('');
+    
+    $$('.schedule-item').forEach(c=>c.addEventListener('click',()=>openAnimeDetail(c.dataset.id)));
+  }catch(e){
+    console.error('Schedule error:',e);
+    $('#schedule-list').innerHTML='';
+    $('#schedule-empty').classList.remove('hidden');
+  }
 }
 
 // ═══════════════════════════════════════════════════
-//  PROFILE PAGE
+//  PROFILE PAGE - PRO LEVEL
 // ═══════════════════════════════════════════════════
 function renderProfile(){
   const u=state.user;if(!u){console.warn('No user');return}
@@ -1926,16 +2330,17 @@ function renderProfile(){
 
   setAvatar($('#profile-avatar'),u.photoUrl,u.firstName);
   setAvatar($('#sidebar-avatar'),u.photoUrl,u.firstName);
-  setAvatar($('#composer-avatar'),u.photoUrl,u.firstName);
   setAvatar($('#loader-avatar'),u.photoUrl,u.firstName);
+
+  // Show online status for non-guest
+  const statusDot=$('#profile-status-dot');
+  if(statusDot)statusDot.style.display=isGuest()?'none':'block';
 
   $('#profile-name').textContent=(u.firstName+' '+u.lastName).trim()||'Guest';
   $('#sidebar-name').textContent=(u.firstName+' '+u.lastName).trim()||'Guest';
-  $('#composer-name').textContent=(u.firstName+' '+u.lastName).trim()||'Guest';
 
   $('#profile-handle').textContent='@'+(u.username||u.firstName?.toLowerCase()||'guest');
   $('#sidebar-handle').textContent='@'+(u.username||u.firstName?.toLowerCase()||'guest');
-  $('#composer-handle').textContent='@'+(u.username||u.firstName?.toLowerCase()||'guest');
 
   $('#profile-uid').textContent='UID: '+(u.id||'--');
   $('#sidebar-uid').textContent='UID: '+(u.id||'--');
@@ -1943,11 +2348,27 @@ function renderProfile(){
   $('#admin-badge').classList.toggle('hidden',!state.isAdmin);
   $('#sidebar-admin-section').style.display=state.isAdmin?'block':'none';
 
+  // Stats
   const wlKeys=Object.keys(state.watchlist);
   $('#stat-watchlist').textContent=wlKeys.length;
-  $('#stat-reviews').textContent=state.reviews.filter(r=>r.authorId===u?.id).length;
-  $('#stat-posts').textContent=state.reviews.filter(r=>r.authorId===u?.id).length;
+  
+  // Count comments by user
+  let userComments=0;
+  Object.values(state.comments).forEach(arr=>{
+    userComments+=arr.filter(c=>c.authorId===u?.id).length;
+  });
+  $('#stat-comments').textContent=userComments;
+  
+  // Count likes given
+  let likesGiven=0;
+  Object.values(state.comments).forEach(arr=>{
+    arr.forEach(c=>{
+      if(c.likes&&c.likes[u?.id])likesGiven++;
+    });
+  });
+  $('#stat-likes').textContent=likesGiven;
 
+  // Watchlist
   const wl=$('#profile-watchlist');
   if(!wlKeys.length){wl.innerHTML='';$('#watchlist-empty').classList.remove('hidden')}
   else{
@@ -1966,9 +2387,21 @@ function renderProfile(){
     $$('.watchlist-card').forEach(c=>c.addEventListener('click',()=>openAnimeDetail(c.dataset.id)));
   }
 
-  const myRev=state.reviews.filter(r=>r.authorId===u?.id);
-  $('#profile-reviews').innerHTML=myRev.length?myRev.map(r=>createReviewCard(r)).join(''):'';
+  // My Comments
+  const myComments=[];
+  Object.entries(state.comments).forEach(([animeId,comments])=>{
+    comments.forEach(c=>{
+      if(c.authorId===u?.id)myComments.push({...c,animeId});
+    });
+  });
+  const pc=$('#profile-comments-list');
+  if(!myComments.length){pc.innerHTML='<div class="empty-state"><svg><use href="#i-comment"/></svg><h3>No comments yet</h3><p>Comments you post will appear here</p></div>'}
+  else{
+    pc.innerHTML=myComments.slice(0,20).map(c=>`<div class="comment-card"><div class="comment-text">${formatCommentText(escapeHtml(c.text||''))}</div><div class="comment-time">${timeAgo(c.timestamp)}</div></div>`).join('');
+  }
 }
+
+// myComments declared inside renderProfile above
 
 // ═══════════════════════════════════════════════════
 //  ADMIN PANEL
@@ -2016,9 +2449,9 @@ function showAdminSection(section){
     sc.innerHTML=`<h3 style="font-family:Outfit,sans-serif;font-weight:800;margin-bottom:12px">Users</h3><div id="users-list"></div>`;
     loadUsersList();
   }
-  else if(section==='reviews'){
-    sc.innerHTML=`<h3 style="font-family:Outfit,sans-serif;font-weight:800;margin-bottom:12px">Reviews</h3><div id="admin-reviews-list"></div>`;
-    loadAdminReviews();
+  else if(section==='comments'){
+    sc.innerHTML=`<h3 style="font-family:Outfit,sans-serif;font-weight:800;margin-bottom:12px">Comments</h3><div id="admin-comments-list"></div>`;
+    loadAdminComments();
   }
   else if(section==='feed'){
     sc.innerHTML=`<h3 style="font-family:Outfit,sans-serif;font-weight:800;margin-bottom:12px">Feed Posts</h3><div id="admin-feed-list"></div>`;
@@ -2046,7 +2479,7 @@ function showAdminSection(section){
     sc.innerHTML=`<h3 style="font-family:Outfit,sans-serif;font-weight:800;margin-bottom:12px">Analytics</h3>
       <div class="profile-stats">
         <div class="stat-card"><div class="num" id="a-users">0</div><div class="label">Users</div></div>
-        <div class="stat-card"><div class="num" id="a-reviews">0</div><div class="label">Reviews</div></div>
+        <div class="stat-card"><div class="num" id="a-comments">0</div><div class="label">Comments</div></div>
         <div class="stat-card"><div class="num" id="a-posts">0</div><div class="label">Posts</div></div>
       </div>
       <div style="margin-top:16px"><div class="stat-card"><div class="text-xs text-secondary">Active Today</div><div class="num" id="a-active" style="margin-top:4px">0</div></div></div>`;
@@ -2056,7 +2489,6 @@ function showAdminSection(section){
 
 $('#admin-section-back').addEventListener('click',()=>{$('#admin-section').classList.add('hidden');$('#admin-dashboard').classList.remove('hidden')});
 
-// Admin: Load channels
 function loadChannelsList(){
   db.ref('animeChannels').once('value').then(snap=>{
     const ch=snap.val()||{};
@@ -2077,7 +2509,6 @@ function loadChannelsList(){
   }).catch(err=>{console.error('Channels error:',err);$('#channels-list').innerHTML='<p class="text-sm text-danger">Error loading</p>'});
 }
 
-// Admin: Add Channel Modal with Multi-ID, Name Search, Auto Season
 function showAddChannelModal(){
   openModal('Add Channel',`
     <div class="input-wrap mb-12"><label>Search Anime Name</label><input type="text" class="input-field" id="admin-anime-search" placeholder="Type anime name..."><div class="admin-search-results hidden" id="admin-search-results"></div></div>
@@ -2107,7 +2538,6 @@ function showAddChannelModal(){
     }).catch(err=>{showToast('Failed: '+err.message,'error')});
   });
 
-  // Setup admin anime search
   setTimeout(()=>{
     const searchInput=$('#admin-anime-search');
     const resultsDiv=$('#admin-search-results');
@@ -2140,7 +2570,6 @@ function showAddChannelModal(){
   },100);
 }
 
-// Auto season detect: propagate link to all TV/MOVIE related anime
 async function propagateToFranchise(sourceId,link){
   try{
     const data=await aniQuery(Q_DETAIL,{id:sourceId});
@@ -2148,7 +2577,7 @@ async function propagateToFranchise(sourceId,link){
     const edges=a.relations?.edges||[];
     const relatedIds=[];
     edges.forEach(e=>{
-      if(e.node&&['TV','MOVIE'].includes(e.node.format)){
+      if(e.node&&['TV','MOVIE','ONA','OVA','SPECIAL'].includes(e.node.format)){
         relatedIds.push(e.node.id);
       }
     });
@@ -2171,13 +2600,19 @@ function loadUsersList(){
   });
 }
 
-function loadAdminReviews(){
-  const c=$('#admin-reviews-list');
-  if(!state.reviews.length){c.innerHTML='<p class="text-sm text-secondary">No reviews</p>';return}
-  c.innerHTML=`<table class="admin-table"><thead><tr><th>Anime</th><th>Author</th><th>Rating</th><th>Text</th><th>Actions</th></tr></thead><tbody>
-    ${state.reviews.slice(0,50).map(r=>`<tr><td>${escapeHtml(r.animeName||'')}</td><td>${escapeHtml(r.authorName||'')}</td><td>${r.rating}/5</td><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis">${escapeHtml(r.text||'')}</td>
-    <td class="cell-actions"><button class="btn btn-danger btn-sm admin-del-review" data-id="${r.id}">${svgIcon('trash',12,12)}</button></td></tr>`).join('')}</tbody></table>`;
-  $$('.admin-del-review').forEach(b=>b.addEventListener('click',()=>deleteReview(b.dataset.id)));
+function loadAdminComments(){
+  const c=$('#admin-comments-list');
+  let allComments=[];
+  Object.entries(state.comments).forEach(([animeId,comments])=>{
+    comments.forEach(com=>allComments.push({...com,animeId}));
+  });
+  allComments.sort((a,b)=>(b.timestamp||0)-(a.timestamp||0));
+  
+  if(!allComments.length){c.innerHTML='<p class="text-sm text-secondary">No comments</p>';return}
+  c.innerHTML=`<table class="admin-table"><thead><tr><th>Anime</th><th>Author</th><th>Text</th><th>Actions</th></tr></thead><tbody>
+    ${allComments.slice(0,50).map(c=>`<tr><td style="font-size:11px">${c.animeId}</td><td>${escapeHtml(c.authorName||'')}</td><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis">${escapeHtml(c.text||'')}</td>
+    <td class="cell-actions"><button class="btn btn-danger btn-sm admin-del-comment" data-anime="${c.animeId}" data-id="${c.id}">${svgIcon('trash',12,12)}</button></td></tr>`).join('')}</tbody></table>`;
+  $$('.admin-del-comment').forEach(b=>b.addEventListener('click',()=>deleteComment(b.dataset.anime,b.dataset.id)));
 }
 
 function loadAdminFeed(){
@@ -2210,7 +2645,9 @@ function saveSettings(){
 
 function updateAnalytics(){
   db.ref('users').once('value').then(s=>{$('#a-users').textContent=Object.keys(s.val()||{}).length});
-  $('#a-reviews').textContent=state.reviews.length;
+  let totalComments=0;
+  Object.values(state.comments).forEach(arr=>{totalComments+=arr.length});
+  $('#a-comments').textContent=totalComments;
   db.ref('feed').once('value').then(s=>{$('#a-posts').textContent=Object.keys(s.val()||{}).length});
 }
 
@@ -2251,6 +2688,13 @@ function saveLanguages(){
   }).catch(err=>showToast('Failed: '+err.message,'error'));
 }
 
+function banUser(uid,name){
+  if(!state.isAdmin)return;
+  openModal('Ban User',`<p>Ban <strong>${escapeHtml(name)}</strong> (${uid})?</p>`,true,()=>{
+    db.ref('bannedUsers/'+uid).set({name:name||'',bannedAt:Date.now()}).then(()=>showToast('User banned','success'));
+  });
+}
+
 // ═══════════════════════════════════════════════════
 //  SETTINGS
 // ═══════════════════════════════════════════════════
@@ -2276,7 +2720,7 @@ async function isBanned(){
 async function initApp(){
   const banned=await isBanned();
   if(banned){
-    document.body.innerHTML='<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;padding:20px;text-align:center"><h1 style="font-family:Outfit;font-weight:800;font-size:24px;margin-bottom:8px">Access Denied</h1><p style="color:var(--text2)">Your account has been banned.</p></div>';
+    document.body.innerHTML='<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;padding:20px;text-align:center;background:var(--bg)"><h1 style="font-family:Outfit;font-weight:800;font-size:24px;margin-bottom:8px;color:var(--text)">Access Denied</h1><p style="color:var(--text2)">Your account has been banned.</p></div>';
     return;
   }
 
@@ -2289,9 +2733,17 @@ async function initApp(){
     });
   }
 
-  // Load channels into state for search prioritization
   db.ref('animeChannels').once('value').then(snap=>{
     state.channels=snap.val()||{};
+  });
+
+  // Load all comments into state
+  db.ref('comments').on('value',snap=>{
+    const val=snap.val()||{};
+    Object.entries(val).forEach(([animeId,comments])=>{
+      state.comments[animeId]=Object.entries(comments).map(([id,v])=>({id,...v})).sort((a,b)=>(b.timestamp||0)-(a.timestamp||0));
+    });
+    if(state.tab==='profile')renderProfile();
   });
 
   $('#admin-badge').classList.toggle('hidden',!state.isAdmin);
@@ -2299,26 +2751,12 @@ async function initApp(){
 
   switchTab('home');
   renderFilterChips();
-  renderComposerStars();
   loadWatchlist();
-  loadReviews();
-  renderProfile();
-  // Load home sections
-  loadHome().then(()=>{
-    // After home loads successfully, load available anime
-    setTimeout(()=>loadAvailableAnime(),600);
-  }).catch(err=>{
-    console.error('Home load failed:',err);
-  });
-  renderComposerStars();
-  loadWatchlist();
-  loadReviews();
   renderProfile();
 
   setTimeout(()=>{
-    const ot=$('#detail-tabs .tab.active');
-    if(ot){const r=ot.getBoundingClientRect();const p=ot.parentElement.getBoundingClientRect();$('#tab-indicator').style.left=(r.left-p.left)+'px';$('#tab-indicator').style.width=r.width+'px'}
-  },100);
+    updateTabIndicator();
+  },200);
 }
 
 // ═══════════════════════════════════════════════════
