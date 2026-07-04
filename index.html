@@ -15,22 +15,24 @@
 <style>
 /* ========== CSS VARIABLES ========== */
 :root {
-  --bg-primary: #E8F4FD;
+  --bg-primary: #F0F4F8;
   --bg-secondary: #FFFFFF;
-  --bg-glass: rgba(255,255,255,0.7);
-  --accent: #0EA5E9;
-  --accent-gradient: linear-gradient(135deg, #0EA5E9, #6366F1);
-  --text-primary: #1E293B;
-  --text-secondary: #64748B;
+  --bg-glass: rgba(255,255,255,0.85);
+  --accent: #2563EB;
+  --accent-gradient: linear-gradient(135deg, #2563EB, #7C3AED);
+  --accent-secondary: #0EA5E9;
+  --text-primary: #0F172A;
+  --text-secondary: #475569;
   --text-muted: #94A3B8;
   --success: #10B981;
   --warning: #F59E0B;
   --danger: #EF4444;
   --border: #E2E8F0;
-  --shadow: 0 2px 8px rgba(30,41,59,0.08);
-  --shadow-lg: 0 8px 32px rgba(30,41,59,0.12);
-  --radius: 16px;
-  --radius-sm: 10px;
+  --shadow: 0 2px 12px rgba(15,23,42,0.06);
+  --shadow-lg: 0 8px 40px rgba(15,23,42,0.1);
+  --shadow-accent: 0 4px 20px rgba(37,99,235,0.25);
+  --radius: 18px;
+  --radius-sm: 12px;
   --font-heading: 'Outfit', sans-serif;
   --font-body: 'Inter', sans-serif;
 }
@@ -64,72 +66,10 @@ img { max-width: 100%; display: block; }
 .pills-container { display: flex; flex-wrap: wrap; gap: 6px; }
 .pill { flex-shrink: 0; max-width: 100%; }
 
-/* ========== SPLASH SCREEN ========== */
-#splash {
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  background: linear-gradient(135deg, #E8F4FD 0%, #BAE6FD 50%, #7DD3FC 100%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  transition: opacity 0.5s ease, transform 0.5s ease;
-}
-#splash.removing { opacity: 0; transform: scale(0.95); }
-.splash-logo {
-  font-family: var(--font-heading);
-  font-size: 64px;
-  font-weight: 800;
-  background: var(--accent-gradient);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  animation: pulseGlow 2s ease-in-out infinite;
-  letter-spacing: 4px;
-}
-.splash-subtitle {
-  font-family: var(--font-heading);
-  font-size: 24px;
-  font-weight: 600;
-  color: var(--text-secondary);
-  margin-top: 8px;
-  opacity: 0;
-  animation: fadeIn 0.6s ease 0.5s forwards;
-  letter-spacing: 8px;
-}
-.splash-bar-container {
-  position: absolute;
-  bottom: 80px;
-  left: 20%;
-  right: 20%;
-  height: 4px;
-  background: rgba(255,255,255,0.4);
-  border-radius: 2px;
-  overflow: hidden;
-}
-.splash-bar {
-  height: 100%;
-  width: 0;
-  background: var(--accent-gradient);
-  border-radius: 2px;
-  animation: loadBar 1.5s ease-out forwards;
-  position: relative;
-}
-.splash-bar::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
-  animation: shimmer 1s infinite;
-}
-@keyframes pulseGlow {
-  0%, 100% { filter: drop-shadow(0 0 8px rgba(14,165,233,0.4)); transform: scale(1); }
-  50% { filter: drop-shadow(0 0 20px rgba(14,165,233,0.7)); transform: scale(1.02); }
-}
-@keyframes fadeIn { to { opacity: 1; } }
-@keyframes loadBar { to { width: 100%; } }
-@keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+
+/* Header User Avatar */
+#header-user-avatar { border-radius: 50%; overflow: hidden; }
+#header-user-avatar:active { transform: scale(0.93); }
 
 /* ========== LAYOUT ========== */
 #app {
@@ -154,52 +94,155 @@ img { max-width: 100%; display: block; }
   position: sticky;
   top: 0;
   z-index: 100;
-  background: rgba(232,244,253,0.85);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border-bottom: 1px solid rgba(226,232,240,0.6);
-  padding: 12px 16px;
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  border-bottom: 1px solid rgba(226,232,240,0.4);
+  padding: 12px 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
   flex-shrink: 0;
+  box-shadow: 0 1px 12px rgba(15,23,42,0.06);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
-.header-left, .header-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
-.header-center { flex: 1; display: flex; justify-content: center; }
+.app-header.scrolled {
+  background: rgba(255,255,255,0.95);
+  box-shadow: 0 4px 20px rgba(15,23,42,0.1);
+  padding: 10px 20px;
+}
+.header-left, .header-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.header-center { flex: 1; display: flex; justify-content: center; align-items: center; }
+
+/* Logo with animation */
 .logo-text {
   font-family: var(--font-heading);
   font-size: 22px;
-  font-weight: 700;
+  font-weight: 800;
   background: var(--accent-gradient);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  user-select: none;
+  -webkit-user-select: none;
+  letter-spacing: -0.8px;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  animation: logoFadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  opacity: 0;
+  transform: translateY(-4px);
 }
+@keyframes logoFadeIn {
+  to { opacity: 1; transform: translateY(0); }
+}
+.logo-text::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent-gradient);
+  display: inline-block;
+  animation: logoPulse 2s ease-in-out infinite;
+}
+@keyframes logoPulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.3); opacity: 0.7; }
+}
+
+/* Admin badge - refined */
 .admin-badge {
   background: linear-gradient(135deg, #F59E0B, #FBBF24);
   color: #fff;
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 700;
-  padding: 3px 10px;
-  border-radius: 20px;
+  padding: 2px 8px;
+  border-radius: 12px;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 1.2px;
+  animation: badgePop 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.3s forwards;
+  opacity: 0;
+  transform: scale(0.8);
 }
+@keyframes badgePop {
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* Icon buttons - refined with hover lift */
 .icon-btn {
   width: 40px;
   height: 40px;
-  border-radius: 12px;
+  border-radius: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--text-primary);
-  transition: all 0.15s ease;
+  color: var(--text-secondary);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
+  background: transparent;
+  border: 1px solid transparent;
 }
-.icon-btn:active { transform: scale(0.93); }
-.icon-btn:hover { background: rgba(14,165,233,0.1); }
-.icon-btn svg { width: 22px; height: 22px; }
+.icon-btn:hover {
+  background: rgba(37,99,235,0.08);
+  color: var(--accent);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(37,99,235,0.15);
+}
+.icon-btn:active { transform: scale(0.92) translateY(0); }
+.icon-btn svg { width: 20px; height: 20px; transition: transform 0.2s; }
+.icon-btn:hover svg { transform: scale(1.1); }
+
+/* Header avatar - refined */
+#header-user-avatar {
+  border-radius: 50%;
+  overflow: hidden;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 2px solid transparent;
+}
+#header-user-avatar:hover {
+  border-color: var(--accent);
+  transform: scale(1.05);
+  box-shadow: 0 2px 12px rgba(37,99,235,0.2);
+}
+#header-user-avatar:active { transform: scale(0.95); }
+
+/* Header entrance animation */
+@keyframes headerSlideDown {
+  from { transform: translateY(-100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+.app-header {
+  animation: headerSlideDown 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Page title in header for non-home pages */
+.page-title-text {
+  font-family: var(--font-heading);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.3px;
+  animation: titleSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  opacity: 0;
+  transform: translateX(-10px);
+}
+@keyframes titleSlideIn {
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* Header action group */
+.header-actions-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  animation: actionsFadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.1s forwards;
+  opacity: 0;
+}
+@keyframes actionsFadeIn {
+  to { opacity: 1; }
+}
 
 /* ========== SIDEBAR ========== */
 #sidebar-overlay {
@@ -491,18 +534,31 @@ img { max-width: 100%; display: block; }
   align-items: center;
   justify-content: center;
   gap: 10px;
-  margin: 24px 16px;
-  padding: 16px;
+  padding: 14px 28px;
   border-radius: var(--radius);
   background: var(--accent-gradient);
   color: #fff;
   font-family: var(--font-heading);
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 700;
-  box-shadow: 0 6px 20px rgba(14,165,233,0.35);
-  transition: all 0.2s;
+  box-shadow: var(--shadow-accent);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  border: none;
+  position: relative;
+  overflow: hidden;
 }
-.explore-btn:active { transform: scale(0.97); box-shadow: 0 3px 10px rgba(14,165,233,0.25); }
+.explore-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.2), transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.explore-btn:hover::before { opacity: 1; }
+.explore-btn:active { transform: scale(0.96) translateY(1px); box-shadow: 0 2px 10px rgba(37,99,235,0.2); }
+.explore-btn svg { transition: transform 0.3s; }
+.explore-btn:hover svg { transform: rotate(15deg) scale(1.1); }
 
 /* ========== SEARCH PAGE ========== */
 .search-container { padding: 12px 16px; position: relative; flex-shrink: 0; }
@@ -1615,6 +1671,50 @@ img { max-width: 100%; display: block; }
 }
 .selected-id-tag .remove-id:active { background: rgba(14,165,233,0.2); }
 
+/* Pending Channels */
+.pending-box {
+  background: var(--bg-secondary);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  margin-bottom: 16px;
+  border: 1px solid var(--border);
+  display: none;
+}
+.pending-box.visible { display: block; }
+.pending-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.pending-lang-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px;
+  background: var(--bg-primary);
+  border-radius: 8px;
+  margin-bottom: 6px;
+  font-size: 13px;
+}
+.pending-lang-name {
+  font-weight: 600;
+  color: var(--accent);
+}
+.pending-lang-links {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+.pending-lang-remove {
+  color: var(--danger);
+  font-size: 16px;
+  cursor: pointer;
+  padding: 4px;
+}
+
 /* Admin Results */
 .admin-results { margin-bottom: 16px; }
 .admin-anime-card {
@@ -1888,6 +1988,43 @@ img { max-width: 100%; display: block; }
 .modal-btn.secondary { background: var(--bg-primary); color: var(--text-secondary); }
 .modal-btn:active { transform: scale(0.97); opacity: 0.9; }
 
+/* ========== PASSWORD MODAL ========== */
+#password-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 400;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(6px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+#password-overlay.open { display: flex; }
+.password-box {
+  background: var(--bg-secondary);
+  border-radius: var(--radius);
+  padding: 24px;
+  width: 100%;
+  max-width: 320px;
+  box-shadow: var(--shadow-lg);
+  animation: modalIn 0.25s ease;
+}
+.password-box .modal-title { text-align: center; margin-bottom: 16px; }
+.password-input {
+  width: 100%;
+  padding: 12px;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--border);
+  background: var(--bg-primary);
+  font-size: 16px;
+  text-align: center;
+  letter-spacing: 2px;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+}
+.password-input:focus { border-color: var(--accent); }
+
 /* ========== LANGUAGE SELECTOR DROPDOWN ========== */
 .lang-dropdown {
   position: absolute;
@@ -1933,6 +2070,22 @@ img { max-width: 100%; display: block; }
 }
 .heart-burst { animation: heartBurst 0.4s ease; }
 
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+
+/* Page header transition */
+.page .app-header {
+  animation: headerSlideDown 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
 /* ========== RESPONSIVE ========== */
 @media (min-width: 768px) {
   #app { max-width: 480px; margin: 0 auto; }
@@ -1954,6 +2107,9 @@ body.is-admin .admin-only { display: flex !important; }
 body.is-admin .admin-only.block { display: block !important; }
 body.is-admin .admin-only.inline-flex { display: inline-flex !important; }
 body.is-admin .admin-only.grid { display: grid !important; }
+/* FIX: Admin pages must require .active to show, preventing overlap with Home */
+body.is-admin .page.admin-only { display: none !important; }
+body.is-admin .page.admin-only.active { display: flex !important; flex-direction: column; }
 
 /* ========== GRID VIEW ========== */
 .anime-grid {
@@ -1966,16 +2122,1084 @@ body.is-admin .admin-only.grid { display: grid !important; }
 
 /* ========== SCROLLBAR ========== */
 ::-webkit-scrollbar { width: 0; height: 0; }
+
+
+
+
+/* ========== ANIME PROFILE PAGE ========== */
+.profile-hero {
+  position: relative;
+  width: 100%;
+  min-height: 200px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.profile-hero-bg {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #1e3a5f 0%, #2d1b4e 50%, #1a1a2e 100%);
+}
+.profile-hero-pattern {
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M50 50c0-5.523 4.477-10 10-10s10 4.477 10 10-4.477 10-10 10-10-4.477-10-10zM10 10c0-5.523 4.477-10 10-10s10 4.477 10 10-4.477 10-10 10-10-4.477-10-10z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+.profile-hero-shine {
+  position: absolute;
+  top: -30%;
+  right: -20%;
+  width: 150%;
+  height: 150%;
+  background: radial-gradient(ellipse at 70% 20%, rgba(99,102,241,0.15) 0%, transparent 50%),
+              radial-gradient(ellipse at 20% 80%, rgba(14,165,233,0.08) 0%, transparent 40%);
+}
+.profile-hero-content {
+  position: relative;
+  z-index: 2;
+  padding: 24px 20px 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.profile-avatar-wrap {
+  position: relative;
+  margin-bottom: 14px;
+}
+.profile-avatar-img {
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid rgba(255,255,255,0.15);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  position: relative;
+  z-index: 2;
+  background: linear-gradient(135deg, #6366F1, #8B5CF6);
+}
+.profile-avatar-default {
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-heading);
+  font-size: 32px;
+  font-weight: 800;
+  color: #fff;
+  border: 3px solid rgba(255,255,255,0.15);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  background: linear-gradient(135deg, #6366F1, #8B5CF6);
+  position: relative;
+  z-index: 2;
+}
+.profile-status-dot {
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #10B981;
+  border: 3px solid #1a1a2e;
+  z-index: 3;
+}
+.profile-name {
+  font-family: var(--font-heading);
+  font-size: 22px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 4px;
+  letter-spacing: -0.3px;
+}
+.profile-handle {
+  font-size: 13px;
+  color: rgba(255,255,255,0.55);
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  justify-content: center;
+}
+.profile-badges-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.profile-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+.profile-badge.premium {
+  background: linear-gradient(135deg, rgba(245,158,11,0.25), rgba(251,191,36,0.15));
+  color: #FBBF24;
+  border: 1px solid rgba(251,191,36,0.3);
+}
+.profile-badge.admin {
+  background: linear-gradient(135deg, rgba(239,68,68,0.25), rgba(248,113,113,0.15));
+  color: #FCA5A5;
+  border: 1px solid rgba(248,113,113,0.3);
+}
+.profile-badge.member {
+  background: rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.75);
+  border: 1px solid rgba(255,255,255,0.15);
+}
+
+/* Stats Card */
+.profile-stats-card {
+  background: var(--bg-secondary);
+  border-radius: var(--radius);
+  margin: -20px 16px 16px;
+  padding: 16px;
+  box-shadow: var(--shadow-lg);
+  position: relative;
+  z-index: 10;
+  display: flex;
+  gap: 0;
+  overflow: hidden;
+}
+.profile-stat-item {
+  flex: 1;
+  text-align: center;
+  padding: 8px 4px;
+  position: relative;
+}
+.profile-stat-item:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 20%;
+  bottom: 20%;
+  width: 1px;
+  background: var(--border);
+}
+.profile-stat-value {
+  font-family: var(--font-heading);
+  font-size: 22px;
+  font-weight: 800;
+  background: var(--accent-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1.2;
+}
+.profile-stat-label {
+  font-size: 10px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+/* Quick Actions Grid */
+.profile-actions-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  padding: 0 16px 16px;
+}
+.profile-action-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 14px 4px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-secondary);
+  border: 1.5px solid var(--border);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+.profile-action-btn:active { transform: scale(0.95); background: var(--bg-primary); }
+.profile-action-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.profile-action-icon.discover { background: linear-gradient(135deg, #0EA5E9, #6366F1); color: #fff; }
+.profile-action-icon.history { background: linear-gradient(135deg, #8B5CF6, #EC4899); color: #fff; }
+.profile-action-icon.settings { background: linear-gradient(135deg, #F59E0B, #FBBF24); color: #fff; }
+.profile-action-icon.share { background: linear-gradient(135deg, #10B981, #34D399); color: #fff; }
+.profile-action-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* Section Styling */
+.profile-section {
+  padding: 0 16px 20px;
+}
+.profile-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+.profile-section-title {
+  font-family: var(--font-heading);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.profile-section-title-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+
+/* Watchlist Cards */
+.profile-watchlist-scroll {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.profile-watchlist-scroll::-webkit-scrollbar { display: none; }
+.profile-watchlist-card {
+  flex-shrink: 0;
+  width: 120px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: var(--bg-secondary);
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  scroll-snap-align: start;
+  position: relative;
+}
+.profile-watchlist-card:active { transform: scale(0.96); }
+.profile-watchlist-img {
+  width: 100%;
+  aspect-ratio: 3/4;
+  object-fit: cover;
+  display: block;
+}
+.profile-watchlist-placeholder {
+  width: 100%;
+  aspect-ratio: 3/4;
+  background: linear-gradient(135deg, #1e293b, #0f172a);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 700;
+}
+.profile-watchlist-info {
+  padding: 8px;
+}
+.profile-watchlist-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.profile-watchlist-meta {
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+.profile-watchlist-remove {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 12px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.profile-watchlist-card:hover .profile-watchlist-remove,
+.profile-watchlist-card:active .profile-watchlist-remove { opacity: 1; }
+
+/* Recently Viewed Cards */
+.profile-recent-scroll {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.profile-recent-scroll::-webkit-scrollbar { display: none; }
+.profile-recent-card {
+  flex-shrink: 0;
+  width: 120px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: var(--bg-secondary);
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  scroll-snap-align: start;
+  position: relative;
+}
+.profile-recent-card:active { transform: scale(0.96); }
+.profile-recent-img {
+  width: 100%;
+  aspect-ratio: 3/4;
+  object-fit: cover;
+  display: block;
+}
+.profile-recent-placeholder {
+  width: 100%;
+  aspect-ratio: 3/4;
+  background: linear-gradient(135deg, #1e293b, #0f172a);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 700;
+}
+.profile-recent-info {
+  padding: 8px;
+}
+.profile-recent-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.profile-recent-meta {
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* Activity Feed */
+.profile-activity-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-sm);
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: all 0.15s;
+  border: 1.5px solid transparent;
+}
+.profile-activity-item:active { background: var(--bg-primary); border-color: var(--border); }
+.profile-activity-thumb {
+  width: 52px;
+  height: 70px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #1e293b, #0f172a);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent);
+  font-size: 10px;
+  font-weight: 700;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+.profile-activity-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.profile-activity-info { flex: 1; min-width: 0; }
+.profile-activity-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.profile-activity-meta {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 3px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.profile-activity-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--text-muted);
+}
+.profile-activity-arrow {
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+/* Settings List */
+.profile-settings-card {
+  background: var(--bg-secondary);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  margin-bottom: 16px;
+}
+.profile-settings-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: background 0.15s;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+  width: 100%;
+  border: none;
+  background: none;
+  font-size: 14px;
+  color: var(--text-primary);
+}
+.profile-settings-item:last-child { border-bottom: none; }
+.profile-settings-item:active { background: var(--bg-primary); }
+.profile-settings-icon-wrap {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.profile-settings-icon-wrap.red { background: rgba(239,68,68,0.1); color: var(--danger); }
+.profile-settings-icon-wrap.blue { background: rgba(14,165,233,0.1); color: var(--accent); }
+.profile-settings-icon-wrap.green { background: rgba(16,185,129,0.1); color: var(--success); }
+.profile-settings-icon-wrap.purple { background: rgba(139,92,246,0.1); color: #8B5CF6; }
+.profile-settings-icon-wrap.orange { background: rgba(245,158,11,0.1); color: var(--warning); }
+.profile-settings-text { flex: 1; font-weight: 500; }
+.profile-settings-arrow {
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+/* Empty States */
+.profile-empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  background: var(--bg-secondary);
+  border-radius: var(--radius);
+  border: 2px dashed var(--border);
+}
+.profile-empty-emoji {
+  font-size: 48px;
+  margin-bottom: 12px;
+  opacity: 0.7;
+}
+.profile-empty-title {
+  font-family: var(--font-heading);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+.profile-empty-sub {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+  line-height: 1.5;
+}
+.profile-empty-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 24px;
+  border-radius: 24px;
+  background: var(--accent-gradient);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  border: none;
+  box-shadow: var(--shadow-accent);
+  transition: all 0.2s;
+}
+.profile-empty-btn:active { transform: scale(0.95); }
+
+/* App Footer */
+.profile-app-footer {
+  text-align: center;
+  padding: 24px 16px 40px;
+  color: var(--text-muted);
+}
+.profile-app-footer .logo-text {
+  font-size: 18px;
+  margin-bottom: 4px;
+}
+.profile-app-footer-version {
+  font-size: 11px;
+  opacity: 0.7;
+  margin-bottom: 8px;
+}
+.profile-app-footer-links {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  font-size: 11px;
+}
+.profile-app-footer-links a {
+  color: var(--accent);
+  font-weight: 500;
+}
+
+/* Favorite Genres Tags */
+.profile-genre-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 0 16px 16px;
+}
+.profile-genre-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  background: rgba(14,165,233,0.08);
+  color: var(--accent);
+  border: 1.5px solid rgba(14,165,233,0.15);
+  transition: all 0.15s;
+}
+.profile-genre-tag:active { transform: scale(0.95); }
+
+/* Season Tracker */
+.profile-season-tracker {
+  background: var(--bg-secondary);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin: 0 16px 16px;
+  box-shadow: var(--shadow);
+}
+.profile-season-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+.profile-season-title {
+  font-family: var(--font-heading);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.profile-season-count {
+  font-size: 12px;
+  color: var(--accent);
+  font-weight: 600;
+}
+.profile-season-bar {
+  height: 6px;
+  border-radius: 3px;
+  background: var(--bg-primary);
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+.profile-season-fill {
+  height: 100%;
+  border-radius: 3px;
+  background: var(--accent-gradient);
+  transition: width 0.6s ease;
+}
+.profile-season-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+}
+
+/* ========== iOS HEADER UPGRADE ========== */
+.header-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1.2;
+}
+.header-brand-title {
+  font-family: var(--font-heading);
+  font-size: 18px;
+  font-weight: 800;
+  background: var(--accent-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.5px;
+}
+.header-brand-sub {
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--text-muted);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+.header-greeting-icon {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #FBBF24, #F59E0B);
+  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
+  animation: greetingPulse 3s ease-in-out infinite;
+  flex-shrink: 0;
+}
+.header-greeting-icon.evening {
+  background: linear-gradient(135deg, #6366F1, #8B5CF6);
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
+}
+.header-greeting-icon.night {
+  background: linear-gradient(135deg, #1E293B, #0F172A);
+  box-shadow: 0 2px 8px rgba(30, 41, 59, 0.3);
+}
+@keyframes greetingPulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.15); opacity: 0.85; }
+}
+.header-user-pfp {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid var(--border);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.header-user-pfp:hover {
+  border-color: var(--accent);
+  transform: scale(1.08);
+  box-shadow: 0 2px 12px rgba(37, 99, 235, 0.2);
+}
+.header-user-pfp:active {
+  transform: scale(0.95);
+}
+.header-user-pfp img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.header-user-pfp .pfp-fallback {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-heading);
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  background: var(--accent-gradient);
+}
+
+/* ========== iOS SIDEBAR UPGRADE ========== */
+#sidebar {
+  transform: translateX(-100%);
+  transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+  will-change: transform;
+}
+#sidebar.open {
+  transform: translateX(0);
+}
+#sidebar-overlay {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.35s ease, visibility 0.35s ease;
+  backdrop-filter: blur(8px) saturate(150%);
+  -webkit-backdrop-filter: blur(8px) saturate(150%);
+}
+#sidebar-overlay.open {
+  opacity: 1;
+  visibility: visible;
+}
+.sidebar-header {
+  padding: 20px 16px;
+  background: linear-gradient(135deg, rgba(37,99,235,0.05), rgba(124,58,237,0.05));
+}
+.sidebar-brand {
+  display: flex;
+  flex-direction: column;
+}
+.sidebar-brand-title {
+  font-family: var(--font-heading);
+  font-size: 20px;
+  font-weight: 800;
+  background: var(--accent-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.sidebar-brand-sub {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-weight: 500;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+.sidebar-close-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-primary);
+  color: var(--text-secondary);
+  transition: all 0.2s ease;
+  border: none;
+  cursor: pointer;
+}
+.sidebar-close-btn:hover {
+  background: var(--border);
+  color: var(--text-primary);
+}
+.sidebar-close-btn:active {
+  transform: scale(0.9);
+}
+.sidebar-close-btn svg {
+  width: 18px;
+  height: 18px;
+}
+.sidebar-section {
+  margin-bottom: 8px;
+}
+.sidebar-btn {
+  padding: 14px 12px;
+  border-radius: 12px;
+  margin-bottom: 2px;
+  font-size: 15px;
+  font-weight: 500;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+.sidebar-btn::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 0;
+  border-radius: 0 3px 3px 0;
+  background: var(--accent-gradient);
+  transition: height 0.25s ease;
+}
+.sidebar-btn:hover, .sidebar-btn.active {
+  background: rgba(37, 99, 235, 0.06);
+  color: var(--accent);
+}
+.sidebar-btn.active::before {
+  height: 60%;
+}
+.sidebar-btn:active {
+  transform: scale(0.97);
+  background: rgba(37, 99, 235, 0.1);
+}
+.sidebar-action-btn {
+  padding: 14px;
+  border-radius: 14px;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+.sidebar-action-btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.2), transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.sidebar-action-btn:hover::after {
+  opacity: 1;
+}
+.sidebar-action-btn:active {
+  transform: scale(0.96);
+}
+
+
+/* ========== SEARCH PAGE UPGRADE ========== */
+.search-box {
+  position: relative;
+  background: var(--bg-secondary);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  border: 1.5px solid var(--border);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 3px rgba(15,23,42,0.04);
+}
+.search-box:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1), 0 4px 12px rgba(37, 99, 235, 0.08);
+  transform: translateY(-1px);
+}
+.search-box-inner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.search-box-icon {
+  width: 20px;
+  height: 20px;
+  color: var(--text-muted);
+  flex-shrink: 0;
+  transition: color 0.2s ease;
+}
+.search-box:focus-within .search-box-icon {
+  color: var(--accent);
+}
+.search-box input {
+  flex: 1;
+  border: none;
+  background: none;
+  font-size: 16px;
+  color: var(--text-primary);
+  min-width: 0;
+  font-weight: 500;
+  letter-spacing: -0.2px;
+}
+.search-box input::placeholder {
+  color: var(--text-muted);
+  font-weight: 400;
+}
+.search-box-hint {
+  position: absolute;
+  bottom: -20px;
+  left: 16px;
+  font-size: 11px;
+  color: var(--text-muted);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+.search-box:focus-within .search-box-hint {
+  opacity: 1;
+}
+.search-box-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.search-clear-btn {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--border);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+}
+.search-clear-btn.visible {
+  display: flex;
+}
+.search-clear-btn:hover {
+  background: var(--text-muted);
+}
+.search-clear-btn:active {
+  transform: scale(0.9);
+}
+.search-clear-btn svg {
+  width: 12px;
+  height: 12px;
+  color: var(--text-secondary);
+}
+.search-enter-hint {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--accent);
+  background: rgba(37, 99, 235, 0.08);
+  padding: 3px 8px;
+  border-radius: 6px;
+  letter-spacing: 0.5px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  flex-shrink: 0;
+}
+.search-box:focus-within .search-enter-hint {
+  opacity: 1;
+}
+.search-hero {
+  padding: 24px 16px 16px;
+  text-align: center;
+}
+.search-hero-title {
+  font-family: var(--font-heading);
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+  letter-spacing: -0.5px;
+}
+.search-hero-sub {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-bottom: 20px;
+}
+
+
+/* ========== iOS FOOTER TAB UPGRADE ========== */
+#bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border-top: 1px solid rgba(226, 232, 240, 0.6);
+  display: flex;
+  justify-content: space-around;
+  padding: 8px 0 calc(8px + env(safe-area-inset-bottom));
+  box-shadow: 0 -4px 24px rgba(15, 23, 42, 0.06);
+}
+.nav-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 0 6px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  border: none;
+  background: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.nav-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%) scaleX(0);
+  width: 32px;
+  height: 3px;
+  border-radius: 0 0 3px 3px;
+  background: var(--accent-gradient);
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.nav-item.active {
+  color: var(--accent);
+}
+.nav-item.active::before {
+  transform: translateX(-50%) scaleX(1);
+}
+.nav-item:active {
+  transform: scale(0.92);
+}
+.nav-item svg {
+  width: 24px;
+  height: 24px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  stroke-width: 1.8;
+}
+.nav-item.active svg {
+  stroke-width: 2.2;
+  transform: translateY(-2px);
+  filter: drop-shadow(0 2px 4px rgba(37, 99, 235, 0.2));
+}
+.nav-item span {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.nav-item.active span {
+  font-weight: 700;
+  letter-spacing: -0.2px;
+}
+.nav-item::after {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border-radius: 14px;
+  background: var(--accent);
+  opacity: 0;
+  transform: scale(0.6);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: -1;
+}
+.nav-item:active::after {
+  opacity: 0.08;
+  transform: scale(1);
+}
+#tab-indicator {
+  position: absolute;
+  bottom: calc(8px + env(safe-area-inset-bottom) + 4px);
+  height: 36px;
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.08), rgba(124, 58, 237, 0.08));
+  border-radius: 12px;
+  transition: all 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+  pointer-events: none;
+  z-index: 99;
+  opacity: 0;
+}
+#tab-indicator.visible {
+  opacity: 1;
+}
+
 </style>
+<base target="_blank">
+<base target="_blank">
+<base target="_blank">
+<base target="_blank">
+<base target="_blank">
 </head>
 <body>
-
-<!-- ========== SPLASH SCREEN ========== -->
-<div id="splash">
-  <div class="splash-logo">IOX</div>
-  <div class="splash-subtitle">VAULT</div>
-  <div class="splash-bar-container"><div class="splash-bar"></div></div>
-</div>
 
 <!-- ========== SIDEBAR OVERLAY ========== -->
 <div id="sidebar-overlay" onclick="closeSidebar()"></div>
@@ -1983,8 +3207,11 @@ body.is-admin .admin-only.grid { display: grid !important; }
 <!-- ========== SIDEBAR ========== -->
 <nav id="sidebar">
   <div class="sidebar-header">
-    <div class="logo-text">IOX VAULT</div>
-    <button class="icon-btn" onclick="closeSidebar()">
+    <div class="sidebar-brand">
+      <span class="sidebar-brand-title">IOX VAULT</span>
+      <span class="sidebar-brand-sub">By Infinite Anime</span>
+    </div>
+    <button class="sidebar-close-btn" onclick="closeSidebar()">
       <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
     </button>
   </div>
@@ -2029,6 +3256,7 @@ body.is-admin .admin-only.grid { display: grid !important; }
     <a href="#" style="color:var(--accent);margin:0 4px;">Terms of Use</a>
     <a href="#" style="color:var(--accent);margin:0 4px;">Privacy Policy</a>
     <div style="margin-top:8px;opacity:0.7;">IOX VAULT is a fan-made platform. All anime data from Anilist. We do not host any content.</div>
+    <div style="margin-top:8px;opacity:0.4;font-size:9px;cursor:default;" ondblclick="openPasswordModal()">.</div>
   </div>
 </nav>
 
@@ -2038,25 +3266,47 @@ body.is-admin .admin-only.grid { display: grid !important; }
 <!-- ========== MODAL OVERLAY ========== -->
 <div id="modal-overlay" onclick="if(event.target===this)closeModal()"></div>
 
+<!-- ========== PASSWORD OVERLAY ========== -->
+<div id="password-overlay" onclick="if(event.target===this)closePasswordModal()">
+  <div class="password-box">
+    <div class="modal-title">Admin Access</div>
+    <input type="password" id="password-input" class="password-input" placeholder="Enter password" maxlength="20" onkeydown="if(event.key==='Enter')checkPassword()">
+    <div style="display:flex;gap:8px;">
+      <button class="modal-btn secondary" style="flex:1;" onclick="closePasswordModal()">Cancel</button>
+      <button class="modal-btn primary" style="flex:1;" onclick="checkPassword()">Unlock</button>
+    </div>
+  </div>
+</div>
+
 <!-- ========== MAIN APP ========== -->
 <div id="app">
 
   <!-- ===== HOME PAGE ===== -->
   <div class="page active" id="page-home">
-    <header class="app-header">
+    <header class="app-header" id="home-header">
       <div class="header-left">
-        <button class="icon-btn" onclick="openSidebar()">
+        <button class="icon-btn" onclick="openSidebar()" aria-label="Menu">
           <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
         </button>
       </div>
       <div class="header-center">
-        <span class="logo-text">IOX VAULT</span>
+        <div class="header-brand">
+          <span class="header-brand-title" id="home-logo-text" oncontextmenu="return false;">IOX VAULT</span>
+          <span class="header-brand-sub">By Infinite Anime</span>
+        </div>
         <span class="admin-badge admin-only" style="margin-left:8px;">ADMIN</span>
       </div>
-      <div class="header-right">
-        <button class="icon-btn" onclick="switchTab('search')">
+      <div class="header-right header-actions-group" style="gap:10px;">
+        <div class="header-greeting-icon" id="header-greeting-icon" style="display:none;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+        </div>
+        <button class="icon-btn" onclick="switchTab('search')" aria-label="Search">
           <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
         </button>
+        <div class="header-user-pfp" onclick="switchTab('profile')" id="header-user-pfp" aria-label="Profile">
+          <img src="" alt="" id="header-avatar-img" style="width:100%;height:100%;object-fit:cover;display:none;">
+          <div id="header-avatar-fallback" class="pfp-fallback">U</div>
+        </div>
       </div>
     </header>
     <div class="pills-scroll" id="home-pills">
@@ -2067,15 +3317,31 @@ body.is-admin .admin-only.grid { display: grid !important; }
     </div>
     <div id="home-content" style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;">
       <div id="home-pre-explore">
-        <div class="empty-state">
-          <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/></svg>
-          <div class="empty-state-title">Discover Anime</div>
-          <div class="empty-state-sub">Explore trending, movies, TV series and more</div>
+        <div class="hero-greeting-card" style="margin:16px;padding:28px 20px;border-radius:var(--radius);background:linear-gradient(135deg, rgba(37,99,235,0.08) 0%, rgba(124,58,237,0.08) 100%);border:1.5px solid rgba(37,99,235,0.15);text-align:center;position:relative;overflow:hidden;">
+          <div style="position:absolute;top:-20px;right:-20px;width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,rgba(37,99,235,0.1),rgba(124,58,237,0.1));filter:blur(20px);"></div>
+          <div style="position:absolute;bottom:-15px;left:-15px;width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,rgba(14,165,233,0.1),rgba(37,99,235,0.1));filter:blur(15px);"></div>
+          <div id="hero-greeting-icon" style="width:56px;height:56px;margin:0 auto 16px;animation:float 3s ease-in-out infinite;">
+            <svg viewBox="0 0 24 24" fill="none" style="width:100%;height:100%;">
+              <defs>
+                <linearGradient id="greetGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style="stop-color:#0EA5E9"/>
+                  <stop offset="100%" style="stop-color:#8B5CF6"/>
+                </linearGradient>
+              </defs>
+              <circle cx="12" cy="12" r="10" stroke="url(#greetGrad)" stroke-width="1.5" fill="none" opacity="0.3"/>
+              <circle cx="12" cy="12" r="6" fill="url(#greetGrad)" opacity="0.15"/>
+              <path d="M12 6v2M12 16v2M6 12h2M16 12h2M7.76 7.76l1.41 1.41M14.83 14.83l1.41 1.41M7.76 16.24l1.41-1.41M14.83 9.17l1.41-1.41" stroke="url(#greetGrad)" stroke-width="1.5" stroke-linecap="round"/>
+              <circle cx="12" cy="12" r="3" fill="url(#greetGrad)"/>
+            </svg>
+          </div>
+          <div id="hero-greeting-title" style="font-family:var(--font-heading);font-size:26px;font-weight:800;color:var(--text-primary);margin-bottom:8px;position:relative;z-index:2;animation:heroTitleIn 0.6s cubic-bezier(0.4,0,0.2,1) forwards;opacity:1;transform:translateY(0);">Welcome to IOX VAULT</div>
+          <div id="hero-greeting-message" style="font-size:15px;color:var(--text-secondary);line-height:1.7;max-width:300px;margin:0 auto 18px;position:relative;z-index:2;animation:heroMsgIn 0.6s cubic-bezier(0.4,0,0.2,1) 0.15s forwards;opacity:1;transform:translateY(0);">Your gateway to the world of anime. Discover trending series, movies, and hidden gems all in one place.</div>
+          <div id="hero-greeting-time" style="font-size:13px;color:var(--accent);font-weight:600;letter-spacing:0.5px;margin-bottom:18px;position:relative;z-index:2;animation:heroTimeIn 0.6s cubic-bezier(0.4,0,0.2,1) 0.3s forwards;opacity:1;transform:translateY(0);">Saturday, July 04, 2026 · 05:24 PM</div>
+          <button class="explore-btn" onclick="exploreNow()" style="position:relative;z-index:2;margin:0 auto;display:inline-flex;box-shadow:var(--shadow-accent);">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
+            <span id="explore-btn-text">Explore Now</span>
+          </button>
         </div>
-        <button class="explore-btn" onclick="exploreNow()">
-          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
-          Explore Now
-        </button>
       </div>
       <div id="home-post-explore" style="display:none;">
         <div id="trending-section" style="display:none;">
@@ -2105,17 +3371,41 @@ body.is-admin .admin-only.grid { display: grid !important; }
   <!-- ===== SEARCH PAGE ===== -->
   <div class="page" id="page-search">
     <header class="app-header">
-      <div class="header-left"><button class="icon-btn" onclick="openSidebar()"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg></button></div>
-      <div class="header-center"><span class="logo-text">Search</span></div>
-      <div class="header-right" style="width:40px;"></div>
-    </header>
-    <div class="search-container">
-      <div class="search-box">
-        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-        <input type="text" id="search-input" placeholder="Search anime..." oninput="onSearchInput(this.value)" onkeydown="if(event.key==='Enter')doSearch(this.value)">
-        <button id="search-clear" onclick="clearSearch()">
-          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+      <div class="header-left">
+        <button class="icon-btn" onclick="openSidebar()" aria-label="Menu">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
         </button>
+      </div>
+      <div class="header-center">
+        <div class="header-brand">
+          <span class="header-brand-title">IOX VAULT</span>
+          <span class="header-brand-sub">By Infinite Anime</span>
+        </div>
+      </div>
+      <div class="header-right header-actions-group" style="gap:10px;">
+        <div class="header-user-pfp" onclick="switchTab('profile')" aria-label="Profile">
+          <img src="" alt="" id="header-avatar-img-search" style="width:100%;height:100%;object-fit:cover;display:none;">
+          <div id="header-avatar-fallback-search" class="pfp-fallback">U</div>
+        </div>
+      </div>
+    </header>
+    <div class="search-hero">
+        <div class="search-hero-title">Discover Anime</div>
+        <div class="search-hero-sub">Find your next favorite series</div>
+      </div>
+      <div class="search-container">
+      <div class="search-box" id="search-box-wrapper">
+        <div class="search-box-inner">
+          <svg class="search-box-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          <input type="text" id="search-input" placeholder="Write Anime name and press Enter to search" oninput="onSearchInput(this.value)" onkeydown="handleSearchKeydown(event, this.value)">
+          <div class="search-box-actions">
+            <button class="search-clear-btn" id="search-clear" onclick="clearSearch()">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+            
+          </div>
+        </div>
+        <div class="search-box-hint">Press Enter to search instantly</div>
       </div>
       <div class="suggestions-dropdown" id="suggestions-box">
         <div class="suggestion-section" id="recent-searches-sec" style="display:none;">
@@ -2160,9 +3450,15 @@ body.is-admin .admin-only.grid { display: grid !important; }
   <!-- ===== SCHEDULE PAGE ===== -->
   <div class="page" id="page-schedule">
     <header class="app-header">
-      <div class="header-left"><button class="icon-btn" onclick="openSidebar()"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg></button></div>
-      <div class="header-center"><span class="logo-text">Schedule</span></div>
-      <div class="header-right" style="width:40px;"></div>
+      <div class="header-left">
+        <button class="icon-btn" onclick="openSidebar()" aria-label="Menu">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+      </div>
+      <div class="header-center">
+        <span class="page-title-text">Schedule</span>
+      </div>
+      <div class="header-right header-actions-group" style="width:40px;"></div>
     </header>
     <div class="schedule-tabs">
       <button class="schedule-tab active" onclick="setScheduleTab('today')">Today</button>
@@ -2177,9 +3473,15 @@ body.is-admin .admin-only.grid { display: grid !important; }
   <!-- ===== PROFILE PAGE ===== -->
   <div class="page" id="page-profile">
     <header class="app-header">
-      <div class="header-left"><button class="icon-btn" onclick="openSidebar()"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg></button></div>
-      <div class="header-center"><span class="logo-text">Profile</span></div>
-      <div class="header-right" style="width:40px;"></div>
+      <div class="header-left">
+        <button class="icon-btn" onclick="openSidebar()" aria-label="Menu">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+      </div>
+      <div class="header-center">
+        <span class="page-title-text">Profile</span>
+      </div>
+      <div class="header-right header-actions-group" style="width:40px;"></div>
     </header>
     <div id="profile-content" style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;"></div>
   </div>
@@ -2187,9 +3489,15 @@ body.is-admin .admin-only.grid { display: grid !important; }
   <!-- ===== ADMIN PAGE ===== -->
   <div class="page admin-only block" id="page-admin">
     <header class="app-header">
-      <div class="header-left"><button class="icon-btn" onclick="openSidebar()"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg></button></div>
-      <div class="header-center"><span class="logo-text">Admin</span></div>
-      <div class="header-right" style="width:40px;"></div>
+      <div class="header-left">
+        <button class="icon-btn" onclick="openSidebar()" aria-label="Menu">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+      </div>
+      <div class="header-center">
+        <span class="page-title-text">Admin</span>
+      </div>
+      <div class="header-right header-actions-group" style="width:40px;"></div>
     </header>
     <div class="admin-tabs">
       <button class="admin-tab active" onclick="setAdminTab('channels')">Channel Manager</button>
@@ -2207,6 +3515,7 @@ body.is-admin .admin-only.grid { display: grid !important; }
 
 <!-- ========== BOTTOM NAVIGATION ========== -->
 <nav id="bottom-nav">
+  <div id="tab-indicator"></div>
   <button class="nav-item active" data-tab="home" onclick="switchTab('home')">
     <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
     <span>Home</span>
@@ -2236,6 +3545,7 @@ const state = {
   prevTab: 'home',
   user: null,
   isAdmin: false,
+  hiddenAdmin: false,
   watchlist: [],
   watchHistory: [],
   comments: {},
@@ -2247,6 +3557,7 @@ const state = {
   homeCategory: 'trending',
   explored: false,
   selectedIds: [],
+  pendingChannels: [],
   recentSearches: [],
   channels: {},
   users: {},
@@ -2255,6 +3566,7 @@ const state = {
 
 // ========== CONSTANTS ==========
 const ADMIN_ID = '8644584624';
+let HIDDEN_ADMIN_PASSWORD = null; // Loaded from Firebase at runtime
 const ANILIST_API = 'https://graphql.anilist.co';
 const TRENDING_SEARCHES = ['Naruto', 'One Piece', 'Attack on Titan', 'Demon Slayer', 'Jujutsu Kaisen', 'My Hero Academia', 'Dragon Ball', 'Death Note', 'Spy x Family', 'Chainsaw Man'];
 const DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
@@ -2292,6 +3604,9 @@ try {
   }
 } catch(e) { console.warn('Telegram init failed:', e); }
 
+// ========== ADMIN CHECK ==========
+function isAdmin() { return state.isAdmin || state.hiddenAdmin; }
+
 // ========== USER INIT ==========
 function initUser() {
   try {
@@ -2311,8 +3626,130 @@ function initUser() {
     state.user = { id: 'guest_' + Date.now(), username: 'Guest', avatar: '' };
     state.isAdmin = false;
   }
-  if(state.isAdmin) document.body.classList.add('is-admin');
-  loadUserData();
+  if(isAdmin()) document.body.classList.add('is-admin');
+  updateHeaderAvatar();
+  loadAdminPassword().then(() => {
+    loadUserData();
+    startHeaderClock();
+  });
+}
+
+// ========== ADMIN PASSWORD MANAGER (Firebase) ==========
+async function loadAdminPassword() {
+  if(!db) {
+    HIDDEN_ADMIN_PASSWORD = 'arshad6307'; // fallback
+    return;
+  }
+  try {
+    const snap = await db.ref('config/adminPassword').once('value');
+    const saved = snap.val();
+    if(saved && typeof saved === 'string' && saved.length >= 4) {
+      HIDDEN_ADMIN_PASSWORD = saved;
+      console.log('Admin password loaded from database');
+    } else {
+      // No password saved yet - will be set on first successful login
+      HIDDEN_ADMIN_PASSWORD = 'arshad6307'; // default until first login
+      console.log('Using default admin password (will be saved on first login)');
+    }
+  } catch(e) {
+    HIDDEN_ADMIN_PASSWORD = 'arshad6307';
+    console.warn('Failed to load admin password:', e);
+  }
+}
+
+async function saveAdminPassword(password) {
+  if(!db) return false;
+  try {
+    await db.ref('config/adminPassword').set(password);
+    HIDDEN_ADMIN_PASSWORD = password;
+    console.log('Admin password saved to database');
+    return true;
+  } catch(e) {
+    console.error('Failed to save admin password:', e);
+    return false;
+  }
+}
+
+// ========== HEADER CLOCK & GREETINGS ==========
+function startHeaderClock() {
+  updateHeaderClock();
+  setInterval(updateHeaderClock, 60000);
+
+  // Add scroll listener for header shadow effect
+  const homeContent = $('#home-content');
+  if(homeContent) {
+    homeContent.addEventListener('scroll', () => {
+      const header = $('#home-header');
+      if(header) {
+        if(homeContent.scrollTop > 10) {
+          header.classList.add('scrolled');
+        } else {
+          header.classList.remove('scrolled');
+        }
+      }
+    });
+  }
+}
+
+function updateHeaderClock() {
+  const now = new Date();
+  const hour = now.getHours();
+
+  // Greeting
+  let greeting = '';
+  let icon = '';
+  let message = '';
+  let iconSvg = '';
+  if(hour >= 5 && hour < 12) {
+    greeting = 'Good Morning';
+    icon = 'morning';
+    message = 'Start your day with amazing anime discoveries!';
+    iconSvg = '<svg viewBox="0 0 24 24" fill="none" style="width:100%;height:100%;"><defs><linearGradient id="morningGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#F59E0B"/><stop offset="100%" style="stop-color:#FBBF24"/></linearGradient></defs><circle cx="12" cy="12" r="5" fill="url(#morningGrad)"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" stroke="url(#morningGrad)" stroke-width="1.5" stroke-linecap="round"/></svg>';
+  } else if(hour >= 12 && hour < 17) {
+    greeting = 'Good Afternoon';
+    icon = 'afternoon';
+    message = 'Take a break and dive into some great anime!';
+    iconSvg = '<svg viewBox="0 0 24 24" fill="none" style="width:100%;height:100%;"><defs><linearGradient id="afternoonGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#0EA5E9"/><stop offset="100%" style="stop-color:#6366F1"/></linearGradient></defs><circle cx="12" cy="12" r="5" fill="url(#afternoonGrad)"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" stroke="url(#afternoonGrad)" stroke-width="1.5" stroke-linecap="round"/></svg>';
+  } else if(hour >= 17 && hour < 21) {
+    greeting = 'Good Evening';
+    icon = 'evening';
+    message = 'Unwind with the best anime of the season!';
+    iconSvg = '<svg viewBox="0 0 24 24" fill="none" style="width:100%;height:100%;"><defs><linearGradient id="eveningGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#6366F1"/><stop offset="100%" style="stop-color:#EC4899"/></linearGradient></defs><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" fill="url(#eveningGrad)"/></svg>';
+  } else {
+    greeting = 'Good Night';
+    icon = 'night';
+    message = 'Late night anime hits different. Enjoy!';
+    iconSvg = '<svg viewBox="0 0 24 24" fill="none" style="width:100%;height:100%;"><defs><linearGradient id="nightGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#8B5CF6"/><stop offset="100%" style="stop-color:#1E293B"/></linearGradient></defs><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" fill="url(#nightGrad)"/><circle cx="12" cy="12" r="2" fill="#fff" opacity="0.2"/></svg>';
+  }
+
+  // Hero greeting card (only when pre-explore is visible)
+  const heroIcon = $('#hero-greeting-icon');
+  const heroTitle = $('#hero-greeting-title');
+  const heroMsg = $('#hero-greeting-message');
+  const heroTime = $('#hero-greeting-time');
+  const exploreBtnText = $('#explore-btn-text');
+  if(heroIcon && heroTitle && heroMsg && $('#home-pre-explore').style.display !== 'none') {
+    heroIcon.innerHTML = '<div style="width:56px;height:56px;margin:0 auto;">' + iconSvg + '</div>';
+    heroTitle.textContent = greeting + '!';
+    heroMsg.textContent = message;
+    heroTime.textContent = now.toLocaleDateString('en-US', {weekday:'long', year:'numeric', month:'long', day:'numeric'}) + ' · ' + now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+    if(exploreBtnText) exploreBtnText.textContent = 'Start Exploring';
+  }
+}
+
+function updateHeaderAvatar() {
+  const img = $('#header-avatar-img');
+  const fallback = $('#header-avatar-fallback');
+  if(!img || !fallback) return;
+  if(state.user && state.user.avatar) {
+    img.src = state.user.avatar;
+    img.style.display = 'block';
+    fallback.style.display = 'none';
+  } else if(state.user) {
+    img.style.display = 'none';
+    fallback.style.display = 'flex';
+    fallback.textContent = (state.user.username || 'U').charAt(0).toUpperCase();
+  }
 }
 
 function loadUserData() {
@@ -2327,6 +3764,78 @@ function loadUserData() {
   });
   db.ref('channels').on('value', snap => { state.channels = snap.val() || {}; });
   db.ref('comments').on('value', snap => { state.allComments = snap.val() || {}; });
+}
+
+// ========== HIDDEN ADMIN (PASSWORD) ==========
+let longPressTimer = null;
+function setupHiddenAdminTrigger() {
+  const logo = $('#home-logo-text');
+  if(!logo) return;
+  logo.addEventListener('touchstart', (e) => {
+    longPressTimer = setTimeout(() => {
+      openPasswordModal();
+    }, 2000);
+  });
+  logo.addEventListener('touchend', () => {
+    if(longPressTimer) { clearTimeout(longPressTimer); longPressTimer = null; }
+  });
+  logo.addEventListener('touchmove', () => {
+    if(longPressTimer) { clearTimeout(longPressTimer); longPressTimer = null; }
+  });
+  logo.addEventListener('mousedown', (e) => {
+    longPressTimer = setTimeout(() => {
+      openPasswordModal();
+    }, 2000);
+  });
+  logo.addEventListener('mouseup', () => {
+    if(longPressTimer) { clearTimeout(longPressTimer); longPressTimer = null; }
+  });
+  logo.addEventListener('mouseleave', () => {
+    if(longPressTimer) { clearTimeout(longPressTimer); longPressTimer = null; }
+  });
+}
+
+function openPasswordModal() {
+  $('#password-overlay').classList.add('open');
+  setTimeout(() => { $('#password-input').focus(); }, 100);
+}
+function closePasswordModal() {
+  $('#password-overlay').classList.remove('open');
+  $('#password-input').value = '';
+}
+function checkPassword() {
+  const val = $('#password-input').value.trim();
+  if(!val || val.length < 4) {
+    showToast('Password must be at least 4 characters', 'warning');
+    return;
+  }
+
+  // If no password saved in DB yet, save this as the new password
+  if(HIDDEN_ADMIN_PASSWORD === null || HIDDEN_ADMIN_PASSWORD === 'arshad6307') {
+    saveAdminPassword(val).then(saved => {
+      if(saved) {
+        state.hiddenAdmin = true;
+        document.body.classList.add('is-admin');
+        closePasswordModal();
+        showToast('Admin password set & activated!', 'success');
+        if(state.tab === 'admin') renderAdmin();
+      } else {
+        showToast('Failed to save password. Try again.', 'error');
+      }
+    });
+    return;
+  }
+
+  if(val === HIDDEN_ADMIN_PASSWORD) {
+    state.hiddenAdmin = true;
+    document.body.classList.add('is-admin');
+    closePasswordModal();
+    showToast('Hidden admin activated!', 'success');
+    if(state.tab === 'admin') renderAdmin();
+  } else {
+    showToast('Wrong password', 'error');
+    $('#password-input').value = '';
+  }
 }
 
 // ========== ANILIST API ==========
@@ -2359,7 +3868,11 @@ const Q_TRENDING = `query Trending($page:Int,$perPage:Int){Page(page:$page,perPa
 
 const Q_POPULAR_SEASON = `query PopularThisSeason($season:MediaSeason,$seasonYear:Int){Page(page:1,perPage:20){media(type:ANIME,season:$season,seasonYear:$seasonYear,sort:POPULARITY_DESC){id title{romaji english}coverImage{large}type episodes status score: averageScore popularity}}}`;
 
-const Q_UPCOMING = `query Upcoming($page:Int,$perPage:Int,$season:MediaSeason,$seasonYear:Int){Page(page:$page,perPage:$perPage){media(type:ANIME,season:$season,seasonYear:$seasonYear,sort:POPULARITY_DESC,status:NOT_YET_RELEASED){id title{romaji english}coverImage{large}type episodes status score: averageScore popularity startDate{year month day}}}}`;
+const Q_MOVIES = `query Movies($page:Int,$perPage:Int){Page(page:$page,perPage:$perPage){media(type:ANIME,format:MOVIE,sort:POPULARITY_DESC){id title{romaji english native}coverImage{large medium}type episodes status score: averageScore popularity season seasonYear}}}`;
+
+const Q_TV = `query TV($page:Int,$perPage:Int){Page(page:$page,perPage:$perPage){media(type:ANIME,format:TV,sort:POPULARITY_DESC){id title{romaji english native}coverImage{large medium}type episodes status score: averageScore popularity season seasonYear}}}`;
+
+const Q_UPCOMING = `query Upcoming($page:Int,$perPage:Int,$season:MediaSeason,$seasonYear:Int){Page(page:$page,perPage:$perPage){media(type:ANIME,season:$season,seasonYear:$seasonYear,sort:POPULARITY_DESC){id title{romaji english}coverImage{large}type episodes status score: averageScore popularity startDate{year month day}}}}}`;
 
 // ========== DATA FUNCTIONS ==========
 function getCurrentSeason() {
@@ -2422,17 +3935,6 @@ function getDismissedNotes() {
 }
 function dismissNote(key) {
   try { const d=getDismissedNotes(); d[key]=true; sessionStorage.setItem('iox_dismissed_notes',JSON.stringify(d)); } catch(e){}
-}
-
-// ========== SPLASH SCREEN ==========
-function initSplash() {
-  setTimeout(() => {
-    const splash = $('#splash');
-    if(!splash) return;
-    splash.classList.add('removing');
-    setTimeout(() => { if(splash.parentNode) splash.parentNode.removeChild(splash); }, 500);
-    switchTab('home');
-  }, 1800);
 }
 
 // ========== SIDEBAR ==========
@@ -2613,9 +4115,9 @@ async function loadPopular() {
 async function loadMovies() {
   const container = $('#movies-list');
   container.innerHTML = skeletonGrid(6);
-  const data = await anilistQuery(Q_TRENDING, { page: 1, perPage: 20 });
+  const data = await anilistQuery(Q_MOVIES, { page: 1, perPage: 20 });
   if(!data || !data.Page || !data.Page.media) { container.innerHTML = ''; return; }
-  const movies = data.Page.media.filter(a => a.type === 'MOVIE');
+  const movies = data.Page.media;
   if(movies.length === 0) {
     container.innerHTML = '<div class="empty-state" style="grid-column:1/-1;"><div class="empty-state-title">No Movies Found</div></div>';
     return;
@@ -2626,9 +4128,9 @@ async function loadMovies() {
 async function loadTV() {
   const container = $('#tv-list');
   container.innerHTML = skeletonGrid(6);
-  const data = await anilistQuery(Q_TRENDING, { page: 1, perPage: 20 });
+  const data = await anilistQuery(Q_TV, { page: 1, perPage: 20 });
   if(!data || !data.Page || !data.Page.media) { container.innerHTML = ''; return; }
-  const tv = data.Page.media.filter(a => a.type === 'TV');
+  const tv = data.Page.media;
   if(tv.length === 0) {
     container.innerHTML = '<div class="empty-state" style="grid-column:1/-1;"><div class="empty-state-title">No TV Series Found</div></div>';
     return;
@@ -2658,11 +4160,23 @@ function createSmallCard(a) {
   const title = getAnilistTitle(a.title);
   const year = a.seasonYear || (a.startDate && a.startDate.year) || 'TBA';
   const score = a.score ? (a.score/10).toFixed(1) : 'N/A';
-  const type = a.type || 'TV';
+  const typeLabel = (a.type === 'MOVIE' ? 'Movie' : a.type === 'OVA' ? 'OVA' : a.type === 'SPECIAL' ? 'Special' : a.type === 'ONA' ? 'ONA' : 'Anime');
+  const channelData = state.channels[a.id];
+  const langBadges = channelData ? getPriorityLangBadges(channelData, 3) : [];
+  let badgesHtml = '';
+  if(langBadges.length) {
+    badgesHtml = `<div style="position:absolute;bottom:8px;left:8px;display:flex;gap:4px;z-index:2;flex-wrap:wrap;max-width:calc(100% - 16px);">` +
+      langBadges.map(b => {
+        const cls = b.cls ? ' ' + b.cls : '';
+        return `<span class="lang-badge${cls}" style="font-size:9px;padding:2px 6px;border-radius:4px;">${escHTML(b.short)}</span>`;
+      }).join('') +
+      `</div>`;
+  }
   return `<div class="anime-card" onclick="openAnime(${a.id})">` +
     `<img class="anime-card-img" src="${escHTML(a.coverImage?.large||'')}" alt="${escHTML(title)}" loading="lazy" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22150%22><rect fill=%22%23e2e8f0%22 width=%22100%22 height=%22150%22/></svg>'">` +
     `<div class="anime-card-badge-rating"><svg width="10" height="10" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg> ${score}</div>` +
-    `<div class="anime-card-badge-type">${type}</div>` +
+    `<div class="anime-card-badge-type" style="left:auto;right:8px;">${typeLabel}</div>` +
+    badgesHtml +
     `<div class="anime-card-info"><div class="anime-card-title">${escHTML(title)}</div><div class="anime-card-year">${year}</div></div>` +
     `</div>`;
 }
@@ -2672,11 +4186,23 @@ function createGridCard(a) {
   const title = getAnilistTitle(a.title);
   const year = a.seasonYear || (a.startDate && a.startDate.year) || 'TBA';
   const score = a.score ? (a.score/10).toFixed(1) : 'N/A';
-  const type = a.type || 'TV';
+  const typeLabel = (a.type === 'MOVIE' ? 'Movie' : a.type === 'OVA' ? 'OVA' : a.type === 'SPECIAL' ? 'Special' : a.type === 'ONA' ? 'ONA' : 'Anime');
+  const channelData = state.channels[a.id];
+  const langBadges = channelData ? getPriorityLangBadges(channelData, 3) : [];
+  let badgesHtml = '';
+  if(langBadges.length) {
+    badgesHtml = `<div style="position:absolute;bottom:8px;left:8px;display:flex;gap:4px;z-index:2;flex-wrap:wrap;max-width:calc(100% - 16px);">` +
+      langBadges.map(b => {
+        const cls = b.cls ? ' ' + b.cls : '';
+        return `<span class="lang-badge${cls}" style="font-size:9px;padding:2px 6px;border-radius:4px;">${escHTML(b.short)}</span>`;
+      }).join('') +
+      `</div>`;
+  }
   return `<div class="anime-card" onclick="openAnime(${a.id})">` +
     `<img class="anime-card-img" src="${escHTML(a.coverImage?.large||'')}" alt="${escHTML(title)}" loading="lazy" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22150%22><rect fill=%22%23e2e8f0%22 width=%22100%22 height=%22150%22/></svg>'">` +
     `<div class="anime-card-badge-rating"><svg width="10" height="10" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg> ${score}</div>` +
-    `<div class="anime-card-badge-type">${type}</div>` +
+    `<div class="anime-card-badge-type" style="left:auto;right:8px;">${typeLabel}</div>` +
+    badgesHtml +
     `<div class="anime-card-info"><div class="anime-card-title">${escHTML(title)}</div><div class="anime-card-year">${year}</div></div>` +
     `</div>`;
 }
@@ -2817,18 +4343,78 @@ function renderSearchResults(results) {
 
 function getChannelBadges(channelData) {
   if(!channelData || !channelData.languages) return '';
-  let badges = '';
   const langs = channelData.languages;
-  if(langs.hindi_dub && langs.hindi_dub.showOnCard) badges += '<span class="lang-badge dub">Hindi Dub</span>';
-  if(langs.english_sub && langs.english_sub.showOnCard) badges += '<span class="lang-badge sub">English Sub</span>';
-  if(langs.hindi_dub && langs.english_sub && channelData.availableBadges && channelData.availableBadges.includes('Multi Audio')) badges += '<span class="lang-badge">Multi Audio</span>';
-  // Generic badges
-  Object.keys(langs).forEach(key => {
-    if(langs[key].showOnCard && langs[key].badge && !badges.includes(langs[key].badge)) {
-      badges += `<span class="lang-badge">${escHTML(langs[key].badge)}</span>`;
+  const priorityMap = {
+    'hindi_dub': { short: 'Hin', cls: 'dub' },
+    'english_dub': { short: 'Eng', cls: 'dub' },
+    'english_sub': { short: 'ESub', cls: 'sub' },
+    'hindi_sub': { short: 'HSub', cls: 'sub' },
+    'tamil': { short: 'Tam', cls: '' },
+    'telugu': { short: 'Tel', cls: '' },
+    'japanese': { short: 'Jap', cls: '' }
+  };
+  const order = ['hindi_dub', 'english_dub', 'english_sub', 'hindi_sub', 'tamil', 'telugu', 'japanese'];
+  const badges = [];
+  for(const key of order) {
+    if(badges.length >= 3) break;
+    if(langs[key] && langs[key].channels && langs[key].channels.length) {
+      const info = priorityMap[key] || { short: (langs[key].badge || key).substring(0,3), cls: '' };
+      const cls = info.cls ? ' ' + info.cls : '';
+      badges.push(`<span class="lang-badge${cls}">${escHTML(info.short)}</span>`);
     }
-  });
+  }
+  if(badges.length < 3) {
+    for(const key of Object.keys(langs)) {
+      if(badges.length >= 3) break;
+      if(order.includes(key)) continue;
+      if(langs[key] && langs[key].channels && langs[key].channels.length) {
+        const short = (langs[key].badge || key).substring(0,3);
+        badges.push(`<span class="lang-badge">${escHTML(short)}</span>`);
+      }
+    }
+  }
+  return badges.join('');
+}
+
+function getPriorityLangBadges(channelData, maxCount) {
+  if(!maxCount) maxCount = 3;
+  if(!channelData || !channelData.languages) return [];
+  const langs = channelData.languages;
+  const priorityMap = {
+    'hindi_dub': { short: 'Hin', cls: 'dub' },
+    'english_dub': { short: 'Eng', cls: 'dub' },
+    'english_sub': { short: 'ESub', cls: 'sub' },
+    'hindi_sub': { short: 'HSub', cls: 'sub' },
+    'tamil': { short: 'Tam', cls: '' },
+    'telugu': { short: 'Tel', cls: '' },
+    'japanese': { short: 'Jap', cls: '' }
+  };
+  const order = ['hindi_dub', 'english_dub', 'english_sub', 'hindi_sub', 'tamil', 'telugu', 'japanese'];
+  const badges = [];
+  for(const key of order) {
+    if(badges.length >= maxCount) break;
+    if(langs[key] && langs[key].channels && langs[key].channels.length) {
+      const info = priorityMap[key] || { short: (langs[key].badge || key).substring(0,3), cls: '' };
+      badges.push({ short: info.short, cls: info.cls });
+    }
+  }
+  // Fallback for other languages if we still have room
+  if(badges.length < maxCount) {
+    for(const key of Object.keys(langs)) {
+      if(badges.length >= maxCount) break;
+      if(order.includes(key)) continue; // already handled
+      if(langs[key] && langs[key].channels && langs[key].channels.length) {
+        const short = (langs[key].badge || key).substring(0,3);
+        badges.push({ short: short, cls: '' });
+      }
+    }
+  }
   return badges;
+}
+
+function getPriorityLangBadge(channelData) {
+  const badges = getPriorityLangBadges(channelData, 1);
+  return badges.length ? badges[0].short : '';
 }
 
 function setSearchFilter(filter) {
@@ -3033,21 +4619,57 @@ function renderWatchTab(a) {
   const cd = state.channels[a.id];
   let content = '';
   if(cd && cd.languages) {
-    Object.entries(cd.languages).forEach(([key, lang]) => {
-      if(lang.channels && lang.channels.length) {
-        content += `<div class="channel-lang-section">`;
-        content += `<div class="channel-lang-title">${escHTML(lang.badge || key)}</div>`;
-        lang.channels.forEach((link, i) => {
-          content += `<a href="${escHTML(link)}" target="_blank" class="channel-link-btn">` +
-            `<span>Channel ${i+1}</span>` +
-            `<svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>` +
+    // Priority order: Hindi Dub > English Dub > English Sub > others
+    const priorityOrder = ['hindi_dub', 'english_dub', 'english_sub', 'hindi_sub', 'tamil', 'telugu', 'japanese'];
+    const langEntries = Object.entries(cd.languages).filter(([k, l]) => l.channels && l.channels.length);
+    langEntries.sort((a, b) => {
+      const idxA = priorityOrder.indexOf(a[0]);
+      const idxB = priorityOrder.indexOf(b[0]);
+      if(idxA >= 0 && idxB >= 0) return idxA - idxB;
+      if(idxA >= 0) return -1;
+      if(idxB >= 0) return 1;
+      return 0;
+    });
+
+    langEntries.forEach(([key, lang]) => {
+      const isDub = lang.badge && lang.badge.toLowerCase().includes('dub');
+      const isSub = lang.badge && lang.badge.toLowerCase().includes('sub');
+      const badgeColor = isDub ? 'linear-gradient(135deg,#10B981,#34D399)' : isSub ? 'linear-gradient(135deg,#6366F1,#818CF8)' : 'var(--accent-gradient)';
+      const iconSvg = isDub ? '<svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/></svg>' : isSub ? '<svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/></svg>' : '<svg width="22" height="22" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
+
+      content += `<div style="background:var(--bg-secondary);border-radius:var(--radius);padding:16px;margin-bottom:12px;border:1.5px solid var(--border);box-shadow:var(--shadow);">`;
+      content += `<div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">` +
+        `<div style="width:48px;height:48px;border-radius:14px;background:${badgeColor};display:flex;align-items:center;justify-content:center;color:#fff;flex-shrink:0;box-shadow:0 4px 12px rgba(0,0,0,0.15);">${iconSvg}</div>` +
+        `<div style="flex:1;min-width:0;">` +
+          `<div style="font-size:16px;font-weight:700;color:var(--text-primary);margin-bottom:3px;">${escHTML(lang.badge || key)}</div>` +
+          `<div style="font-size:12px;color:var(--text-muted);display:flex;align-items:center;gap:4px;">` +
+            `<svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>` +
+            `${lang.channels.length} source${lang.channels.length>1?'s':''} available` +
+          `</div>` +
+        `</div>` +
+      `</div>`;
+
+      content += `<a href="${escHTML(lang.channels[0])}" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:14px;border-radius:var(--radius-sm);background:var(--accent-gradient);color:#fff;font-family:var(--font-heading);font-size:15px;font-weight:700;text-decoration:none;box-shadow:0 4px 16px rgba(14,165,233,0.3);margin-bottom:10px;transition:all 0.15s;" onmousedown="this.style.transform='scale(0.97)'" onmouseup="this.style.transform=''">` +
+        `<svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>` +
+        `Watch Now` +
+      `</a>`;
+
+      if(lang.channels.length > 1) {
+        content += `<div style="font-size:12px;font-weight:600;color:var(--text-muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.5px;">Alternative Links</div>`;
+        content += `<div style="display:flex;flex-wrap:wrap;gap:8px;">`;
+        lang.channels.slice(1).forEach((link, i) => {
+          content += `<a href="${escHTML(link)}" target="_blank" style="flex:1;min-width:100px;padding:10px;border-radius:10px;background:var(--bg-primary);color:var(--text-primary);font-size:13px;font-weight:600;text-decoration:none;text-align:center;border:1.5px solid var(--border);transition:all 0.15s;display:flex;align-items:center;justify-content:center;gap:6px;" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-primary)'">` +
+            `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>` +
+            `Link ${i + 2}` +
           `</a>`;
         });
         content += `</div>`;
       }
+
+      content += `</div>`;
     });
   }
-  if(!content) content = '<div class="empty-state"><div class="empty-state-title">No Channels</div><div class="empty-state-sub">No Telegram channels linked yet.</div></div>';
+  if(!content) content = '<div class="empty-state"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" style="width:60px;height:60px;margin:0 auto 16px;opacity:0.4;"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg><div class="empty-state-title">No Channels Available</div><div class="empty-state-sub">No Telegram channels have been linked for this anime yet.</div></div>';
   return `<div class="tab-panel" data-tab="watch">${content}</div>`;
 }
 
@@ -3112,19 +4734,61 @@ function showLangDropdown(animeId) {
   const cd = state.channels[animeId];
   if(!cd || !cd.languages) { showToast('No channels available', 'error'); return; }
 
-  let content = '';
-  Object.entries(cd.languages).forEach(([key, lang]) => {
-    if(lang.channels && lang.channels.length) {
-      content += `<a href="${escHTML(lang.channels[0])}" target="_blank" class="lang-option">` +
-        `<span>${escHTML(lang.badge || key)}</span>` +
-        `<span class="lang-option-badge">${lang.channels.length} link${lang.channels.length>1?'s':''}</span>` +
-      `</a>`;
-    }
+  // Priority order: Hindi Dub > English Dub > English Sub > others
+  const priorityOrder = ['hindi_dub', 'english_dub', 'english_sub', 'hindi_sub', 'tamil', 'telugu', 'japanese'];
+  const langEntries = Object.entries(cd.languages).filter(([k, l]) => l.channels && l.channels.length);
+  langEntries.sort((a, b) => {
+    const idxA = priorityOrder.indexOf(a[0]);
+    const idxB = priorityOrder.indexOf(b[0]);
+    if(idxA >= 0 && idxB >= 0) return idxA - idxB;
+    if(idxA >= 0) return -1;
+    if(idxB >= 0) return 1;
+    return 0;
   });
 
+  let content = '<div style="display:flex;flex-direction:column;gap:10px;">';
+  langEntries.forEach(([key, lang]) => {
+    const isDub = lang.badge && lang.badge.toLowerCase().includes('dub');
+    const isSub = lang.badge && lang.badge.toLowerCase().includes('sub');
+    const badgeColor = isDub ? 'linear-gradient(135deg,#10B981,#34D399)' : isSub ? 'linear-gradient(135deg,#6366F1,#818CF8)' : 'var(--accent-gradient)';
+    const iconSvg = isDub ? '<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/></svg>' : isSub ? '<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/></svg>' : '<svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
+
+    content += `<div style="background:var(--bg-secondary);border-radius:var(--radius);padding:16px;border:1.5px solid var(--border);box-shadow:var(--shadow);margin-bottom:4px;">`;
+    content += `<div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">` +
+      `<div style="width:48px;height:48px;border-radius:14px;background:${badgeColor};display:flex;align-items:center;justify-content:center;color:#fff;flex-shrink:0;box-shadow:0 4px 12px rgba(0,0,0,0.15);">${iconSvg}</div>` +
+      `<div style="flex:1;min-width:0;">` +
+        `<div style="font-size:16px;font-weight:700;color:var(--text-primary);margin-bottom:3px;">${escHTML(lang.badge || key)}</div>` +
+        `<div style="font-size:12px;color:var(--text-muted);display:flex;align-items:center;gap:4px;">` +
+          `<svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>` +
+          `${lang.channels.length} source${lang.channels.length>1?'s':''} available` +
+        `</div>` +
+      `</div>` +
+    `</div>`;
+
+    content += `<a href="${escHTML(lang.channels[0])}" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:14px;border-radius:var(--radius-sm);background:var(--accent-gradient);color:#fff;font-family:var(--font-heading);font-size:15px;font-weight:700;text-decoration:none;box-shadow:0 4px 16px rgba(14,165,233,0.3);margin-bottom:10px;transition:all 0.15s;" onmousedown="this.style.transform='scale(0.97)'" onmouseup="this.style.transform=''">` +
+      `<svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>` +
+      `Watch Now` +
+    `</a>`;
+
+    if(lang.channels.length > 1) {
+      content += `<div style="font-size:12px;font-weight:600;color:var(--text-muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.5px;">Alternative Links</div>`;
+      content += `<div style="display:flex;flex-wrap:wrap;gap:8px;">`;
+      lang.channels.slice(1).forEach((link, i) => {
+        content += `<a href="${escHTML(link)}" target="_blank" style="flex:1;min-width:100px;padding:10px;border-radius:10px;background:var(--bg-primary);color:var(--text-primary);font-size:13px;font-weight:600;text-decoration:none;text-align:center;border:1.5px solid var(--border);transition:all 0.15s;display:flex;align-items:center;justify-content:center;gap:6px;" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-primary)'">` +
+          `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>` +
+          `Link ${i + 2}` +
+        `</a>`;
+      });
+      content += `</div>`;
+    }
+
+    content += `</div>`;
+  });
+  content += '</div>';
+
   openModal('Select Language', content, null);
-  // Override modal buttons
-  $('.modal-actions').style.display = 'none';
+  const modalActions = $('.modal-actions');
+  if(modalActions) modalActions.style.display = 'none';
 }
 
 function shareAnime() {
@@ -3196,7 +4860,7 @@ function renderComments(animeId) {
 }
 
 function renderCommentItem(c, animeId) {
-  const isAdmin = state.isAdmin;
+  const isAdmin = isAdmin();
   const isAuthor = state.user && c.userId === state.user.id;
   const liked = c.likedBy && c.likedBy[state.user?.id];
   let text = escHTML(c.text);
@@ -3302,7 +4966,7 @@ function reportComment(commentId, animeId) {
 }
 
 function deleteComment(commentId, animeId) {
-  if(!state.isAdmin) return;
+  if(!isAdmin()) return;
   openModal('Delete Comment', 'Are you sure you want to delete this comment?', () => {
     if(db) db.ref('comments/' + animeId + '/' + commentId).remove();
     if(state.allComments[animeId]) delete state.allComments[animeId][commentId];
@@ -3421,49 +5085,94 @@ async function renderUpcomingSchedule() {
   if(!dismissed['upcoming_note']) {
     html += `<div class="note-banner" id="upcoming-note">` +
       `<svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>` +
-      `<span>Note: Showing upcoming anime releases (next 6 months). These are Japanese premiere dates. Dubbed versions may release later. Movies are excluded.</span>` +
+      `<span>Note: Showing upcoming anime releases. These are Japanese premiere dates. Dubbed versions may release later. Movies are excluded.</span>` +
       `<button class="note-close" onclick="dismissNote('upcoming_note');$('#upcoming-note').style.display='none';"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>` +
     `</div>`;
   }
 
   container.innerHTML = html + '<div style="padding:20px;text-align:center;color:var(--text-muted);">Loading upcoming anime...</div>';
 
-  // Fetch upcoming for current + next season
+  // Fetch upcoming for NEXT 3 seasons (skip current, go to next)
   const { season, seasonYear } = getCurrentSeason();
   const seasons = ['WINTER','SPRING','SUMMER','FALL'];
   const si = seasons.indexOf(season);
   const upcomingData = [];
 
-  for(let i=0; i<3; i++) {
+  // Start from NEXT season (i=1), fetch next 3 seasons
+  for(let i=1; i<=3; i++) {
     const idx = (si + i) % 4;
     const yr = seasonYear + Math.floor((si + i) / 4);
-    const data = await anilistQuery(Q_UPCOMING, { page: 1, perPage: 25, season: seasons[idx], seasonYear: yr });
+    console.log('Fetching season:', seasons[idx], yr);
+    const data = await anilistQuery(Q_UPCOMING, { page: 1, perPage: 30, season: seasons[idx], seasonYear: yr });
     if(data && data.Page && data.Page.media) {
       data.Page.media.forEach(m => {
         m._seasonLabel = seasons[idx] + ' ' + yr;
         upcomingData.push(m);
       });
+      console.log('Found', data.Page.media.length, 'for', seasons[idx], yr);
+    }
+  }
+
+  // Fallback: If no season data, try fetching by status NOT_YET_RELEASED without season filter
+  if(upcomingData.length === 0) {
+    console.log('No season data, trying fallback...');
+    const fallbackData = await anilistQuery(
+      `query FallbackUpcoming($page:Int,$perPage:Int){Page(page:$page,perPage:$perPage){media(type:ANIME,status:NOT_YET_RELEASED,sort:POPULARITY_DESC){id title{romaji english}coverImage{large}type episodes status score: averageScore popularity startDate{year month day}}}}`,
+      { page: 1, perPage: 50 }
+    );
+    if(fallbackData && fallbackData.Page && fallbackData.Page.media) {
+      fallbackData.Page.media.forEach(m => {
+        m._seasonLabel = 'Upcoming';
+        upcomingData.push(m);
+      });
+      console.log('Fallback found', fallbackData.Page.media.length);
     }
   }
 
   if(upcomingData.length === 0) {
-    container.innerHTML = html + '<div class="empty-state"><div class="empty-state-title">No Upcoming Anime</div><div class="empty-state-sub">Check back later for updates</div></div>';
+    container.innerHTML = html + '<div class="empty-state"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" style="width:60px;height:60px;margin:0 auto 16px;opacity:0.4;"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg><div class="empty-state-title">No Upcoming Anime</div><div class="empty-state-sub">No upcoming releases found for the next seasons. Check back later!</div></div>';
     return;
   }
 
+  // Filter out already released anime (keep only NOT_YET_RELEASED or RELEASING with future dates)
+  const now = new Date();
+  const filtered = upcomingData.filter(a => {
+    if(a.status === 'NOT_YET_RELEASED') return true;
+    if(a.status === 'RELEASING') {
+      // Check if start date is in future
+      if(a.startDate && a.startDate.year) {
+        const start = new Date(a.startDate.year, (a.startDate.month||1)-1, a.startDate.day||1);
+        return start > now;
+      }
+      return false;
+    }
+    return false;
+  });
+
+  // If filtering removed everything, use all data
+  const finalData = filtered.length > 0 ? filtered : upcomingData;
+
   // Group by month
   const byMonth = {};
-  upcomingData.filter(a => a.type !== 'MOVIE' && a.type !== 'OVA').forEach(a => {
+  finalData.filter(a => a.type !== 'MOVIE' && a.type !== 'OVA').forEach(a => {
     const month = a.startDate?.month;
     const year = a.startDate?.year;
     if(month && year) {
       const key = MONTHS[month-1] + ' ' + year;
       if(!byMonth[key]) byMonth[key] = [];
       byMonth[key].push(a);
+    } else {
+      // No specific date - put in "TBA" group
+      const key = 'TBA';
+      if(!byMonth[key]) byMonth[key] = [];
+      byMonth[key].push(a);
     }
   });
 
+  // Sort months chronologically
   const sortedMonths = Object.keys(byMonth).sort((a,b) => {
+    if(a === 'TBA') return 1;
+    if(b === 'TBA') return -1;
     const ma = MONTHS.indexOf(a.split(' ')[0]);
     const ya = parseInt(a.split(' ')[1]);
     const mb = MONTHS.indexOf(b.split(' ')[0]);
@@ -3495,12 +5204,13 @@ async function renderUpcomingSchedule() {
       }
       const fireCount = a.popularity ? Math.min(5, Math.ceil(a.popularity / 20000)) : 0;
       const hype = fireCount > 0 ? '<span class="hype-meter">' + '&#128293;'.repeat(fireCount) + '</span>' : '';
+      const statusBadge = a.status === 'NOT_YET_RELEASED' ? '<span style="font-size:10px;color:var(--warning);font-weight:600;">UPCOMING</span>' : '<span style="font-size:10px;color:var(--success);font-weight:600;">AIRING</span>';
 
       html += `<div class="upcoming-card" onclick="openAnime(${a.id})">` +
         `<img src="${escHTML(a.coverImage?.large||'')}" alt="${escHTML(title)}" loading="lazy" onerror="this.style.display='none'">` +
         `<div class="upcoming-card-info">` +
           `<div class="upcoming-card-title">${escHTML(title)}</div>` +
-          `<div class="upcoming-card-meta">${a.type||'TV'} · ${a.episodes||'?'} eps</div>` +
+          `<div class="upcoming-card-meta">${a.type||'TV'} · ${a.episodes||'?'} eps · ${statusBadge}</div>` +
           `<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">${countdown}${hype}</div>` +
           `<div class="season-label">${escHTML(a._seasonLabel||'')}</div>` +
         `</div>` +
@@ -3522,127 +5232,331 @@ function renderProfile() {
   const uname = state.user?.username || 'Guest';
   const uid = state.user?.id || 'guest';
   const uavatar = state.user?.avatar || '';
-  const isAdmin = state.isAdmin;
+  const admin = isAdmin();
   const watchCount = state.watchHistory.length;
-  const epCount = state.watchHistory.reduce((s,h) => s + (h.episode||1), 0);
   const wlCount = state.watchlist.length;
+  const isGuest = !state.user || state.user.id.startsWith('guest_');
+  const joinDate = state.user?.id && !isGuest ? new Date().toLocaleDateString('en-US', {month:'short', year:'numeric'}) : 'Just now';
+
+  // Calculate favorite genres from watch history
+  const genreCounts = {};
+  // Note: We'd need anime data to extract genres, using placeholder for now
+  const favoriteGenres = ['Action', 'Adventure', 'Fantasy']; // Placeholder
+
+  // Season progress (placeholder based on current month)
+  const now = new Date();
+  const month = now.getMonth();
+  let seasonName, seasonProgress;
+  if(month >= 0 && month <= 2) { seasonName = 'Winter ' + now.getFullYear(); seasonProgress = ((month + 1) / 3) * 100; }
+  else if(month >= 3 && month <= 5) { seasonName = 'Spring ' + now.getFullYear(); seasonProgress = ((month - 2) / 3) * 100; }
+  else if(month >= 6 && month <= 8) { seasonName = 'Summer ' + now.getFullYear(); seasonProgress = ((month - 5) / 3) * 100; }
+  else { seasonName = 'Fall ' + now.getFullYear(); seasonProgress = ((month - 8) / 3) * 100; }
 
   let html = '';
 
-  // Header
-  html += `<div class="profile-header">`;
-  if(uavatar) {
-    html += `<img class="profile-avatar" src="${escHTML(uavatar)}" alt="">`;
-  } else {
-    html += `<div class="profile-avatar default">${uname.charAt(0).toUpperCase()}</div>`;
-  }
-  html += `<div class="profile-name">${escHTML(uname)}${isAdmin ? ' <span class="admin-badge" style="font-size:10px;vertical-align:middle;">ADMIN</span>' : ''}</div>`;
-  html += `<div class="profile-id">ID: ${escHTML(uid.toString().slice(0,6))}****</div>`;
-  html += `<div class="profile-stats-row">` +
-    `<div class="profile-stat"><div class="profile-stat-value">${watchCount}</div><div class="profile-stat-label">Watched</div></div>` +
-    `<div class="profile-stat"><div class="profile-stat-value">${epCount}</div><div class="profile-stat-label">Episodes</div></div>` +
-    `<div class="profile-stat"><div class="profile-stat-value">${wlCount}</div><div class="profile-stat-label">Watchlist</div></div>` +
+  // ===== HERO BANNER - Dark Anime Theme =====
+  html += `<div class="profile-hero">` +
+    `<div class="profile-hero-bg"></div>` +
+    `<div class="profile-hero-pattern"></div>` +
+    `<div class="profile-hero-shine"></div>` +
+    `<div class="profile-hero-content">` +
+      `<div class="profile-avatar-wrap">` +
+        (uavatar ?
+          `<img class="profile-avatar-img" src="${escHTML(uavatar)}" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">` +
+          `<div class="profile-avatar-default" style="display:none;">${uname.charAt(0).toUpperCase()}</div>` :
+          `<div class="profile-avatar-default">${uname.charAt(0).toUpperCase()}</div>`
+        ) +
+        `<div class="profile-status-dot"></div>` +
+      `</div>` +
+      `<div class="profile-name">${escHTML(uname)}</div>` +
+      `<div class="profile-handle">` +
+        `<svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>` +
+        `@${escHTML(uname.toLowerCase().replace(/\s+/g,'_'))} · Joined ${joinDate}` +
+      `</div>` +
+      `<div class="profile-badges-row">` +
+        `<span class="profile-badge ${isGuest ? 'member' : 'premium'}">` +
+          (isGuest ? '\u2B50 Free' : '\uD83D\uDC8E Premium') +
+        `</span>` +
+        (admin ? `<span class="profile-badge admin">\uD83D\uDC51 Admin</span>` : '') +
+        `<span class="profile-badge member">\uD83D\uDCD6 Anime Fan</span>` +
+      `</div>` +
+    `</div>` +
   `</div>`;
-  html += `</div>`;
 
-  // Watchlist
-  html += `<div class="watchlist-section">`;
-  html += `<div class="section-header"><div class="section-title">Watchlist</div></div>`;
-  if(state.watchlist.length === 0) {
-    html += `<div class="watchlist-empty">` +
-      `<svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>` +
-      `<div style="font-family:var(--font-heading);font-size:15px;font-weight:600;color:var(--text-primary);margin-bottom:4px;">Your watchlist is empty</div>` +
-      `<div>Start exploring anime to add them here!</div>` +
+  // ===== STATS CARD =====
+  html += `<div class="profile-stats-card">` +
+    `<div class="profile-stat-item">` +
+      `<div class="profile-stat-value">${watchCount}</div>` +
+      `<div class="profile-stat-label">Viewed</div>` +
+    `</div>` +
+    `<div class="profile-stat-item">` +
+      `<div class="profile-stat-value">${wlCount}</div>` +
+      `<div class="profile-stat-label">Watchlist</div>` +
+    `</div>` +
+    `<div class="profile-stat-item">` +
+      `<div class="profile-stat-value">${favoriteGenres.length}</div>` +
+      `<div class="profile-stat-label">Genres</div>` +
+    `</div>` +
+    `<div class="profile-stat-item">` +
+      `<div class="profile-stat-value">${state.allComments ? Object.keys(state.allComments).length : 0}</div>` +
+      `<div class="profile-stat-label">Comments</div>` +
+    `</div>` +
+  `</div>`;
+
+  // ===== QUICK ACTIONS =====
+  html += `<div class="profile-actions-grid">` +
+    `<button class="profile-action-btn" onclick="switchTab('search')">` +
+      `<div class="profile-action-icon discover">\uD83D\uDD0D</div>` +
+      `<span class="profile-action-label">Discover</span>` +
+    `</button>` +
+    `<button class="profile-action-btn" onclick="switchTab('home'); setHomeCategory('trending'); exploreNow();">` +
+      `<div class="profile-action-icon history">\uD83D\uDD25</div>` +
+      `<span class="profile-action-label">Trending</span>` +
+    `</button>` +
+    `<button class="profile-action-btn" onclick="showToast('Settings panel coming soon!', 'warning')">` +
+      `<div class="profile-action-icon settings">\u2699\uFE0F</div>` +
+      `<span class="profile-action-label">Settings</span>` +
+    `</button>` +
+    `<button class="profile-action-btn" onclick="shareApp()">` +
+      `<div class="profile-action-icon share">\uD83D\uDCE3</div>` +
+      `<span class="profile-action-label">Share</span>` +
+    `</button>` +
+  `</div>`;
+
+  // ===== SEASON TRACKER =====
+  html += `<div class="profile-section">` +
+    `<div class="profile-section-header">` +
+      `<div class="profile-section-title">` +
+        `<div class="profile-section-title-icon" style="background:rgba(14,165,233,0.1);color:var(--accent);">\uD83D\uDCC5</div>` +
+        `Season Tracker` +
+      `</div>` +
+    `</div>` +
+    `<div class="profile-season-tracker">` +
+      `<div class="profile-season-header">` +
+        `<span class="profile-season-title">${escHTML(seasonName)}</span>` +
+        `<span class="profile-season-count">${Math.round(seasonProgress)}% Complete</span>` +
+      `</div>` +
+      `<div class="profile-season-bar">` +
+        `<div class="profile-season-fill" style="width:${seasonProgress}%"></div>` +
+      `</div>` +
+      `<div class="profile-season-labels">` +
+        `<span>Season Start</span>` +
+        `<span>Next Season</span>` +
+      `</div>` +
+    `</div>` +
+  `</div>`;
+
+  // ===== FAVORITE GENRES =====
+  html += `<div class="profile-section">` +
+    `<div class="profile-section-header">` +
+      `<div class="profile-section-title">` +
+        `<div class="profile-section-title-icon" style="background:rgba(139,92,246,0.1);color:#8B5CF6;">\uD83C\uDFAD</div>` +
+        `Favorite Genres` +
+      `</div>` +
+    `</div>` +
+    `<div class="profile-genre-tags">` +
+      favoriteGenres.map(g => `<span class="profile-genre-tag">${escHTML(g)}</span>`).join('') +
+      `<span class="profile-genre-tag" style="background:rgba(16,185,129,0.08);color:var(--success);border-color:rgba(16,185,129,0.15);">+ Add</span>` +
+    `</div>` +
+  `</div>`;
+
+  // ===== RECENTLY VIEWED =====
+  html += `<div class="profile-section">` +
+    `<div class="profile-section-header">` +
+      `<div class="profile-section-title">` +
+        `<div class="profile-section-title-icon" style="background:rgba(16,185,129,0.1);color:var(--success);">\u23F5</div>` +
+        `Recently Viewed` +
+      `</div>` +
+      (state.watchHistory.length > 3 ? `<button class="section-link" onclick="switchTab('search')">View All <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg></button>` : '') +
+    `</div>`;
+
+  if(state.watchHistory.length === 0) {
+    html += `<div class="profile-empty-state">` +
+      `<div class="profile-empty-emoji">\uD83D\uDCD6</div>` +
+      `<div class="profile-empty-title">No Recent Activity</div>` +
+      `<div class="profile-empty-sub">Browse anime and your recently viewed list will appear here.</div>` +
+      `<button class="profile-empty-btn" onclick="switchTab('search')">` +
+        `\uD83D\uDD0D Browse Anime` +
+      `</button>` +
     `</div>`;
   } else {
-    html += `<div class="cards-scroll">`;
-    state.watchlist.forEach(id => {
-      // Try to get from cached data or show placeholder
-      html += `<div class="anime-card" style="width:140px;flex-shrink:0;" onclick="openAnime(${id})">` +
-        `<div class="anime-card-img" style="display:flex;align-items:center;justify-content:center;background:var(--bg-primary);color:var(--text-muted);font-size:12px;">Anime #${id}</div>` +
+    html += `<div class="profile-recent-scroll">`;
+    state.watchHistory.slice(0, 10).forEach(h => {
+      html += `<div class="profile-recent-card" onclick="openAnime(${h.anilistId})">` +
+        `<div class="profile-recent-placeholder">#${h.anilistId}</div>` +
+        `<div class="profile-recent-info">` +
+          `<div class="profile-recent-title">Anime #${h.anilistId}</div>` +
+          `<div class="profile-recent-meta">${relativeTime(h.timestamp)}</div>` +
+        `</div>` +
       `</div>`;
     });
     html += `</div>`;
   }
   html += `</div>`;
 
-  // Recent Activity
-  html += `<div class="watchlist-section">`;
-  html += `<div class="section-header"><div class="section-title">Recent Activity</div></div>`;
-  if(state.watchHistory.length === 0) {
-    html += `<div class="watchlist-empty"><div>No recent activity</div></div>`;
+  // ===== WATCHLIST =====
+  html += `<div class="profile-section">` +
+    `<div class="profile-section-header">` +
+      `<div class="profile-section-title">` +
+        `<div class="profile-section-title-icon" style="background:rgba(239,68,68,0.1);color:var(--danger);">\u2764\uFE0F</div>` +
+        `My Watchlist` +
+      `</div>` +
+      (wlCount > 0 ? `<button class="section-link" onclick="switchTab('search')">View All <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg></button>` : '') +
+    `</div>`;
+
+  if(state.watchlist.length === 0) {
+    html += `<div class="profile-empty-state">` +
+      `<div class="profile-empty-emoji">\uD83D\uDC96</div>` +
+      `<div class="profile-empty-title">Your Watchlist is Empty</div>` +
+      `<div class="profile-empty-sub">Save anime you want to watch by tapping the heart icon.</div>` +
+      `<button class="profile-empty-btn" onclick="switchTab('search')">` +
+        `\uD83D\uDD0D Find Anime` +
+      `</button>` +
+    `</div>`;
   } else {
-    state.watchHistory.slice(0, 10).forEach(h => {
-      html += `<div style="display:flex;align-items:center;gap:12px;padding:10px;background:var(--bg-secondary);border-radius:var(--radius-sm);margin-bottom:8px;">` +
-        `<div style="width:40px;height:54px;background:var(--bg-primary);border-radius:6px;display:flex;align-items:center;justify-content:center;color:var(--text-muted);font-size:10px;">#${h.anilistId}</div>` +
-        `<div style="flex:1;min-width:0;">` +
-          `<div style="font-size:13px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">Anime #${h.anilistId}</div>` +
-          `<div style="font-size:11px;color:var(--text-muted);">Episode ${h.episode||1}</div>` +
+    html += `<div class="profile-watchlist-scroll">`;
+    state.watchlist.forEach(id => {
+      html += `<div class="profile-watchlist-card" onclick="openAnime(${id})">` +
+        `<div class="profile-watchlist-placeholder">#${id}</div>` +
+        `<div class="profile-watchlist-info">` +
+          `<div class="profile-watchlist-title">Anime #${id}</div>` +
+          `<div class="profile-watchlist-meta">Tap to view details</div>` +
         `</div>` +
-        `<div style="font-size:11px;color:var(--text-muted);flex-shrink:0;">${relativeTime(h.timestamp)}</div>` +
+        `<div class="profile-watchlist-remove" onclick="event.stopPropagation();toggleWatchlist(${id});renderProfile();">` +
+          `\u2715` +
+        `</div>` +
+      `</div>`;
+    });
+    html += `</div>`;
+  }
+  html += `</div>`;
+
+  // ===== RECENT ACTIVITY (Comments) =====
+  html += `<div class="profile-section">` +
+    `<div class="profile-section-header">` +
+      `<div class="profile-section-title">` +
+        `<div class="profile-section-title-icon" style="background:rgba(139,92,246,0.1);color:#8B5CF6;">\uD83D\uDCAC</div>` +
+        `Activity` +
+      `</div>` +
+    `</div>`;
+
+  if(state.watchHistory.length === 0) {
+    html += `<div class="profile-empty-state" style="padding:28px;">` +
+      `<div class="profile-empty-emoji" style="font-size:36px;">\uD83D\uDCAD</div>` +
+      `<div class="profile-empty-title">No Activity Yet</div>` +
+      `<div class="profile-empty-sub" style="font-size:12px;">Your activity will be tracked here.</div>` +
+    `</div>`;
+  } else {
+    state.watchHistory.slice(0, 6).forEach(h => {
+      html += `<div class="profile-activity-item" onclick="openAnime(${h.anilistId})">` +
+        `<div class="profile-activity-thumb">` +
+          `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#1e293b,#0f172a);color:var(--accent);font-size:10px;font-weight:700;">#${h.anilistId}</div>` +
+        `</div>` +
+        `<div class="profile-activity-info">` +
+          `<div class="profile-activity-title">Viewed Anime #${h.anilistId}</div>` +
+          `<div class="profile-activity-meta">` +
+            `<span style="color:var(--accent);font-weight:600;">Info Page</span>` +
+            `<span class="profile-activity-dot"></span>` +
+            `<span>${relativeTime(h.timestamp)}</span>` +
+          `</div>` +
+        `</div>` +
+        `<svg class="profile-activity-arrow" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>` +
       `</div>`;
     });
   }
   html += `</div>`;
 
-  // Settings
-  html += `<div class="settings-section">`;
-  html += `<div class="section-header"><div class="section-title">Settings</div></div>`;
-  html += `<button class="settings-item" onclick="clearWatchHistory()"><span>Clear Watch History</span><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>`;
-  html += `<button class="settings-item" onclick="clearCache()"><span>Clear Cache</span><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg></button>`;
-  if(tg && state.user && !state.user.id.startsWith('guest_')) {
-    html += `<button class="settings-item danger" onclick="logout()"><span>Logout</span><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg></button>`;
-  } else {
-    html += `<button class="settings-item" onclick="loginTelegram()"><span style="color:var(--accent);font-weight:600;">Login with Telegram</span><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/></svg></button>`;
-  }
-  html += `</div>`;
+  // ===== ACCOUNT SETTINGS =====
+  html += `<div class="profile-section">` +
+    `<div class="profile-section-header">` +
+      `<div class="profile-section-title">` +
+        `<div class="profile-section-title-icon" style="background:rgba(14,165,233,0.1);color:var(--accent);">\u2699\uFE0F</div>` +
+        `Account` +
+      `</div>` +
+    `</div>` +
+    `<div class="profile-settings-card">` +
+      `<button class="profile-settings-item" onclick="clearWatchHistory()">` +
+        `<div class="profile-settings-icon-wrap red">` +
+          `<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>` +
+        `</div>` +
+        `<span class="profile-settings-text">Clear History</span>` +
+        `<svg class="profile-settings-arrow" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>` +
+      `</button>` +
+      `<button class="profile-settings-item" onclick="clearCache()">` +
+        `<div class="profile-settings-icon-wrap blue">` +
+          `<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>` +
+        `</div>` +
+        `<span class="profile-settings-text">Clear Cache</span>` +
+        `<svg class="profile-settings-arrow" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>` +
+      `</button>` +
+      `<button class="profile-settings-item" onclick="showToast('Notifications settings coming soon!', 'warning')">` +
+        `<div class="profile-settings-icon-wrap purple">` +
+          `<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>` +
+        `</div>` +
+        `<span class="profile-settings-text">Notifications</span>` +
+        `<svg class="profile-settings-arrow" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>` +
+      `</button>` +
+      `<button class="profile-settings-item" onclick="showToast('Language settings coming soon!', 'warning')">` +
+        `<div class="profile-settings-icon-wrap green">` +
+          `<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"/></svg>` +
+        `</div>` +
+        `<span class="profile-settings-text">Language</span>` +
+        `<span style="font-size:12px;color:var(--text-muted);margin-left:auto;margin-right:8px;">English</span>` +
+        `<svg class="profile-settings-arrow" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>` +
+      `</button>` +
+      `<button class="profile-settings-item" onclick="showToast('Dark mode coming soon!', 'warning')">` +
+        `<div class="profile-settings-icon-wrap orange">` +
+          `<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>` +
+        `</div>` +
+        `<span class="profile-settings-text">Dark Mode</span>` +
+        `<span style="font-size:12px;color:var(--text-muted);margin-left:auto;margin-right:8px;">Off</span>` +
+        `<svg class="profile-settings-arrow" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>` +
+      `</button>` +
+      (tg && state.user && !isGuest ?
+        `<button class="profile-settings-item" style="color:var(--danger);" onclick="logout()">` +
+          `<div class="profile-settings-icon-wrap red">` +
+            `<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>` +
+          `</div>` +
+          `<span class="profile-settings-text" style="color:var(--danger);">Logout</span>` +
+          `<svg class="profile-settings-arrow" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color:var(--danger);"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>` +
+        `</button>` :
+        `<button class="profile-settings-item" onclick="loginTelegram()">` +
+          `<div class="profile-settings-icon-wrap blue">` +
+            `<svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/></svg>` +
+          `</div>` +
+          `<span class="profile-settings-text" style="color:var(--accent);font-weight:600;">Login with Telegram</span>` +
+          `<svg class="profile-settings-arrow" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color:var(--accent);"><path stroke-linecap="round" stroke-linejoin="round" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>` +
+        `</button>`
+      ) +
+    `</div>` +
+  `</div>`;
+
+  // ===== APP FOOTER =====
+  html += `<div class="profile-app-footer">` +
+    `<div class="logo-text" style="font-size:20px;margin-bottom:6px;">IOX VAULT</div>` +
+    `<div class="profile-app-footer-version">Anime Info & Tracking App</div>` +
+    `<div class="profile-app-footer-links">` +
+      `<a href="#" onclick="showToast('Terms page coming soon!', 'warning');return false;">Terms</a>` +
+      `<a href="#" onclick="showToast('Privacy page coming soon!', 'warning');return false;">Privacy</a>` +
+      `<a href="https://t.me/code_iox" target="_blank">Support</a>` +
+    `</div>` +
+    `<div style="margin-top:12px;font-size:10px;opacity:0.5;">Powered by AniList API</div>` +
+  `</div>`;
 
   container.innerHTML = html;
 }
-
 function clearWatchHistory() {
-  openModal('Clear History', 'Are you sure you want to clear your watch history?', () => {
+  openModal('Clear History', 'Are you sure you want to clear your view history?', () => {
     state.watchHistory = [];
     if(db && state.user) db.ref('users/' + state.user.id + '/watchHistory').remove();
-    showToast('Watch history cleared', 'success');
+    showToast('View history cleared', 'success');
     renderProfile();
   });
 }
-function clearCache() {
-  try {
-    sessionStorage.clear();
-    showToast('Cache cleared', 'success');
-  } catch(e) { showToast('Failed to clear cache', 'error'); }
-}
-function logout() {
-  openModal('Logout', 'Are you sure you want to logout?', () => {
-    state.user = null;
-    state.isAdmin = false;
-    document.body.classList.remove('is-admin');
-    showToast('Logged out', 'success');
-    renderProfile();
-  });
-}
-function loginTelegram() {
-  if(tg && tg.openTelegramLink) {
-    tg.openTelegramLink('https://t.me/ioxvaultbot');
-  } else {
-    showToast('Open this app in Telegram to login', 'warning');
-  }
-}
-
-// ========== ADMIN PANEL ==========
-function setAdminTab(tab) {
-  state.adminView = tab;
-  $$('.admin-tab').forEach(t => t.classList.toggle('active', t.textContent.toLowerCase().includes(tab)));
-  $$('.admin-panel').forEach(p => p.classList.toggle('active', p.id === 'admin-panel-' + tab));
-  if(tab === 'channels') renderChannelManager();
-  else if(tab === 'users') renderUserManager();
-  else if(tab === 'comments') renderCommentManager();
-}
-
 function renderAdmin() {
-  if(!state.isAdmin) { switchTab('home'); return; }
+  if(!isAdmin()) { switchTab('home'); return; }
+  const ac = $('#admin-content');
+  if(ac) ac.scrollTop = 0;
   if(state.adminView === 'channels') renderChannelManager();
   else if(state.adminView === 'users') renderUserManager();
   else if(state.adminView === 'comments') renderCommentManager();
@@ -3667,6 +5581,10 @@ function renderChannelManager() {
         `<button class="admin-btn secondary" style="margin-top:8px;" onclick="clearSelectedIds()">Clear All</button>` +
       `</div>` +
       `<div id="channel-form" style="display:none;margin-top:16px;">` +
+        `<div class="pending-box" id="pending-box">` +
+          `<div class="pending-label">Pending Languages</div>` +
+          `<div id="pending-list"></div>` +
+        `</div>` +
         `<div class="lang-section">` +
           `<div class="lang-section-title">Add Channel Links</div>` +
           `<input type="text" id="lang-name-input" class="lang-input" placeholder="Language name (e.g., Hindi, English)">` +
@@ -3678,6 +5596,7 @@ function renderChannelManager() {
           `</div>` +
         `</div>` +
         `<div style="display:flex;gap:8px;margin-bottom:16px;">` +
+          `<button class="admin-btn secondary" onclick="addMoreLanguage()" style="flex:1;">Add More</button>` +
           `<button class="admin-btn" onclick="saveChannels()" style="flex:1;">Save All Channels</button>` +
         `</div>` +
       `</div>` +
@@ -3686,6 +5605,7 @@ function renderChannelManager() {
   }
 
   renderExistingChannels();
+  renderPendingChannels();
 }
 
 async function adminSearchAnime() {
@@ -3756,48 +5676,119 @@ function removeSelectedId(id) {
 
 function clearSelectedIds() {
   state.selectedIds = [];
+  state.pendingChannels = [];
   renderSelectedIds();
+  renderPendingChannels();
   $$('.select-anime-btn').forEach(btn => {
     btn.textContent = 'Select';
     btn.classList.remove('selected');
   });
 }
 
-function saveChannels() {
-  if(state.selectedIds.length === 0) { showToast('No anime selected', 'warning'); return; }
-
+function addMoreLanguage() {
   const langName = $('#lang-name-input').value.trim();
   const langLink = $('#lang-link-input').value.trim();
   if(!langName || !langLink) { showToast('Please fill in language name and link', 'warning'); return; }
 
-  const langKey = langName.toLowerCase().replace(/\s+/g, '_');
   const badge = $('#badge-hindi').checked ? 'Hindi Dub' : $('#badge-english').checked ? 'English Sub' : $('#badge-multi').checked ? 'Multi Audio' : langName;
   const showOnCard = $('#badge-hindi').checked || $('#badge-english').checked;
 
-  state.selectedIds.forEach(id => {
-    const ref = db.ref('channels/' + id + '/languages/' + langKey);
-    ref.once('value').then(snap => {
-      const existing = snap.val();
-      const channels = existing?.channels || [];
-      if(!channels.includes(langLink)) channels.push(langLink);
-      ref.set({
-        badge: badge,
-        channels: channels,
-        showOnCard: showOnCard
-      });
+  state.pendingChannels.push({
+    langKey: langName.toLowerCase().replace(/\\s+/g, '_'),
+    langName: langName,
+    link: langLink,
+    badge: badge,
+    showOnCard: showOnCard
+  });
+
+  $('#lang-name-input').value = '';
+  $('#lang-link-input').value = '';
+  $('#badge-hindi').checked = false;
+  $('#badge-english').checked = false;
+  $('#badge-multi').checked = false;
+
+  renderPendingChannels();
+  showToast('Language added to queue. Add more or Save All.', 'success');
+}
+
+function renderPendingChannels() {
+  const box = $('#pending-box');
+  const list = $('#pending-list');
+  if(!box || !list) return;
+  if(state.pendingChannels.length === 0) {
+    box.classList.remove('visible');
+    list.innerHTML = '';
+    return;
+  }
+  box.classList.add('visible');
+  list.innerHTML = state.pendingChannels.map((p, idx) =>
+    `<div class="pending-lang-item">` +
+      `<div>` +
+        `<div class="pending-lang-name">${escHTML(p.badge)}</div>` +
+        `<div class="pending-lang-links">${escHTML(p.link)}</div>` +
+      `</div>` +
+      `<span class="pending-lang-remove" onclick="removePendingLanguage(${idx})">&times;</span>` +
+    `</div>`
+  ).join('');
+}
+
+function removePendingLanguage(idx) {
+  state.pendingChannels.splice(idx, 1);
+  renderPendingChannels();
+}
+
+function clearPendingChannels() {
+  state.pendingChannels = [];
+  renderPendingChannels();
+}
+
+function saveChannels() {
+  if(state.selectedIds.length === 0) { showToast('No anime selected', 'warning'); return; }
+
+  // Add current form data if filled
+  const langName = $('#lang-name-input').value.trim();
+  const langLink = $('#lang-link-input').value.trim();
+  if(langName && langLink) {
+    const badge = $('#badge-hindi').checked ? 'Hindi Dub' : $('#badge-english').checked ? 'English Sub' : $('#badge-multi').checked ? 'Multi Audio' : langName;
+    const showOnCard = $('#badge-hindi').checked || $('#badge-english').checked;
+    state.pendingChannels.push({
+      langKey: langName.toLowerCase().replace(/\\s+/g, '_'),
+      langName: langName,
+      link: langLink,
+      badge: badge,
+      showOnCard: showOnCard
     });
-    // Update availableBadges
-    db.ref('channels/' + id + '/availableBadges').once('value').then(snap => {
-      const badges = snap.val() || [];
-      if(!badges.includes(badge)) badges.push(badge);
-      if($('#badge-multi').checked && !badges.includes('Multi Audio')) badges.push('Multi Audio');
-      db.ref('channels/' + id + '/availableBadges').set(badges);
+  }
+
+  if(state.pendingChannels.length === 0) { showToast('No languages to save. Please add at least one.', 'warning'); return; }
+
+  state.selectedIds.forEach(id => {
+    state.pendingChannels.forEach(p => {
+      const ref = db.ref('channels/' + id + '/languages/' + p.langKey);
+      ref.once('value').then(snap => {
+        const existing = snap.val();
+        const channels = existing?.channels || [];
+        if(!channels.includes(p.link)) channels.push(p.link);
+        ref.set({
+          badge: p.badge,
+          channels: channels,
+          showOnCard: p.showOnCard
+        });
+      });
+      // Update availableBadges
+      db.ref('channels/' + id + '/availableBadges').once('value').then(snap => {
+        const badges = snap.val() || [];
+        if(!badges.includes(p.badge)) badges.push(p.badge);
+        if(p.badge === 'Multi Audio' && !badges.includes('Multi Audio')) badges.push('Multi Audio');
+        db.ref('channels/' + id + '/availableBadges').set(badges);
+      });
     });
     db.ref('channels/' + id + '/title').set('Anime ' + id);
   });
 
-  showToast(`Channels saved for ${state.selectedIds.length} anime!`, 'success');
+  showToast(`Saved ${state.pendingChannels.length} languages for ${state.selectedIds.length} anime!`, 'success');
   clearSelectedIds();
+  clearPendingChannels();
   $('#lang-name-input').value = '';
   $('#lang-link-input').value = '';
   renderExistingChannels();
@@ -3918,11 +5909,131 @@ function renderCommentManager() {
   }).join('');
 }
 
+
+// ========== SEARCH DOUBLE-TAP ENTER ==========
+
+function handleSearchKeydown(event, value) {
+  if (event.key === 'Enter') {
+    // SINGLE TAP: Search immediately
+    doSearch(value);
+    // Visual feedback
+    const box = document.getElementById('search-box-wrapper');
+    if (box) {
+      box.style.transform = 'scale(0.98)';
+      box.style.borderColor = 'var(--success)';
+      setTimeout(() => {
+        box.style.transform = '';
+        box.style.borderColor = '';
+      }, 200);
+    }
+    // Hide keyboard on mobile
+    event.target.blur();
+    event.preventDefault();
+  }
+}
+
+// ========== HEADER GREETING ICON UPDATE ==========
+function updateHeaderGreetingIcon() {
+  const icon = document.getElementById('header-greeting-icon');
+  if (!icon) return;
+  const hour = new Date().getHours();
+  let svg = '';
+  let cls = '';
+
+  if (hour >= 5 && hour < 12) {
+    cls = '';
+    svg = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>';
+  } else if (hour >= 12 && hour < 17) {
+    cls = '';
+    svg = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5" fill="rgba(255,255,255,0.3)"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>';
+  } else if (hour >= 17 && hour < 21) {
+    cls = 'evening';
+    svg = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" fill="rgba(255,255,255,0.2)"/></svg>';
+  } else {
+    cls = 'night';
+    svg = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" fill="rgba(255,255,255,0.15)"/><circle cx="12" cy="12" r="2" fill="rgba(255,255,255,0.3)"/></svg>';
+  }
+
+  icon.style.display = 'flex';
+  icon.className = 'header-greeting-icon ' + cls;
+  icon.innerHTML = svg;
+}
+
+// ========== TAB INDICATOR ANIMATION ==========
+function updateTabIndicator() {
+  const indicator = document.getElementById('tab-indicator');
+  const activeTab = document.querySelector('.nav-item.active');
+  if (!indicator || !activeTab) return;
+
+  const nav = document.getElementById('bottom-nav');
+  if (!nav) return;
+
+  const navRect = nav.getBoundingClientRect();
+  const tabRect = activeTab.getBoundingClientRect();
+
+  const left = tabRect.left - navRect.left + (tabRect.width - 48) / 2;
+  indicator.style.left = left + 'px';
+  indicator.style.width = '48px';
+  indicator.classList.add('visible');
+}
+
+// Override switchTab to update indicator
+const originalSwitchTab = switchTab;
+switchTab = function(name) {
+  originalSwitchTab(name);
+  setTimeout(updateTabIndicator, 50);
+  setTimeout(updateTabIndicator, 350);
+};
+
+// ========== HEADER AVATAR SYNC FOR SEARCH PAGE ==========
+function syncHeaderAvatars() {
+  const mainImg = document.getElementById('header-avatar-img');
+  const mainFallback = document.getElementById('header-avatar-fallback');
+  const searchImg = document.getElementById('header-avatar-img-search');
+  const searchFallback = document.getElementById('header-avatar-fallback-search');
+
+  if (mainImg && searchImg) {
+    searchImg.src = mainImg.src;
+    searchImg.style.display = mainImg.style.display;
+  }
+  if (mainFallback && searchFallback) {
+    searchFallback.textContent = mainFallback.textContent;
+    searchFallback.style.display = mainFallback.style.display;
+  }
+}
+
+// Hook into updateHeaderAvatar
+const originalUpdateHeaderAvatar = updateHeaderAvatar;
+updateHeaderAvatar = function() {
+  originalUpdateHeaderAvatar();
+  syncHeaderAvatars();
+};
+
+// ========== SEARCH CLEAR BUTTON UPGRADE ==========
+const originalOnSearchInput = onSearchInput;
+onSearchInput = function(val) {
+  originalOnSearchInput(val);
+  const clearBtn = document.getElementById('search-clear');
+  if (clearBtn) {
+    clearBtn.classList.toggle('visible', val.length > 0);
+  }
+};
+
+// ========== INIT UPGRADES ==========
+document.addEventListener('DOMContentLoaded', function() {
+  updateHeaderGreetingIcon();
+  setInterval(updateHeaderGreetingIcon, 60000);
+  setTimeout(updateTabIndicator, 500);
+  window.addEventListener('resize', updateTabIndicator);
+});
+
+
 // ========== INITIALIZATION ==========
 document.addEventListener('DOMContentLoaded', () => {
   initUser();
-  initSplash();
+  setupHiddenAdminTrigger();
   state.recentSearches = getRecentSearches();
+  switchTab('home');
 });
 </script>
 </body>
