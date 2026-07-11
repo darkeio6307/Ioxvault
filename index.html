@@ -3006,6 +3006,163 @@ img { max-width: 100%; display: block; }
   border: none;
   cursor: pointer;
 }
+/* Existing Channels Admin */
+.existing-channels-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  padding: 0 0 12px;
+  border-bottom: 1px solid var(--border);
+}
+.existing-channels-title {
+  font-family: var(--font-heading);
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.existing-channels-count {
+  font-size: 12px;
+  color: var(--accent);
+  font-weight: 700;
+  background: rgba(59,130,246,0.1);
+  padding: 3px 10px;
+  border-radius: 10px;
+}
+.admin-channel-card {
+  background: var(--bg-secondary);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+  margin-bottom: 12px;
+  border: 1.5px solid var(--border);
+  transition: all 0.2s;
+}
+.admin-channel-card:hover {
+  border-color: rgba(59,130,246,0.2);
+}
+.admin-channel-card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.admin-channel-card-img {
+  width: 44px;
+  height: 60px;
+  border-radius: 10px;
+  object-fit: cover;
+  flex-shrink: 0;
+  background: linear-gradient(135deg, #1e293b, #0f172a);
+}
+.admin-channel-card-title {
+  font-family: var(--font-heading);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.admin-channel-card-id {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+.admin-channel-langs {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.admin-channel-lang-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  background: var(--bg-primary);
+  border-radius: 10px;
+  border: 1px solid var(--border);
+}
+.admin-channel-lang-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.admin-channel-lang-badge.dub { background: rgba(16,185,129,0.15); color: var(--success); }
+.admin-channel-lang-badge.sub { background: rgba(99,102,241,0.15); color: #818CF8; }
+.admin-channel-lang-links {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-weight: 500;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin: 0 10px;
+}
+.admin-channel-lang-actions {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.admin-channel-lang-actions button {
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.admin-channel-lang-actions .edit-btn { background: rgba(59,130,246,0.1); color: var(--accent); }
+.admin-channel-lang-actions .edit-btn:hover { background: rgba(59,130,246,0.2); }
+.admin-channel-lang-actions .del-btn { background: rgba(239,68,68,0.1); color: var(--danger); }
+.admin-channel-lang-actions .del-btn:hover { background: rgba(239,68,68,0.2); }
+.admin-channel-delete-all {
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 10px;
+  background: rgba(239,68,68,0.08);
+  color: var(--danger);
+  font-size: 12px;
+  font-weight: 700;
+  border: 1px solid rgba(239,68,68,0.2);
+  cursor: pointer;
+  width: 100%;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.admin-channel-delete-all:hover { background: rgba(239,68,68,0.15); }
+.channels-search-filter {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.channels-search-filter input {
+  flex: 1;
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--border);
+  background: var(--bg-secondary);
+  font-size: 14px;
+  color: var(--text-primary);
+  font-weight: 500;
+}
+.channels-search-filter input:focus { border-color: var(--accent); outline: none; }
+
 .table-action-btn.edit { background: rgba(59,130,246,0.1); color: var(--accent); }
 .table-action-btn.edit:hover { background: rgba(59,130,246,0.2); }
 .table-action-btn.delete { background: rgba(239,68,68,0.1); color: var(--danger); }
@@ -3296,6 +3453,247 @@ body.is-admin .page.admin-only.active { display: flex !important; flex-direction
   #app { max-width: 480px; margin: 0 auto; }
   #bottom-nav { max-width: 480px; left: 50%; transform: translateX(-50%); }
   #sidebar { max-width: 320px; }
+}
+
+/* ========== PRO SCHEDULE TIMELINE ========== */
+.schedule-pro-header {
+  margin: 16px 16px 20px;
+  padding: 24px 20px;
+  border-radius: var(--radius);
+  background: linear-gradient(135deg, rgba(37,99,235,0.15) 0%, rgba(139,92,246,0.1) 50%, rgba(14,165,233,0.08) 100%);
+  border: 1.5px solid rgba(59,130,246,0.2);
+  position: relative;
+  overflow: hidden;
+}
+.schedule-pro-header::before {
+  content: '';
+  position: absolute;
+  top: -40%;
+  right: -20%;
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(59,130,246,0.12), transparent 70%);
+  animation: heroOrbFloat 7s ease-in-out infinite;
+}
+.schedule-pro-date {
+  font-family: var(--font-heading);
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: -0.3px;
+  position: relative;
+  z-index: 1;
+}
+.schedule-pro-sub {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 4px;
+  font-weight: 500;
+  position: relative;
+  z-index: 1;
+}
+.schedule-pro-count {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  background: rgba(59,130,246,0.1);
+  border: 1px solid rgba(59,130,246,0.2);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--accent);
+  position: relative;
+  z-index: 1;
+}
+
+.timeline-container { padding: 0 16px 24px; position: relative; }
+.timeline-container::before {
+  content: '';
+  position: absolute;
+  left: 36px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--accent), rgba(139,92,246,0.3));
+  border-radius: 1px;
+}
+.timeline-period {
+  position: relative;
+  margin-bottom: 20px;
+}
+.timeline-period-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+  position: relative;
+  z-index: 1;
+}
+.timeline-period-dot {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+.timeline-period-dot.morning { background: linear-gradient(135deg, #F59E0B, #FBBF24); }
+.timeline-period-dot.afternoon { background: linear-gradient(135deg, #3B82F6, #6366F1); }
+.timeline-period-dot.evening { background: linear-gradient(135deg, #8B5CF6, #EC4899); }
+.timeline-period-dot.night { background: linear-gradient(135deg, #1E293B, #475569); }
+.timeline-period-label {
+  font-family: var(--font-heading);
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: 0.3px;
+}
+.timeline-period-time {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-weight: 600;
+  margin-left: auto;
+}
+
+.timeline-card {
+  display: flex;
+  gap: 14px;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+  margin-bottom: 10px;
+  margin-left: 26px;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1.5px solid var(--border);
+  position: relative;
+  z-index: 1;
+}
+.timeline-card::before {
+  content: '';
+  position: absolute;
+  left: -21px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid var(--bg-primary);
+  box-shadow: 0 0 0 2px var(--accent);
+}
+.timeline-card:hover {
+  border-color: rgba(59,130,246,0.3);
+  transform: translateX(6px);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2), 0 0 30px rgba(59,130,246,0.08);
+}
+.timeline-card:active { transform: scale(0.98); }
+.timeline-card img {
+  width: 56px;
+  height: 76px;
+  border-radius: 12px;
+  object-fit: cover;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+.timeline-card-info { flex: 1; min-width: 0; }
+.timeline-card-title {
+  font-family: var(--font-heading);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-bottom: 4px;
+}
+.timeline-card-meta {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+.timeline-card-badges { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.timeline-time-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 12px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 800;
+  background: var(--accent-gradient);
+  color: #fff;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(59,130,246,0.3);
+}
+.timeline-ep-badge {
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 10px;
+  font-weight: 800;
+  background: rgba(99,102,241,0.2);
+  color: #818CF8;
+  flex-shrink: 0;
+}
+.timeline-live-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 10px;
+  font-size: 10px;
+  font-weight: 800;
+  background: rgba(239,68,68,0.15);
+  color: var(--danger);
+  flex-shrink: 0;
+  border: 1px solid rgba(239,68,68,0.2);
+  animation: livePulse 2s ease-in-out infinite;
+}
+@keyframes livePulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(239,68,68,0.3); }
+  50% { box-shadow: 0 0 0 4px rgba(239,68,68,0); }
+}
+.timeline-countdown {
+  font-size: 11px;
+  color: var(--accent);
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.schedule-empty-pro {
+  text-align: center;
+  padding: 60px 20px;
+  background: var(--bg-secondary);
+  border-radius: var(--radius);
+  border: 2px dashed var(--border);
+  margin: 16px;
+}
+.schedule-empty-pro svg {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 16px;
+  opacity: 0.25;
+}
+.schedule-empty-pro-title {
+  font-family: var(--font-heading);
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+.schedule-empty-pro-sub {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.6;
+  max-width: 260px;
+  margin: 0 auto 20px;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -3739,7 +4137,8 @@ const state = {
   customNewsLoaded: false,
   newsDisplayCount: 10,
   newsRefreshing: false,
-  currentNewsItem: null
+  currentNewsItem: null,
+  animeCache: {}
 };
 
 // ========== CONSTANTS ==========
@@ -4069,6 +4468,33 @@ function formatNumber(n) {
   if(n >= 1000000) return (n/1000000).toFixed(1) + 'M';
   if(n >= 1000) return (n/1000).toFixed(1) + 'K';
   return String(n);
+}
+
+// Batch fetch anime details for profile cards
+async function fetchAnimeBatch(ids) {
+  if(!ids || ids.length === 0) return {};
+  const uniqueIds = [...new Set(ids.map(id => Number(id)).filter(id => id > 0 && !state.animeCache[id]))];
+  if(uniqueIds.length === 0) return state.animeCache;
+  // Fetch in batches of 10
+  const batchSize = 10;
+  for(let i = 0; i < uniqueIds.length; i += batchSize) {
+    const batch = uniqueIds.slice(i, i + batchSize);
+    const idList = batch.join(',');
+    const query = `query BatchAnime{${batch.map((id, idx) => `a${idx}:Media(id:${id}){id title{romaji english}coverImage{large medium}type episodes status}`).join('')}}`;
+    try {
+      const data = await anilistQuery(query, {});
+      if(data) {
+        batch.forEach((id, idx) => {
+          const anime = data['a' + idx];
+          if(anime) state.animeCache[id] = anime;
+        });
+      }
+    } catch(e) { console.warn('Batch fetch error:', e); }
+  }
+  return state.animeCache;
+}
+function getCachedAnime(id) {
+  return state.animeCache[Number(id)] || null;
 }
 
 // ========== LOCAL STORAGE ==========
@@ -5013,57 +5439,74 @@ async function renderTodaySchedule() {
   if(!container) return;
   const now = new Date();
   const dayName = DAYS[now.getDay()];
-  let html = `<div class="day-header"><div class="day-dot"></div><div class="day-name">${dayName.toUpperCase()} (TODAY)</div></div>`;
+  const dateStr = now.toLocaleDateString('en-US', {month:'long', day:'numeric', year:'numeric'});
+  container.innerHTML = '<div style="padding:20px;text-align:center;color:var(--text-muted);"><div class="skeleton" style="height:80px;border-radius:var(--radius);margin-bottom:16px;"></div><div class="skeleton" style="height:120px;border-radius:var(--radius-sm);margin-bottom:10px;"></div><div class="skeleton" style="height:120px;border-radius:var(--radius-sm);"></div></div>';
   const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
   const endOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
   const startTs = Math.floor(startOfDay.getTime()/1000);
   const endTs = Math.floor(endOfDay.getTime()/1000);
-  container.innerHTML = html + '<div style="padding:20px;text-align:center;color:var(--text-muted);">Loading schedule...</div>';
   const data = await anilistQuery(Q_AIRING, { page: 1, perPage: 50, airingAtGreater: startTs, airingAtLesser: endTs });
   if(!data || !data.Page || !data.Page.airingSchedules || data.Page.airingSchedules.length === 0) {
-    container.innerHTML = html + '<div class="anime-count">0 anime</div><div class="empty-state"><div class="empty-state-title">No Anime Today</div><div class="empty-state-sub">Nothing scheduled for today</div></div>';
+    container.innerHTML = '<div class="schedule-pro-header"><div class="schedule-pro-date">' + dayName.toUpperCase() + '</div><div class="schedule-pro-sub">' + dateStr + '</div><div class="schedule-pro-count">0 anime scheduled</div></div>' +
+      '<div class="schedule-empty-pro"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div class="schedule-empty-pro-title">No Releases Today</div><div class="schedule-empty-pro-sub">No anime episodes are scheduled for release today. Check the Upcoming tab for future releases.</div></div>';
     return;
   }
   const schedules = data.Page.airingSchedules;
   const morning = [], afternoon = [], evening = [], night = [];
   schedules.forEach(s => {
     const hour = new Date(s.airingAt * 1000).getHours();
-    if(hour >= 4 && hour < 12) morning.push(s);
-    else if(hour >= 12 && hour < 18) afternoon.push(s);
-    else if(hour >= 18 && hour < 24) evening.push(s);
+    if(hour >= 5 && hour < 12) morning.push(s);
+    else if(hour >= 12 && hour < 17) afternoon.push(s);
+    else if(hour >= 17 && hour < 21) evening.push(s);
     else night.push(s);
   });
-  html += `<div class="anime-count">${schedules.length} anime</div>`;
+  let html = '<div class="schedule-pro-header">' +
+    '<div class="schedule-pro-date">' + dayName.toUpperCase() + ' <span style="font-size:14px;font-weight:600;color:var(--accent);">TODAY</span></div>' +
+    '<div class="schedule-pro-sub">' + dateStr + '</div>' +
+    '<div class="schedule-pro-count"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg> ' + schedules.length + ' episode' + (schedules.length > 1 ? 's' : '') + ' releasing</div>' +
+  '</div>';
+  html += '<div class="timeline-container">';
   const timeGroups = [
-    { label: 'Morning (4AM - 12PM)', items: morning },
-    { label: 'Afternoon (12PM - 6PM)', items: afternoon },
-    { label: 'Evening (6PM - 12AM)', items: evening },
-    { label: 'Night (12AM - 4AM)', items: night }
+    { label: 'Morning', time: '5AM - 12PM', icon: '\u2600\uFE0F', cls: 'morning', items: morning },
+    { label: 'Afternoon', time: '12PM - 5PM', icon: '\u26A1', cls: 'afternoon', items: afternoon },
+    { label: 'Evening', time: '5PM - 9PM', icon: '\uD83C\DF05', cls: 'evening', items: evening },
+    { label: 'Late Night', time: '9PM - 5AM', icon: '\uD83C\DF19', cls: 'night', items: night }
   ];
   timeGroups.forEach(g => {
     if(g.items.length === 0) return;
-    html += `<div class="time-section"><div class="time-label">${g.label}</div>`;
+    html += '<div class="timeline-period">' +
+      '<div class="timeline-period-header">' +
+        '<div class="timeline-period-dot ' + g.cls + '">' + g.icon + '</div>' +
+        '<span class="timeline-period-label">' + g.label + '</span>' +
+        '<span class="timeline-period-time">' + g.time + '</span>' +
+      '</div>';
     g.items.forEach(s => {
       const a = s.media;
       const title = getAnilistTitle(a.title);
       const time = new Date(s.airingAt * 1000);
       const timeStr = time.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
       const isAiringNow = Math.abs(Date.now()/1000 - s.airingAt) < 1800;
-      html += `<div class="schedule-card" onclick="openAnime(${a.id})">` +
-        `<img src="${escHTML(a.coverImage?.large||'')}" alt="${escHTML(title)}" loading="lazy" onerror="this.style.display='none'">` +
-        `<div class="schedule-card-info">` +
-          `<div class="schedule-card-title">${escHTML(title)}</div>` +
-          `<div class="schedule-card-type">${a.type||'TV'}</div>` +
-          `<div class="schedule-card-badges">` +
-            `<span class="time-badge"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path stroke-linecap="round" d="M12 6v6l4 2"/></svg> ${timeStr}</span>` +
-            `<span class="ep-badge">EP ${s.episode||'?'}</span>` +
-            (isAiringNow ? `<span class="live-indicator"><span class="live-dot"></span> LIVE</span>` : '') +
-          `</div>` +
-        `</div>` +
-      `</div>`;
+      const minsUntil = Math.floor((s.airingAt - Date.now()/1000)/60);
+      let countdownTxt = '';
+      if(isAiringNow) countdownTxt = 'Airing now';
+      else if(minsUntil > 0 && minsUntil < 60) countdownTxt = 'In ' + minsUntil + 'm';
+      else if(minsUntil >= 60 && minsUntil < 1440) countdownTxt = 'In ' + Math.floor(minsUntil/60) + 'h ' + (minsUntil%60) + 'm';
+      html += '<div class="timeline-card" onclick="openAnime(' + a.id + ')">' +
+        '<img src="' + escHTML(a.coverImage?.large||'') + '" alt="' + escHTML(title) + '" loading="lazy" onerror="this.style.display=\'none\'">' +
+        '<div class="timeline-card-info">' +
+          '<div class="timeline-card-title">' + escHTML(title) + '</div>' +
+          '<div class="timeline-card-meta">' + (a.type||'TV') + ' &middot; Ep ' + (s.episode||'?') + '</div>' +
+          '<div class="timeline-card-badges">' +
+            '<span class="timeline-time-badge"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path stroke-linecap="round" d="M12 6v6l4 2"/></svg> ' + timeStr + '</span>' +
+            '<span class="timeline-ep-badge">EP ' + (s.episode||'?') + '</span>' +
+            (isAiringNow ? '<span class="timeline-live-badge"><span class="live-dot"></span> LIVE</span>' : (countdownTxt ? '<span class="timeline-countdown">' + countdownTxt + '</span>' : '')) +
+          '</div>' +
+        '</div>' +
+      '</div>';
     });
-    html += `</div>`;
+    html += '</div>';
   });
+  html += '</div>';
   container.innerHTML = html;
 }
 
@@ -5183,7 +5626,6 @@ function renderProfile() {
   const container = $('#profile-content');
   if(!container) return;
   const uname = state.user?.username || 'Guest';
-  const uid = state.user?.id || 'guest';
   const uavatar = state.user?.avatar || '';
   const admin = isAdmin();
   const watchCount = state.watchHistory.length;
@@ -5199,157 +5641,183 @@ function renderProfile() {
   else if(month >= 6 && month <= 8) { seasonName = 'Summer ' + now.getFullYear(); seasonProgress = ((month - 5) / 3) * 100; }
   else { seasonName = 'Fall ' + now.getFullYear(); seasonProgress = ((month - 8) / 3) * 100; }
 
+  // Get anime IDs that need fetching
+  const historyIds = state.watchHistory.slice(0, 10).map(h => h.anilistId).filter(id => id > 0);
+  const watchlistIds = state.watchlist.filter(id => Number(id) > 0);
+  const allIds = [...new Set([...historyIds, ...watchlistIds])];
+
+  // Build the profile HTML
   let html = '';
-  html += `<div class="profile-hero">` +
-    `<div class="profile-hero-bg"></div>` +
-    `<div class="profile-hero-pattern"></div>` +
-    `<div class="profile-hero-shine"></div>` +
-    `<div class="profile-hero-content">` +
-      `<div class="profile-avatar-wrap">` +
-        (uavatar ? `<img class="profile-avatar-img" src="${escHTML(uavatar)}" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">` +
-          `<div class="profile-avatar-default" style="display:none;">${uname.charAt(0).toUpperCase()}</div>` :
-          `<div class="profile-avatar-default">${uname.charAt(0).toUpperCase()}</div>`
+  html += '<div class="profile-hero">' +
+    '<div class="profile-hero-bg"></div>' +
+    '<div class="profile-hero-pattern"></div>' +
+    '<div class="profile-hero-shine"></div>' +
+    '<div class="profile-hero-content">' +
+      '<div class="profile-avatar-wrap">' +
+        (uavatar ? '<img class="profile-avatar-img" src="' + escHTML(uavatar) + '" alt="" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'">' +
+          '<div class="profile-avatar-default" style="display:none;">' + uname.charAt(0).toUpperCase() + '</div>' :
+          '<div class="profile-avatar-default">' + uname.charAt(0).toUpperCase() + '</div>'
         ) +
-        `<div class="profile-status-dot"></div>` +
-      `</div>` +
-      `<div class="profile-name">${escHTML(uname)}</div>` +
-      `<div class="profile-handle">` +
-        `<svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>` +
-        `@${escHTML(uname.toLowerCase().replace(/\s+/g,'_'))} · Joined ${joinDate}` +
-      `</div>` +
-      `<div class="profile-badges-row">` +
-        `<span class="profile-badge ${isGuest ? 'member' : 'premium'}">${isGuest ? '\u2B50 Free' : '\uD83D\uDC8E Premium'}</span>` +
-        (admin ? `<span class="profile-badge admin">\uD83D\uDC51 Admin</span>` : '') +
-        `<span class="profile-badge member">\uD83D\uDCD6 Anime Fan</span>` +
-      `</div>` +
-    `</div>` +
-  `</div>`;
+        '<div class="profile-status-dot"></div>' +
+      '</div>' +
+      '<div class="profile-name">' + escHTML(uname) + '</div>' +
+      '<div class="profile-handle">' +
+        '<svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>' +
+        '@' + escHTML(uname.toLowerCase().replace(/\s+/g,'_')) + ' &middot; Joined ' + joinDate +
+      '</div>' +
+      '<div class="profile-badges-row">' +
+        '<span class="profile-badge ' + (isGuest ? 'member' : 'premium') + '">' + (isGuest ? '\u2B50 Free' : '\uD83D\uDC8E Premium') + '</span>' +
+        (admin ? '<span class="profile-badge admin">\uD83D\uDC51 Admin</span>' : '') +
+        '<span class="profile-badge member">\uD83D\uDCD6 Anime Fan</span>' +
+      '</div>' +
+    '</div>' +
+  '</div>';
 
-  html += `<div class="profile-stats-card">` +
-    `<div class="profile-stat-item"><div class="profile-stat-value">${watchCount}</div><div class="profile-stat-label">Viewed</div></div>` +
-    `<div class="profile-stat-item"><div class="profile-stat-value">${wlCount}</div><div class="profile-stat-label">Watchlist</div></div>` +
-    `<div class="profile-stat-item"><div class="profile-stat-value">${favoriteGenres.length}</div><div class="profile-stat-label">Genres</div></div>` +
-    `<div class="profile-stat-item"><div class="profile-stat-value">${Object.keys(state.allComments).reduce((sum,k)=>sum+Object.keys(state.allComments[k]||{}).length,0)}</div><div class="profile-stat-label">Comments</div></div>` +
-  `</div>`;
+  html += '<div class="profile-stats-card">' +
+    '<div class="profile-stat-item"><div class="profile-stat-value">' + watchCount + '</div><div class="profile-stat-label">Viewed</div></div>' +
+    '<div class="profile-stat-item"><div class="profile-stat-value">' + wlCount + '</div><div class="profile-stat-label">Watchlist</div></div>' +
+    '<div class="profile-stat-item"><div class="profile-stat-value">' + favoriteGenres.length + '</div><div class="profile-stat-label">Genres</div></div>' +
+    '<div class="profile-stat-item"><div class="profile-stat-value">' + Object.keys(state.allComments).reduce((sum,k)=>sum+Object.keys(state.allComments[k]||{}).length,0) + '</div><div class="profile-stat-label">Comments</div></div>' +
+  '</div>';
 
-  html += `<div class="profile-actions-grid">` +
-    `<button class="profile-action-btn" onclick="switchTab('search')"><div class="profile-action-icon discover">\uD83D\uDD0D</div><span class="profile-action-label">Discover</span></button>` +
-    `<button class="profile-action-btn" onclick="switchTab('home'); setHomeCategory('trending'); exploreNow();"><div class="profile-action-icon history">\uD83D\uDD25</div><span class="profile-action-label">Trending</span></button>` +
-    `<button class="profile-action-btn" onclick="showToast('Settings coming soon!', 'warning')"><div class="profile-action-icon settings">\u2699\uFE0F</div><span class="profile-action-label">Settings</span></button>` +
-    `<button class="profile-action-btn" onclick="shareApp()"><div class="profile-action-icon share">\uD83D\uDCE3</div><span class="profile-action-label">Share</span></button>` +
-  `</div>`;
+  html += '<div class="profile-actions-grid">' +
+    '<button class="profile-action-btn" onclick="switchTab(\'search\')"><div class="profile-action-icon discover">\uD83D\uDD0D</div><span class="profile-action-label">Discover</span></button>' +
+    '<button class="profile-action-btn" onclick="switchTab(\'home\'); setHomeCategory(\'trending\'); exploreNow();"><div class="profile-action-icon history">\uD83D\uDD25</div><span class="profile-action-label">Trending</span></button>' +
+    '<button class="profile-action-btn" onclick="showToast(\'Settings coming soon!\', \'warning\')"><div class="profile-action-icon settings">\u2699\uFE0F</div><span class="profile-action-label">Settings</span></button>' +
+    '<button class="profile-action-btn" onclick="shareApp()"><div class="profile-action-icon share">\uD83D\uDCE3</div><span class="profile-action-label">Share</span></button>' +
+  '</div>';
 
-  html += `<div class="profile-section">` +
-    `<div class="profile-section-header">` +
-      `<div class="profile-section-title"><div class="profile-section-title-icon" style="background:rgba(14,165,233,0.1);color:var(--accent);">\uD83D\uDCC5</div>Season Tracker</div>` +
-    `</div>` +
-    `<div class="profile-season-tracker">` +
-      `<div class="profile-season-header"><span class="profile-season-title">${escHTML(seasonName)}</span><span class="profile-season-count">${Math.round(seasonProgress)}% Complete</span></div>` +
-      `<div class="profile-season-bar"><div class="profile-season-fill" style="width:${seasonProgress}%"></div></div>` +
-      `<div class="profile-season-labels"><span>Season Start</span><span>Next Season</span></div>` +
-    `</div>` +
-  `</div>`;
+  html += '<div class="profile-section">' +
+    '<div class="profile-section-header">' +
+      '<div class="profile-section-title"><div class="profile-section-title-icon" style="background:rgba(14,165,233,0.1);color:var(--accent);">\uD83D\uDCC5</div>Season Tracker</div>' +
+    '</div>' +
+    '<div class="profile-season-tracker">' +
+      '<div class="profile-season-header"><span class="profile-season-title">' + escHTML(seasonName) + '</span><span class="profile-season-count">' + Math.round(seasonProgress) + '% Complete</span></div>' +
+      '<div class="profile-season-bar"><div class="profile-season-fill" style="width:' + seasonProgress + '%"></div></div>' +
+      '<div class="profile-season-labels"><span>Season Start</span><span>Next Season</span></div>' +
+    '</div>' +
+  '</div>';
 
-  html += `<div class="profile-section">` +
-    `<div class="profile-section-header">` +
-      `<div class="profile-section-title"><div class="profile-section-title-icon" style="background:rgba(139,92,246,0.1);color:#8B5CF6;">\uD83C\uDFAD</div>Favorite Genres</div>` +
-    `</div>` +
-    `<div class="profile-genre-tags">` +
-      favoriteGenres.map(g => `<span class="profile-genre-tag">${escHTML(g)}</span>`).join('') +
-      `<span class="profile-genre-tag" style="background:rgba(16,185,129,0.08);color:var(--success);border-color:rgba(16,185,129,0.15);">+ Add</span>` +
-    `</div>` +
-  `</div>`;
+  html += '<div class="profile-section">' +
+    '<div class="profile-section-header">' +
+      '<div class="profile-section-title"><div class="profile-section-title-icon" style="background:rgba(139,92,246,0.1);color:#8B5CF6;">\uD83C\uDFAD</div>Favorite Genres</div>' +
+    '</div>' +
+    '<div class="profile-genre-tags">' +
+      favoriteGenres.map(g => '<span class="profile-genre-tag">' + escHTML(g) + '</span>').join('') +
+      '<span class="profile-genre-tag" style="background:rgba(16,185,129,0.08);color:var(--success);border-color:rgba(16,185,129,0.15);">+ Add</span>' +
+    '</div>' +
+  '</div>';
 
-  html += `<div class="profile-section">` +
-    `<div class="profile-section-header">` +
-      `<div class="profile-section-title"><div class="profile-section-title-icon" style="background:rgba(16,185,129,0.1);color:var(--success);">\u23F5</div>Recently Viewed</div>` +
-      (state.watchHistory.length > 3 ? `<button class="section-link" onclick="switchTab('search')">View All <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg></button>` : '') +
-    `</div>`;
+  // Recently Viewed with real thumbnails
+  html += '<div class="profile-section">' +
+    '<div class="profile-section-header">' +
+      '<div class="profile-section-title"><div class="profile-section-title-icon" style="background:rgba(16,185,129,0.1);color:var(--success);">\u23F5</div>Recently Viewed</div>' +
+      (state.watchHistory.length > 3 ? '<button class="section-link" onclick="switchTab(\'search\')">View All <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg></button>' : '') +
+    '</div>';
   if(state.watchHistory.length === 0) {
-    html += `<div class="profile-empty-state">` +
-      `<div class="profile-empty-emoji">\uD83D\uDCD6</div>` +
-      `<div class="profile-empty-title">No Recent Activity</div>` +
-      `<div class="profile-empty-sub">Browse anime and your recently viewed list will appear here.</div>` +
-      `<button class="profile-empty-btn" onclick="switchTab('search')">\uD83D\uDD0D Browse Anime</button>` +
-    `</div>`;
+    html += '<div class="profile-empty-state">' +
+      '<div class="profile-empty-emoji">\uD83D\uDCD6</div>' +
+      '<div class="profile-empty-title">No Recent Activity</div>' +
+      '<div class="profile-empty-sub">Browse anime and your recently viewed list will appear here.</div>' +
+      '<button class="profile-empty-btn" onclick="switchTab(\'search\')">\uD83D\uDD0D Browse Anime</button>' +
+    '</div>';
   } else {
-    html += `<div class="profile-recent-scroll">`;
+    html += '<div class="profile-recent-scroll">';
     state.watchHistory.slice(0, 10).forEach(h => {
-      html += `<div class="profile-recent-card" onclick="openAnime(${h.anilistId})">` +
-        `<div class="profile-recent-placeholder">#${h.anilistId}</div>` +
-        `<div class="profile-recent-info"><div class="profile-recent-title">Anime #${h.anilistId}</div><div class="profile-recent-meta">${relativeTime(h.timestamp)}</div></div>` +
-      `</div>`;
+      const cached = getCachedAnime(h.anilistId);
+      const title = cached ? getAnilistTitle(cached.title) : ('Anime #' + h.anilistId);
+      const img = cached && cached.coverImage ? (cached.coverImage.medium || cached.coverImage.large) : '';
+      html += '<div class="profile-recent-card" onclick="openAnime(' + h.anilistId + ')">' +
+        (img ? '<img class="profile-recent-img" src="' + escHTML(img) + '" alt="" loading="lazy" onerror="this.style.display=\'none\';this.parentNode.querySelector(\'.profile-recent-placeholder\').style.display=\'flex\'">' : '') +
+        '<div class="profile-recent-placeholder" style="' + (img ? 'display:none;' : '') + '">#' + h.anilistId + '</div>' +
+        '<div class="profile-recent-info"><div class="profile-recent-title">' + escHTML(title) + '</div><div class="profile-recent-meta">' + relativeTime(h.timestamp) + '</div></div>' +
+      '</div>';
     });
-    html += `</div>`;
+    html += '</div>';
   }
-  html += `</div>`;
+  html += '</div>';
 
-  html += `<div class="profile-section">` +
-    `<div class="profile-section-header">` +
-      `<div class="profile-section-title"><div class="profile-section-title-icon" style="background:rgba(239,68,68,0.1);color:var(--danger);">\u2764\uFE0F</div>My Watchlist</div>` +
-      (wlCount > 0 ? `<button class="section-link" onclick="switchTab('search')">View All <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg></button>` : '') +
-    `</div>`;
+  // Watchlist with real thumbnails
+  html += '<div class="profile-section">' +
+    '<div class="profile-section-header">' +
+      '<div class="profile-section-title"><div class="profile-section-title-icon" style="background:rgba(239,68,68,0.1);color:var(--danger);">\u2764\uFE0F</div>My Watchlist</div>' +
+      (wlCount > 0 ? '<button class="section-link" onclick="switchTab(\'search\')">View All <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg></button>' : '') +
+    '</div>';
   if(state.watchlist.length === 0) {
-    html += `<div class="profile-empty-state">` +
-      `<div class="profile-empty-emoji">\uD83D\uDC96</div>` +
-      `<div class="profile-empty-title">Your Watchlist is Empty</div>` +
-      `<div class="profile-empty-sub">Save anime you want to watch by tapping the heart icon.</div>` +
-      `<button class="profile-empty-btn" onclick="switchTab('search')">\uD83D\uDD0D Find Anime</button>` +
-    `</div>`;
+    html += '<div class="profile-empty-state">' +
+      '<div class="profile-empty-emoji">\uD83D\uDC96</div>' +
+      '<div class="profile-empty-title">Your Watchlist is Empty</div>' +
+      '<div class="profile-empty-sub">Save anime you want to watch by tapping the heart icon.</div>' +
+      '<button class="profile-empty-btn" onclick="switchTab(\'search\')">\uD83D\uDD0D Find Anime</button>' +
+    '</div>';
   } else {
-    html += `<div class="profile-watchlist-scroll">`;
+    html += '<div class="profile-watchlist-scroll">';
     state.watchlist.forEach(id => {
-      html += `<div class="profile-watchlist-card" onclick="openAnime(${id})">` +
-        `<div class="profile-watchlist-placeholder">#${id}</div>` +
-        `<div class="profile-watchlist-info"><div class="profile-watchlist-title">Anime #${id}</div><div class="profile-watchlist-meta">Tap to view</div></div>` +
-        `<div class="profile-watchlist-remove" onclick="event.stopPropagation();toggleWatchlist(${id});renderProfile();">\u2715</div>` +
-      `</div>`;
+      const cached = getCachedAnime(id);
+      const title = cached ? getAnilistTitle(cached.title) : ('Anime #' + id);
+      const img = cached && cached.coverImage ? (cached.coverImage.medium || cached.coverImage.large) : '';
+      html += '<div class="profile-watchlist-card" onclick="openAnime(' + id + ')">' +
+        (img ? '<img class="profile-watchlist-img" src="' + escHTML(img) + '" alt="" loading="lazy" onerror="this.style.display=\'none\';this.parentNode.querySelector(\'.profile-watchlist-placeholder\').style.display=\'flex\'">' : '') +
+        '<div class="profile-watchlist-placeholder" style="' + (img ? 'display:none;' : '') + '">#' + id + '</div>' +
+        '<div class="profile-watchlist-info"><div class="profile-watchlist-title">' + escHTML(title) + '</div><div class="profile-watchlist-meta">Tap to view</div></div>' +
+        '<div class="profile-watchlist-remove" onclick="event.stopPropagation();toggleWatchlist(' + id + ');renderProfile();">\u2715</div>' +
+      '</div>';
     });
-    html += `</div>`;
+    html += '</div>';
   }
-  html += `</div>`;
+  html += '</div>';
 
-  html += `<div class="profile-section">` +
-    `<div class="profile-section-header">` +
-      `<div class="profile-section-title"><div class="profile-section-title-icon" style="background:rgba(14,165,233,0.1);color:var(--accent);">\u2699\uFE0F</div>Account</div>` +
-    `</div>` +
-    `<div class="profile-settings-card">` +
-      `<button class="profile-settings-item" onclick="clearWatchHistory()">` +
-        `<div class="profile-settings-icon-wrap red"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></div>` +
-        `<span class="profile-settings-text">Clear History</span>` +
-        `<svg class="profile-settings-arrow" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>` +
-      `</button>` +
-      `<button class="profile-settings-item" onclick="clearCache()">` +
-        `<div class="profile-settings-icon-wrap blue"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg></div>` +
-        `<span class="profile-settings-text">Clear Cache</span>` +
-        `<svg class="profile-settings-arrow" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>` +
-      `</button>` +
-      `<button class="profile-settings-item" onclick="showToast('Notifications settings coming soon!', 'warning')">` +
-        `<div class="profile-settings-icon-wrap purple"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg></div>` +
-        `<span class="profile-settings-text">Notifications</span>` +
-        `<svg class="profile-settings-arrow" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>` +
-      `</button>` +
-      `<button class="profile-settings-item" onclick="showToast('Dark mode coming soon!', 'warning')">` +
-        `<div class="profile-settings-icon-wrap orange"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg></div>` +
-        `<span class="profile-settings-text">Dark Mode</span>` +
-        `<span style="font-size:12px;color:var(--text-muted);margin-left:auto;margin-right:8px;">On</span>` +
-        `<svg class="profile-settings-arrow" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>` +
-      `</button>` +
-    `</div>` +
-  `</div>`;
+  html += '<div class="profile-section">' +
+    '<div class="profile-section-header">' +
+      '<div class="profile-section-title"><div class="profile-section-title-icon" style="background:rgba(14,165,233,0.1);color:var(--accent);">\u2699\uFE0F</div>Account</div>' +
+    '</div>' +
+    '<div class="profile-settings-card">' +
+      '<button class="profile-settings-item" onclick="clearWatchHistory()">' +
+        '<div class="profile-settings-icon-wrap red"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></div>' +
+        '<span class="profile-settings-text">Clear History</span>' +
+        '<svg class="profile-settings-arrow" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>' +
+      '</button>' +
+      '<button class="profile-settings-item" onclick="clearCache()">' +
+        '<div class="profile-settings-icon-wrap blue"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg></div>' +
+        '<span class="profile-settings-text">Clear Cache</span>' +
+        '<svg class="profile-settings-arrow" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>' +
+      '</button>' +
+      '<button class="profile-settings-item" onclick="showToast(\'Notifications settings coming soon!\', \'warning\')">' +
+        '<div class="profile-settings-icon-wrap purple"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg></div>' +
+        '<span class="profile-settings-text">Notifications</span>' +
+        '<svg class="profile-settings-arrow" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>' +
+      '</button>' +
+      '<button class="profile-settings-item" onclick="showToast(\'Dark mode coming soon!\', \'warning\')">' +
+        '<div class="profile-settings-icon-wrap orange"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg></div>' +
+        '<span class="profile-settings-text">Dark Mode</span>' +
+        '<span style="font-size:12px;color:var(--text-muted);margin-left:auto;margin-right:8px;">On</span>' +
+        '<svg class="profile-settings-arrow" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>' +
+      '</button>' +
+    '</div>' +
+  '</div>';
 
-  html += `<div class="profile-app-footer">` +
-    `<div class="logo-text" style="font-size:20px;margin-bottom:6px;">IOX VAULT</div>` +
-    `<div class="profile-app-footer-version">Anime Info & Tracking App</div>` +
-    `<div class="profile-app-footer-links">` +
-      `<a href="#" onclick="showToast('Terms page coming soon!', 'warning');return false;">Terms</a>` +
-      `<a href="#" onclick="showToast('Privacy page coming soon!', 'warning');return false;">Privacy</a>` +
-      `<a href="https://t.me/code_iox" target="_blank">Support</a>` +
-    `</div>` +
-    `<div style="margin-top:12px;font-size:10px;opacity:0.5;">Powered by AniList API</div>` +
-  `</div>`;
+  html += '<div class="profile-app-footer">' +
+    '<div class="logo-text" style="font-size:20px;margin-bottom:6px;">IOX VAULT</div>' +
+    '<div class="profile-app-footer-version">Anime Info & Tracking App</div>' +
+    '<div class="profile-app-footer-links">' +
+      '<a href="#" onclick="showToast(\'Terms page coming soon!\', \'warning\');return false;">Terms</a>' +
+      '<a href="#" onclick="showToast(\'Privacy page coming soon!\', \'warning\');return false;">Privacy</a>' +
+      '<a href="https://t.me/code_iox" target="_blank">Support</a>' +
+    '</div>' +
+    '<div style="margin-top:12px;font-size:10px;opacity:0.5;">Powered by AniList API</div>' +
+  '</div>';
 
   container.innerHTML = html;
+
+  // Fetch missing anime details and re-render
+  if(allIds.length > 0) {
+    const uncached = allIds.filter(id => !getCachedAnime(id));
+    if(uncached.length > 0) {
+      fetchAnimeBatch(uncached).then(() => {
+        if(state.tab === 'profile') renderProfile();
+      });
+    }
+  }
 }
 
 function clearWatchHistory() {
@@ -5393,22 +5861,22 @@ async function renderAPINews(isLoadMore = false) {
   if(!container) return;
   if(state.isFetchingNews) return;
   if(!isLoadMore && state.newsLoaded && container.children.length > 0 && !state.newsRefreshing) return;
-  
+
   if(isLoadMore) {
     state.newsPage++;
     const btn = document.querySelector('.news-load-more-btn');
-    if(btn) btn.textContent = 'Loading...';
+    if(btn) btn.innerHTML = '<svg style="width:16px;height:16px;animation:ptrSpin 1s linear infinite;display:inline-block;vertical-align:middle;margin-right:6px;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg> Loading...';
   } else {
     if(!state.newsRefreshing) container.innerHTML = '<div style="padding:20px;">' + skeletonNewsCards(4) + '</div>';
     state.newsPage = 1;
-    state.newsData = []; 
+    state.newsData = [];
   }
-  
+
   state.isFetchingNews = true;
   try {
     let items = [];
-    if(!isLoadMore && state.newsPage === 1) {
-      const url1 = RSS2JSON_API + '?rss_url=' + encodeURIComponent(ANITRENDZ_RSS + '?paged=1');
+    if(!isLoadMore) {
+      const url1 = RSS2JSON_API + '?rss_url=' + encodeURIComponent(ANITRENDZ_RSS);
       const url2 = RSS2JSON_API + '?rss_url=' + encodeURIComponent(ANITRENDZ_RSS + '?paged=2');
       const [res1, res2] = await Promise.all([fetch(url1), fetch(url2)]);
       const data1 = await res1.json();
@@ -5423,37 +5891,64 @@ async function renderAPINews(isLoadMore = false) {
     }
     const filtered = items.filter(item => NEWS_FILTER_KEYWORDS.some(kw => (item.title||'').toLowerCase().includes(kw)));
     const finalItems = filtered.length > 0 ? filtered : items;
+    const startIdx = state.newsData.length;
     for(let i = 0; i < finalItems.length; i++) {
       const item = finalItems[i];
-      let image = item.thumbnail || (item.enclosure && item.enclosure.link) || '';
+      let image = item.thumbnail || '';
+      if(!image && item.enclosure && item.enclosure.link) image = item.enclosure.link;
       if(!image) {
         const match = (item.content || item.description || '').match(/<img[^>]+src=["']([^"']+)["']/i);
         if(match) image = match[1];
       }
-      if(!image || !image.startsWith('http')) image = FALLBACK_NEWS_IMAGES[i % FALLBACK_NEWS_IMAGES.length];
-      
+      if(!image || !image.startsWith('http')) image = FALLBACK_NEWS_IMAGES[(startIdx + i) % FALLBACK_NEWS_IMAGES.length];
+      let excerpt = '';
+      if(item.description) excerpt = item.description.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
+      if(!excerpt && item.content) excerpt = item.content.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
+      if(excerpt.length > 120) excerpt = excerpt.substring(0, 120) + '...';
+      const date = item.pubDate ? new Date(item.pubDate).toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'}) : '';
       state.newsData.push({
         title: item.title || 'Untitled',
-        excerpt: (item.description || item.content || '').replace(/<[^>]+>/g, '').substring(0, 120) + '...',
+        excerpt: excerpt,
         fullContent: item.content || item.description || '',
         image: image,
         url: item.link || '',
-        date: item.pubDate ? new Date(item.pubDate).toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'}) : 'Recently',
+        date: date,
         author: item.author || 'AniTrendz',
-        index: state.newsData.length
+        index: startIdx + i
       });
     }
     state.newsLoaded = true;
+    // Build HTML with proper UI
     let htmlContent = '';
-    state.newsData.forEach(n => {
-      htmlContent += `<div class="news-card" onclick="openNewsDetail(${n.index})">` +
-        `<img class="news-thumbnail" src="${escHTML(n.image)}" onerror="this.src='${FALLBACK_NEWS_IMAGES[0]}'">` +
-        `<div class="news-content"><div class="news-title">${escHTML(n.title)}</div><div class="news-excerpt">${escHTML(n.excerpt)}</div></div>` +
-      `</div>`;
-    });
-    htmlContent += `<div style="text-align:center;padding:16px;"><button class="news-btn view-more news-load-more-btn" onclick="loadMoreNews()">Load More News</button></div>`;
+    for(let i = 0; i < state.newsData.length; i++) {
+      const n = state.newsData[i];
+      htmlContent += '<div class="news-card" onclick="openNewsDetail(' + n.index + ')" style="cursor:pointer;">' +
+        '<img class="news-thumbnail" src="' + escHTML(n.image) + '" alt="" loading="lazy" onerror="this.src=\'' + escHTML(FALLBACK_NEWS_IMAGES[i % FALLBACK_NEWS_IMAGES.length]) + '\'">' +
+        '<div class="news-content">' +
+          '<span class="news-badge api-news">Anime News</span>' +
+          '<div class="news-title">' + escHTML(n.title) + '</div>' +
+          '<div class="news-excerpt">' + escHTML(n.excerpt) + '</div>' +
+          '<div class="news-actions">' +
+            '<span class="news-date">' + escHTML(n.date) + ' &middot; ' + escHTML(n.author) + '</span>' +
+            '<span class="news-btn source" style="margin-left:auto;">Read More &rarr;</span>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+    }
+    // Load More button - always show if we got items (RSS has more pages)
+    if(finalItems.length > 0) {
+      htmlContent += '<div style="text-align:center;padding:20px;">' +
+        '<button class="news-btn view-more news-load-more-btn" onclick="loadMoreNews()" style="font-size:14px;padding:12px 28px;border-radius:14px;">' +
+          '<svg style="width:16px;height:16px;margin-right:6px;vertical-align:middle;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>' +
+          'Load More News</button></div>';
+    }
     container.innerHTML = htmlContent;
-  } catch(e) { console.error(e); } finally { state.isFetchingNews = false; }
+  } catch(e) {
+    console.error('News error:', e);
+    if(!isLoadMore) {
+      container.innerHTML = '<div class="empty-state"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" style="width:60px;height:60px;margin:0 auto 16px;opacity:0.4;"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"/></svg><div class="empty-state-title">Error</div><div class="empty-state-sub">Failed to load news. Please try again.</div></div>';
+    }
+  } finally { state.isFetchingNews = false; }
 }
 
 function openNewsDetail(index) {
@@ -5506,109 +6001,7 @@ function renderNewsDetail(item) {
   container.innerHTML = html;
 }
 
-async function renderAPINews() {
-  const container = $('#api-news-list');
-  if(!container) return;
-  if(state.newsLoaded && container.children.length > 0 && !state.newsRefreshing) return;
-  if(!state.newsRefreshing) {
-    container.innerHTML = '<div style="padding:20px;">' + skeletonNewsCards(4) + '</div>';
-  }
-  try {
-    const rssUrl = encodeURIComponent(ANITRENDZ_RSS);
-    const res = await fetch(RSS2JSON_API + '?rss_url=' + rssUrl);
-    const data = await res.json();
-    if(!data || !data.items || data.items.length === 0) {
-      container.innerHTML = '<div class="empty-state"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" style="width:60px;height:60px;margin:0 auto 16px;opacity:0.4;"><path stroke-linecap="round" stroke-linejoin="round" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/></svg><div class="empty-state-title">No News Found</div><div class="empty-state-sub">Could not load anime news. Try again later.</div></div>';
-      return;
-    }
-    let items = data.items;
-    // Smart filter: keep items with important keywords
-    const filtered = items.filter(item => {
-      const title = (item.title || '').toLowerCase();
-      return NEWS_FILTER_KEYWORDS.some(kw => title.includes(kw));
-    });
-    // If no matches, fallback to top 10 general items
-    const finalItems = filtered.length > 0 ? filtered : items.slice(0, 10);
-    // Process items
-    const processedItems = [];
-    for(let i = 0; i < finalItems.length; i++) {
-      const item = finalItems[i];
-      // Image extraction
-      let image = item.thumbnail || '';
-      if(!image && item.enclosure && item.enclosure.link) {
-        image = item.enclosure.link;
-      }
-      if(!image && (item.content || item.description)) {
-        const content = item.content || item.description;
-        const imgMatch = content.match(/<img[^>]+src=["']([^"']+)["']/i);
-        if(imgMatch) image = imgMatch[1];
-      }
-      // Fallback image if still no image
-      if(!image || !image.startsWith('http')) {
-        image = FALLBACK_NEWS_IMAGES[i % FALLBACK_NEWS_IMAGES.length];
-      }
-      // Clean excerpt: strip HTML, limit 120 chars
-      let excerpt = '';
-      if(item.description) {
-        excerpt = item.description.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
-      }
-      if(!excerpt && item.content) {
-        excerpt = item.content.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
-      }
-      if(excerpt.length > 120) {
-        excerpt = excerpt.substring(0, 120) + '...';
-      }
-      // Full content (for detail page)
-      let fullContent = item.content || item.description || '';
-      // Date
-      const date = item.pubDate ? new Date(item.pubDate).toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'}) : '';
-      processedItems.push({
-        title: item.title || 'Untitled',
-        excerpt: excerpt,
-        fullContent: fullContent,
-        image: image,
-        url: item.link || '',
-        date: date,
-        author: item.author || data.feed?.title || 'AniTrendz',
-        index: i
-      });
-    }
-    state.newsData = processedItems;
-    state.newsLoaded = true;
-    state.newsTotal = processedItems.length;
-    // Build HTML with standard for loop and string builder
-    let htmlContent = '';
-    const displayCount = state.newsDisplayCount || 10;
-    const pageItems = processedItems.slice(0, displayCount);
-    for(let i = 0; i < pageItems.length; i++) {
-      const n = pageItems[i];
-      htmlContent += '<div class="news-card" onclick="openNewsDetail(' + n.index + ')" style="cursor:pointer;">' +
-        '<img class="news-thumbnail" src="' + escHTML(n.image) + '" alt="" loading="lazy" onerror="this.src=\'' + escHTML(FALLBACK_NEWS_IMAGES[n.index % FALLBACK_NEWS_IMAGES.length]) + '\'">' +
-        '<div class="news-content">' +
-          '<span class="news-badge api-news">Anime News</span>' +
-          '<div class="news-title">' + escHTML(n.title) + '</div>' +
-          '<div class="news-excerpt">' + escHTML(n.excerpt) + '</div>' +
-          '<div class="news-actions">' +
-            '<span class="news-date">' + escHTML(n.date) + ' &middot; ' + escHTML(n.author) + '</span>' +
-            '<span class="news-btn source" style="margin-left:auto;">Read More &rarr;</span>' +
-          '</div>' +
-        '</div>' +
-      '</div>';
-    }
-    // Add "Load More" button if there are more items
-    if(displayCount < processedItems.length) {
-      htmlContent += '<div style="text-align:center;padding:16px;">' +
-        '<button class="news-btn view-more" onclick="loadMoreNews()" style="font-size:14px;padding:10px 24px;">Load More (' + (processedItems.length - displayCount) + ' remaining)</button>' +
-      '</div>';
-    }
-    container.innerHTML = htmlContent;
-    state.newsRefreshing = false;
-  } catch(e) {
-    console.error('News error:', e);
-    container.innerHTML = '<div class="empty-state"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" style="width:60px;height:60px;margin:0 auto 16px;opacity:0.4;"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"/></svg><div class="empty-state-title">Error</div><div class="empty-state-sub">Failed to load news. Please try again.</div></div>';
-    state.newsRefreshing = false;
-  }
-}
+// renderAPINews merged above - this function removed to prevent duplication
 
 function createNewsCard(news, idx) {
   const title = news.title || 'Untitled';
@@ -5881,7 +6274,7 @@ function renderAdminDashboard() {
 function renderChannelManager() {
   const container = $('#admin-panel-channels');
   container.innerHTML = `<div class="admin-search-box">` +
-    `<input type="text" id="admin-search" placeholder="Search anime to add channel..." onkeydown="if(event.key==='Enter')adminSearch()">` +
+    `<input type="text" id="admin-search" placeholder="Search anime to add channel..." onkeydown="if(event.key===\'Enter\')adminSearch()">` +
     `<button class="admin-btn" onclick="adminSearch()">Search</button>` +
   `</div>` +
   `<div class="selected-ids-box" id="selected-ids-box" style="display:none;">` +
@@ -5893,9 +6286,132 @@ function renderChannelManager() {
     `<div id="pending-list"></div>` +
     `<button class="admin-btn" style="width:100%;margin-top:10px;" onclick="saveAllChannels()">Save All Channels</button>` +
   `</div>` +
-  `<div class="admin-results" id="admin-results"></div>`;
+  `<div class="admin-results" id="admin-results"></div>` +
+  `<div style="margin-top:24px;">` +
+    `<div class="existing-channels-header">` +
+      `<div class="existing-channels-title">` +
+        `<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color:var(--accent);"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>` +
+        `Existing Channels` +
+      `</div>` +
+      `<span class="existing-channels-count" id="existing-ch-count">0</span>` +
+    `</div>` +
+    `<div class="channels-search-filter">` +
+      `<input type="text" id="channels-filter-input" placeholder="Filter by anime ID or language..." oninput="filterExistingChannels(this.value)">` +
+    `</div>` +
+    `<div id="existing-channels-list"></div>` +
+  `</div>`;
   renderSelectedIds();
   renderPendingChannels();
+  renderExistingChannels();
+}
+
+function renderExistingChannels(filterText) {
+  const list = $('#existing-channels-list');
+  const countEl = $('#existing-ch-count');
+  if(!list) return;
+  const entries = Object.entries(state.channels);
+  if(countEl) countEl.textContent = entries.length;
+  if(entries.length === 0) {
+    list.innerHTML = '<div style="padding:20px;text-align:center;color:var(--text-muted);font-size:13px;">No channels added yet. Search and add above.</div>';
+    return;
+  }
+  let html = '';
+  const filter = (filterText || '').toLowerCase().trim();
+  for(let i = 0; i < entries.length; i++) {
+    const [animeId, channelData] = entries[i];
+    if(!channelData || !channelData.languages) continue;
+    const langEntries = Object.entries(channelData.languages);
+    // Filter by text
+    if(filter) {
+      const matchesId = animeId.includes(filter);
+      const matchesLang = langEntries.some(([k, v]) => (v.badge || k).toLowerCase().includes(filter));
+      if(!matchesId && !matchesLang) continue;
+    }
+    const cached = getCachedAnime(animeId);
+    const title = cached ? getAnilistTitle(cached.title) : ('Anime #' + animeId);
+    const img = cached && cached.coverImage ? (cached.coverImage.medium || cached.coverImage.large) : '';
+    html += '<div class="admin-channel-card">' +
+      '<div class="admin-channel-card-header">' +
+        (img ? '<img class="admin-channel-card-img" src="' + escHTML(img) + '" alt="" loading="lazy" onerror="this.style.display=\'none\'">' : '<div class="admin-channel-card-img" style="display:flex;align-items:center;justify-content:center;color:var(--text-muted);font-size:11px;font-weight:700;">#' + animeId + '</div>') +
+        '<div style="flex:1;min-width:0;">' +
+          '<div class="admin-channel-card-title">' + escHTML(title) + '</div>' +
+          '<div class="admin-channel-card-id">ID: ' + animeId + ' &middot; ' + langEntries.length + ' language' + (langEntries.length > 1 ? 's' : '') + '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="admin-channel-langs">';
+    langEntries.forEach(([langKey, langData]) => {
+      const isDub = (langData.badge || '').toLowerCase().includes('dub');
+      const isSub = (langData.badge || '').toLowerCase().includes('sub');
+      const badgeClass = isDub ? 'dub' : isSub ? 'sub' : '';
+      const links = (langData.channels || []).slice(0, 2).join(', ');
+      html += '<div class="admin-channel-lang-row">' +
+        '<span class="admin-channel-lang-badge ' + badgeClass + '">' + escHTML(langData.badge || langKey) + '</span>' +
+        '<span class="admin-channel-lang-links">' + escHTML(links) + (langData.channels && langData.channels.length > 2 ? ' +' + (langData.channels.length - 2) + ' more' : '') + '</span>' +
+        '<div class="admin-channel-lang-actions">' +
+          '<button class="edit-btn" onclick="editChannelLang(' + animeId + ', \'' + langKey + '\')">Edit</button>' +
+          '<button class="del-btn" onclick="deleteChannelLang(' + animeId + ', \'' + langKey + '\')">Del</button>' +
+        '</div>' +
+      '</div>';
+    });
+    html += '</div>' +
+      '<button class="admin-channel-delete-all" onclick="deleteAllChannelsForAnime(' + animeId + ')">' +
+        '<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>' +
+        'Remove All Languages' +
+      '</button>' +
+    '</div>';
+  }
+  list.innerHTML = html || '<div style="padding:20px;text-align:center;color:var(--text-muted);font-size:13px;">No channels match your filter.</div>';
+  // Fetch anime details for titles/images if missing
+  const missingIds = entries.filter(([id]) => !getCachedAnime(id)).map(([id]) => Number(id)).filter(id => id > 0);
+  if(missingIds.length > 0) {
+    fetchAnimeBatch(missingIds).then(() => {
+      if(state.tab === 'admin' && state.adminView === 'channels' && !filter) renderExistingChannels();
+    });
+  }
+}
+
+function filterExistingChannels(text) {
+  renderExistingChannels(text);
+}
+
+function editChannelLang(animeId, langKey) {
+  const cd = state.channels[animeId];
+  if(!cd || !cd.languages || !cd.languages[langKey]) return;
+  const lang = cd.languages[langKey];
+  const currentLinks = lang.channels ? lang.channels.join('\n') : '';
+  openModal('Edit Channel', '<div style="margin-bottom:12px;"><strong>Anime ID:</strong> ' + animeId + '<br><strong>Language:</strong> ' + escHTML(lang.badge || langKey) + '</div><textarea id="edit-channel-links" class="comment-textarea" style="min-height:80px;background:var(--bg-primary);" placeholder="Enter Telegram links, one per line...">' + escHTML(currentLinks) + '</textarea>', () => {
+    const newLinks = $('#edit-channel-links').value.trim().split('\n').map(l => l.trim()).filter(l => l.length > 0 && l.includes('t.me'));
+    if(newLinks.length === 0) { showToast('Please enter valid Telegram links', 'warning'); return; }
+    state.channels[animeId].languages[langKey].channels = newLinks;
+    if(db) db.ref('channels/' + animeId + '/languages/' + langKey + '/channels').set(newLinks);
+    showToast('Channel updated!', 'success');
+    renderExistingChannels();
+  });
+}
+
+function deleteChannelLang(animeId, langKey) {
+  openModal('Delete Language', 'Are you sure you want to remove ' + escHTML(langKey) + ' channels for anime ' + animeId + '?', () => {
+    if(state.channels[animeId] && state.channels[animeId].languages) {
+      delete state.channels[animeId].languages[langKey];
+      if(Object.keys(state.channels[animeId].languages).length === 0) {
+        delete state.channels[animeId];
+        if(db) db.ref('channels/' + animeId).remove();
+      } else {
+        if(db) db.ref('channels/' + animeId + '/languages/' + langKey).remove();
+      }
+    }
+    showToast('Language channel removed', 'success');
+    renderExistingChannels();
+  });
+}
+
+function deleteAllChannelsForAnime(animeId) {
+  openModal('Remove All Channels', 'Remove ALL language channels for anime ' + animeId + '?', () => {
+    delete state.channels[animeId];
+    if(db) db.ref('channels/' + animeId).remove();
+    showToast('All channels removed', 'success');
+    renderExistingChannels();
+  });
 }
 
 function adminSearch() {
