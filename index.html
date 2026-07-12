@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-<meta name="description" content="IOX VAULT - Anime Streaming & Tracking Platform">
+<meta name="description" content="IOX VAULT - Anime Info & Tracking Hub. Not a streaming site. Discover trending anime, track seasons, and stay updated with news.">
 <meta name="theme-color" content="#0F172A">
-<title>IOX VAULT</title>
+<title>IOX VAULT - Anime Info & Tracking</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -1952,6 +1952,96 @@ img { max-width: 100%; display: block; }
   border: 1px solid rgba(255,255,255,0.1);
 }
 
+/* Rank Badge Styles */
+.rank-badge-display {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  border: 1.5px solid transparent;
+  backdrop-filter: blur(10px);
+  transition: all 0.25s ease;
+}
+.rank-progress-card {
+  background: var(--bg-secondary);
+  border-radius: var(--radius);
+  padding: 18px;
+  margin: 0 16px 16px;
+  box-shadow: var(--shadow);
+  border: 1.5px solid var(--border);
+}
+.rank-progress-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+.rank-progress-title {
+  font-family: var(--font-heading);
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.rank-progress-bar {
+  height: 8px;
+  border-radius: 4px;
+  background: var(--bg-primary);
+  overflow: hidden;
+}
+.rank-progress-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.8s ease;
+}
+.rank-progress-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 8px;
+  font-weight: 600;
+}
+
+/* Schedule filter chips */
+.filter-chip {
+  padding: 7px 16px;
+  border-radius: 18px;
+  font-size: 12px;
+  font-weight: 600;
+  border: 1.5px solid var(--border);
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+.filter-chip.active {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+  box-shadow: 0 4px 12px rgba(59,130,246,0.25);
+}
+
+/* Timeline card aired state */
+.timeline-card[data-sstatus="aired"] {
+  border-left: 3px solid var(--success);
+}
+.timeline-card[data-sstatus="upcoming"] {
+  border-left: 3px solid var(--accent);
+}
+
+/* Terms page styling */
+#page-terms .page-title-text {
+  font-size: 16px !important;
+}
+
 /* Stats Card */
 .profile-stats-card {
   background: var(--bg-secondary);
@@ -2499,10 +2589,7 @@ img { max-width: 100%; display: block; }
   color: var(--text-primary);
   line-height: 1.4;
   margin-bottom: 6px;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  word-break: break-word;
 }
 .news-excerpt {
   font-size: 13px;
@@ -2510,9 +2597,10 @@ img { max-width: 100%; display: block; }
   line-height: 1.6;
   margin-bottom: 10px;
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  word-break: break-word;
 }
 .news-expanded {
   font-size: 13px;
@@ -3731,7 +3819,7 @@ body.is-admin .page.admin-only.active { display: flex !important; flex-direction
       </a>
       <button class="sidebar-action-btn secondary" onclick="shareApp()">
         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
-        Share App
+        Share (@codeioxstorebot)
       </button>
     </div>
     <div class="sidebar-section">
@@ -3763,11 +3851,17 @@ body.is-admin .page.admin-only.active { display: flex !important; flex-direction
     </div>
   </div>
   <div class="sidebar-footer">
+    <div style="margin-bottom:6px;font-weight:700;color:var(--text-primary);">IOX VAULT</div>
     <div style="margin-bottom:6px;">Powered by Infinite Anime</div>
-    <div style="margin-bottom:6px;">Developer: @code_iox</div>
-    <a href="#" style="color:var(--accent);margin:0 4px;">Terms</a>
-    <a href="#" style="color:var(--accent);margin:0 4px;">Privacy</a>
-    <div style="margin-top:8px;opacity:0.7;">IOX VAULT is a fan-made platform. All anime data from Anilist. We do not host any content.</div>
+    <div style="margin-bottom:8px;">Developer: @code_iox</div>
+    <div style="display:inline-flex;align-items:center;gap:4px;margin-bottom:8px;padding:3px 10px;border-radius:8px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.2);">
+      <span style="color:var(--danger);font-size:10px;font-weight:800;">⚠ NOT A STREAMING SITE</span>
+    </div>
+    <div style="margin-bottom:6px;">
+      <a href="#" onclick="openTermsPage();return false;" style="color:var(--accent);margin:0 4px;">Terms</a>
+      <a href="https://t.me/code_iox" target="_blank" style="color:var(--accent);margin:0 4px;">Support</a>
+    </div>
+    <div style="margin-top:8px;opacity:0.7;font-size:11px;line-height:1.5;">This is a fan-made anime info & tracking platform. All data from AniList. We do not host any anime content.</div>
     <div style="margin-top:8px;opacity:0.4;font-size:9px;cursor:default;" ondblclick="openPasswordModal()">.</div>
   </div>
 </nav>
@@ -3845,7 +3939,7 @@ body.is-admin .page.admin-only.active { display: flex !important; flex-direction
             </svg>
           </div>
           <div id="hero-greeting-title" style="font-family:var(--font-heading);font-size:28px;font-weight:800;color:var(--text-primary);margin-bottom:10px;position:relative;z-index:2;">Welcome to IOX VAULT</div>
-          <div id="hero-greeting-message" style="font-size:15px;color:var(--text-secondary);line-height:1.8;max-width:300px;margin:0 auto 20px;position:relative;z-index:2;">Your gateway to the world of anime. Discover trending series, movies, and hidden gems all in one place.</div>
+          <div id="hero-greeting-message" style="font-size:15px;color:var(--text-secondary);line-height:1.8;max-width:300px;margin:0 auto 20px;position:relative;z-index:2;">Your gateway to the world of anime. Discover trending series, track seasons, and stay updated with the latest anime news. <strong style='color:var(--accent);'>We do not stream anime.</strong></div>
           <div id="hero-greeting-time" style="font-size:13px;color:var(--accent);font-weight:700;letter-spacing:0.5px;margin-bottom:20px;position:relative;z-index:2;"></div>
           <button class="explore-btn" onclick="exploreNow()">
             <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
@@ -3854,6 +3948,49 @@ body.is-admin .page.admin-only.active { display: flex !important; flex-direction
         </div>
       </div>
       <div id="home-post-explore" style="display:none;">
+                  <div style="padding:0 16px 16px;">
+          <div style="display:grid;grid-template-columns:repeat(4, 1fr);gap:10px;margin-bottom:8px;">
+            <a href="https://t.me/Infinite_Link_Bot?start=req_LTEwMDI5NzQ0MDA4NTk" target="_blank" style="text-decoration:none;">
+              <div style="background:linear-gradient(135deg, #1a1f35, #2d1f35);border-radius:14px;padding:12px 4px;display:flex;flex-direction:column;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.06);transition:all 0.2s;height:100%;" onmouseover="this.style.transform='translateY(-3px)';this.style.borderColor='rgba(59,130,246,0.3)'" onmouseout="this.style.transform='';this.style.borderColor='rgba(255,255,255,0.06)'">
+                <div style="color:var(--accent);margin-bottom:6px;">
+                  <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                </div>
+                <div style="font-size:10px;font-weight:700;color:var(--text-primary);line-height:1.2;text-align:center;">Anime Index</div>
+              </div>
+            </a>
+            <a href="https://t.me/animeinhindifangroup" target="_blank" style="text-decoration:none;">
+              <div style="background:linear-gradient(135deg, #1a1f35, #1f2d35);border-radius:14px;padding:12px 4px;display:flex;flex-direction:column;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.06);transition:all 0.2s;height:100%;" onmouseover="this.style.transform='translateY(-3px)';this.style.borderColor='rgba(16,185,129,0.3)'" onmouseout="this.style.transform='';this.style.borderColor='rgba(255,255,255,0.06)'">
+                <div style="color:#10B981;margin-bottom:6px;">
+                  <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                </div>
+                <div style="font-size:10px;font-weight:700;color:var(--text-primary);line-height:1.2;text-align:center;">Support Group</div>
+              </div>
+            </a>
+            <a href="https://t.me/+Su9GUdAEPXRiZDI1" target="_blank" style="text-decoration:none;">
+              <div style="background:linear-gradient(135deg, #1a1f35, #351f2d);border-radius:14px;padding:12px 4px;display:flex;flex-direction:column;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.06);transition:all 0.2s;height:100%;" onmouseover="this.style.transform='translateY(-3px)';this.style.borderColor='rgba(245,158,11,0.3)'" onmouseout="this.style.transform='';this.style.borderColor='rgba(255,255,255,0.06)'">
+                <div style="color:#F59E0B;margin-bottom:6px;">
+                  <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path></svg>
+                </div>
+                <div style="font-size:10px;font-weight:700;color:var(--text-primary);line-height:1.2;text-align:center;">Anime Base</div>
+              </div>
+            </a>
+            <a href="https://t.me/code_iox" target="_blank" style="text-decoration:none;">
+              <div style="background:linear-gradient(135deg, #1a1f35, #2d1f35);border-radius:14px;padding:12px 4px;display:flex;flex-direction:column;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.06);transition:all 0.2s;height:100%;" onmouseover="this.style.transform='translateY(-3px)';this.style.borderColor='rgba(139,92,246,0.3)'" onmouseout="this.style.transform='';this.style.borderColor='rgba(255,255,255,0.06)'">
+                <div style="color:#8B5CF6;margin-bottom:6px;">
+                  <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"></path><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"></path></svg>
+                </div>
+                <div style="font-size:10px;font-weight:700;color:var(--text-primary);line-height:1.2;text-align:center;">Admin Support</div>
+              </div>
+            </a>
+          </div>
+          <div style="background:linear-gradient(135deg, rgba(239,68,68,0.08), rgba(239,68,68,0.02));border-radius:12px;padding:10px 14px;margin-bottom:8px;border:1px solid rgba(239,68,68,0.15);display:flex;align-items:center;gap:10px;">
+            <div style="color:var(--danger);display:flex;align-items:center;justify-content:center;">
+              <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+            </div>
+            <span style="font-size:11px;color:var(--text-secondary);line-height:1.5;font-weight:500;"><strong style="color:var(--danger);">IOX VAULT is not a streaming site.</strong> We only provide anime information, schedules, and news. Watch anime through official channels linked by our community.</span>
+          </div>
+        </div>
+
         <div id="trending-section" style="display:none;">
           <div class="section-header"><div class="section-title">Trending Now</div><button class="section-link" onclick="showAllTrending()">View All <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg></button></div>
           <div class="cards-scroll" id="trending-list"></div>
@@ -4075,6 +4212,92 @@ body.is-admin .page.admin-only.active { display: flex !important; flex-direction
     </div>
   </div>
 
+  <!-- ===== TERMS & CONDITIONS PAGE ===== -->
+  <div class="page" id="page-terms">
+    <header class="app-header">
+      <div class="header-left">
+        <button class="icon-btn" onclick="goBack()" aria-label="Back">
+          <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+        </button>
+      </div>
+      <div class="header-center">
+        <span class="page-title-text" style="font-family:var(--font-heading);font-size:18px;font-weight:700;color:var(--text-primary);letter-spacing:-0.3px;">Terms & Conditions</span>
+      </div>
+      <div class="header-right header-actions-group" style="width:40px;"></div>
+    </header>
+    <div style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:20px;">
+      <div style="background:var(--bg-secondary);border-radius:var(--radius);padding:24px;border:1.5px solid var(--border);margin-bottom:16px;">
+        <div style="font-family:var(--font-heading);font-size:24px;font-weight:800;margin-bottom:20px;color:var(--text-primary);text-align:center;">
+          <span style="font-size:40px;display:block;margin-bottom:12px;">??</span>
+          IOX VAULT<br>
+          <span style="font-size:14px;color:var(--text-muted);font-weight:500;">Terms of Service & Conditions</span>
+        </div>
+        <div style="font-size:13px;color:var(--text-muted);text-align:center;margin-bottom:24px;">Last Updated: July 2025 | Effective Date: July 2025</div>
+
+        <div style="font-size:14px;color:var(--text-secondary);line-height:1.8;">
+          <div style="font-family:var(--font-heading);font-size:16px;font-weight:800;color:var(--text-primary);margin:20px 0 10px;display:flex;align-items:center;gap:8px;">
+            <span style="width:28px;height:28px;border-radius:8px;background:var(--accent-gradient);display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;">1</span>
+            Acceptance of Terms
+          </div>
+          <p>By accessing or using IOX VAULT ("the App"), you agree to be bound by these Terms & Conditions. If you do not agree with any part of these terms, please do not use the App. This is an anime information and tracking platform, <strong>not a streaming service</strong>.</p>
+
+          <div style="font-family:var(--font-heading);font-size:16px;font-weight:800;color:var(--text-primary);margin:20px 0 10px;display:flex;align-items:center;gap:8px;">
+            <span style="width:28px;height:28px;border-radius:8px;background:var(--accent-gradient);display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;">2</span>
+            Nature of Service
+          </div>
+          <p>IOX VAULT is a <strong>fan-made anime information and tracking platform</strong>. We do NOT host, stream, or distribute any anime content. All anime data, including titles, descriptions, ratings, and images, is sourced from publicly available APIs including AniList and Jikan. The App provides information about anime, airing schedules, and community features only.</p>
+
+          <div style="font-family:var(--font-heading);font-size:16px;font-weight:800;color:var(--text-primary);margin:20px 0 10px;display:flex;align-items:center;gap:8px;">
+            <span style="width:28px;height:28px;border-radius:8px;background:var(--accent-gradient);display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;">3</span>
+            User Accounts & Data
+          </div>
+          <p>Authentication is handled via Telegram WebApp. We collect minimal user data including your Telegram user ID, username, and profile photo for personalization. Your watchlist, viewing history, and comments are stored securely in Firebase. You can request data deletion by contacting the admin.</p>
+
+          <div style="font-family:var(--font-heading);font-size:16px;font-weight:800;color:var(--text-primary);margin:20px 0 10px;display:flex;align-items:center;gap:8px;">
+            <span style="width:28px;height:28px;border-radius:8px;background:var(--accent-gradient);display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;">4</span>
+            Community Guidelines
+          </div>
+          <p>When posting comments, you agree to: (a) not post harmful, abusive, or offensive content, (b) not spam or post irrelevant content, (c) respect other users, (d) not share pirated or illegal content links. Violations may result in account suspension or ban without notice.</p>
+
+          <div style="font-family:var(--font-heading);font-size:16px;font-weight:800;color:var(--text-primary);margin:20px 0 10px;display:flex;align-items:center;gap:8px;">
+            <span style="width:28px;height:28px;border-radius:8px;background:var(--accent-gradient);display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;">5</span>
+            Intellectual Property
+          </div>
+          <p>All anime-related content (images, titles, descriptions) belongs to their respective copyright holders. IOX VAULT claims no ownership over third-party anime content. The IOX VAULT name, logo, and codebase are the intellectual property of the developer.</p>
+
+          <div style="font-family:var(--font-heading);font-size:16px;font-weight:800;color:var(--text-primary);margin:20px 0 10px;display:flex;align-items:center;gap:8px;">
+            <span style="width:28px;height:28px;border-radius:8px;background:var(--accent-gradient);display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;">6</span>
+            Disclaimer of Warranties
+          </div>
+          <p>The App is provided "as is" without warranties of any kind. We do not guarantee accuracy, completeness, or reliability of anime data. Third-party Telegram channels linked in the App are not controlled or verified by us. Use them at your own discretion.</p>
+
+          <div style="font-family:var(--font-heading);font-size:16px;font-weight:800;color:var(--text-primary);margin:20px 0 10px;display:flex;align-items:center;gap:8px;">
+            <span style="width:28px;height:28px;border-radius:8px;background:var(--accent-gradient);display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;">7</span>
+            Limitation of Liability
+          </div>
+          <p>IOX VAULT and its developer shall not be liable for any direct, indirect, incidental, or consequential damages arising from your use of the App. This includes but is not limited to data loss, service interruptions, or issues with third-party links.</p>
+
+          <div style="font-family:var(--font-heading);font-size:16px;font-weight:800;color:var(--text-primary);margin:20px 0 10px;display:flex;align-items:center;gap:8px;">
+            <span style="width:28px;height:28px;border-radius:8px;background:var(--accent-gradient);display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;">8</span>
+            Modifications to Terms
+          </div>
+          <p>We reserve the right to modify these terms at any time. Continued use of the App after changes constitutes acceptance of the updated terms. Check this page periodically for updates.</p>
+
+          <div style="font-family:var(--font-heading);font-size:16px;font-weight:800;color:var(--text-primary);margin:20px 0 10px;display:flex;align-items:center;gap:8px;">
+            <span style="width:28px;height:28px;border-radius:8px;background:var(--accent-gradient);display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;">9</span>
+            Contact & Support
+          </div>
+          <p>For questions, concerns, or data deletion requests, contact the developer via Telegram: <strong>@code_iox</strong>. Join our community: <strong>@InfiniteAnimeOriginal</strong>.</p>
+
+          <div style="margin-top:24px;padding:16px;background:rgba(59,130,246,0.05);border-radius:var(--radius-sm);border:1px solid rgba(59,130,246,0.15);text-align:center;">
+            <div style="font-size:13px;color:var(--accent);font-weight:700;margin-bottom:4px;">?? Thank you for using IOX VAULT!</div>
+            <div style="font-size:12px;color:var(--text-muted);">Powered by Infinite Anime &bull; Developed by @code_iox</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div><!-- /#app -->
 
 <!-- ========== BOTTOM NAVIGATION ========== -->
@@ -4125,6 +4348,8 @@ const state = {
   homeCategory: 'trending',
   newsView: 'api',
   explored: false,
+  xp: 0,
+  totalXP: 0,
   selectedIds: [],
   pendingChannels: [],
   recentSearches: [],
@@ -4149,7 +4374,7 @@ const JIKAN_API = 'https://api.jikan.moe/v4';
 const RSS2JSON_API = 'https://api.rss2json.com/v1/api.json';
 const ANITRENDZ_RSS = 'https://anitrendz.net/news/feed/';
 const TRENDING_SEARCHES = ['Naruto', 'One Piece', 'Attack on Titan', 'Demon Slayer', 'Jujutsu Kaisen', 'My Hero Academia', 'Dragon Ball', 'Death Note', 'Spy x Family', 'Chainsaw Man'];
-const NEWS_FILTER_KEYWORDS = ['dub','release','season','announce','trailer','premiere','cast','visual','movie','english','hindi','reveal','teaser','preview','sequel','ova','film'];
+const NEWS_FILTER_KEYWORDS = ['dub','release','season','announce','trailer','premiere','cast','visual','movie','english','hindi','reveal','teaser','preview','sequel','ova','film','upcoming','new anime','recap','continuation','renewed','confirmed','airing','debut','opening','ending','delay','postponed','resume','episode count','broadcast','adaptation','spin-off','side story','compilation'];
 const FALLBACK_NEWS_IMAGES = [
   'https://images.unsplash.com/photo-1578632767115-351597cf2477?w=400&h=225&fit=crop',
   'https://images.unsplash.com/photo-1541562232579-512a21360020?w=400&h=225&fit=crop',
@@ -4166,6 +4391,49 @@ const FALLBACK_NEWS_IMAGES = [
 ];
 const DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+// ========== RANKING SYSTEM ==========
+const RANKS = [
+  { name: 'Novice', minXP: 0, icon: '??', color: '#94A3B8', grad: 'linear-gradient(135deg, #94A3B8, #64748B)' },
+  { name: 'Apprentice', minXP: 500, icon: '⚔️', color: '#38BDF8', grad: 'linear-gradient(135deg, #38BDF8, #0EA5E9)' },
+  { name: 'Weeb', minXP: 1500, icon: '??', color: '#A78BFA', grad: 'linear-gradient(135deg, #A78BFA, #8B5CF6)' },
+  { name: 'Otaku', minXP: 3000, icon: '??', color: '#F472B6', grad: 'linear-gradient(135deg, #F472B6, #EC4899)' },
+  { name: 'S-Class', minXP: 7000, icon: '⭐', color: '#FBBF24', grad: 'linear-gradient(135deg, #FBBF24, #F59E0B)' },
+  { name: 'Anime God', minXP: 15000, icon: '??', color: '#F59E0B', grad: 'linear-gradient(135deg, #F59E0B, #EF4444, #F59E0B)' }
+];
+
+function getUserRank(xp) {
+  let rank = RANKS[0];
+  for(let i = 0; i < RANKS.length; i++) { if(xp >= RANKS[i].minXP) rank = RANKS[i]; }
+  return rank;
+}
+function getNextRank(xp) {
+  for(let i = 0; i < RANKS.length; i++) { if(xp < RANKS[i].minXP) return RANKS[i]; }
+  return null;
+}
+function getRankProgress(xp) {
+  const currentRank = getUserRank(xp);
+  const nextRank = getNextRank(xp);
+  if(!nextRank) return 100;
+  const range = nextRank.minXP - currentRank.minXP;
+  const progress = xp - currentRank.minXP;
+  return Math.min(100, Math.max(0, Math.round((progress / range) * 100)));
+}
+function addXP(amount) {
+  const earned = amount || Math.floor(Math.random() * 16) + 10; // 10-25 random
+  state.xp = (state.xp || 0) + earned;
+  state.totalXP = (state.totalXP || 0) + earned;
+  if(db && state.user) db.ref('users/' + state.user.id + '/xp').set(state.xp);
+  return earned;
+}
+function loadUserXP() {
+  if(!db || !state.user) return;
+  db.ref('users/' + state.user.id + '/xp').once('value').then(snap => {
+    const savedXP = snap.val();
+    if(savedXP && typeof savedXP === 'number') { state.xp = savedXP; state.totalXP = savedXP; }
+    else { state.xp = 0; state.totalXP = 0; }
+  });
+}
 
 // ========== DOM HELPERS ==========
 const $ = (s) => document.querySelector(s);
@@ -4225,6 +4493,7 @@ function initUser() {
   updateHeaderAvatar();
   loadAdminPassword().then(() => {
     loadUserData();
+    loadUserXP();
     loadCustomNews();
     startHeaderClock();
   });
@@ -4577,9 +4846,9 @@ function confirmModal() { if(modalCallback) modalCallback(); closeModal(); }
 function shareApp() {
   try {
     if(tg && tg.openTelegramLink) {
-      tg.openTelegramLink('https://t.me/share/url?url=' + encodeURIComponent('https://t.me/ioxvaultbot') + '&text=' + encodeURIComponent('Check out IOX VAULT - the best anime streaming app!'));
+      tg.openTelegramLink('https://t.me/share/url?url=' + encodeURIComponent('https://t.me/codeioxstorebot') + '&text=' + encodeURIComponent('Check out IOX VAULT - Your Ultimate Anime Info & Tracking Hub! Discover trending anime, track seasons, and stay updated with the latest news. Powered by @code_iox'));
     } else if(navigator.share) {
-      navigator.share({ title: 'IOX VAULT', text: 'Check out IOX VAULT!', url: 'https://t.me/ioxvaultbot' });
+      navigator.share({ title: 'IOX VAULT', text: 'Check out IOX VAULT - Your Ultimate Anime Info & Tracking Hub!', url: 'https://t.me/codeioxstorebot' });
     } else { showToast('Share link copied!', 'success'); }
   } catch(e) { showToast('Share link copied!', 'success'); }
 }
@@ -4624,6 +4893,9 @@ function exploreNow() {
   state.explored = true;
   $('#home-pre-explore').style.display = 'none';
   $('#home-post-explore').style.display = 'block';
+  const earned = addXP();
+  const rank = getUserRank(state.xp);
+  showToast('+' + earned + ' XP! You are now ' + rank.name + ' (' + state.xp + ' XP)', 'success');
   renderHomeContent();
 }
 
@@ -4874,15 +5146,31 @@ function getPriorityLangBadges(channelData, maxCount) {
   if(!channelData || !channelData.languages) return [];
   const langs = channelData.languages;
   const priorityMap = {
-    'hindi_dub': { short: 'Hin', cls: 'dub' },
-    'english_dub': { short: 'Eng', cls: 'dub' },
-    'english_sub': { short: 'ESub', cls: 'sub' },
-    'hindi_sub': { short: 'HSub', cls: 'sub' },
-    'tamil': { short: 'Tam', cls: '' },
-    'telugu': { short: 'Tel', cls: '' },
-    'japanese': { short: 'Jap', cls: '' }
+    'hindi_dub': { short: 'HinD', cls: 'dub' },
+    'english_dub': { short: 'EngD', cls: 'dub' },
+    'english_sub': { short: 'EngS', cls: 'sub' },
+    'hindi_sub': { short: 'HinS', cls: 'sub' },
+    'tamil_dub': { short: 'TamD', cls: 'dub' },
+    'tamil_sub': { short: 'TamS', cls: 'sub' },
+    'telugu_dub': { short: 'TelD', cls: 'dub' },
+    'telugu_sub': { short: 'TelS', cls: 'sub' },
+    'malayalam_dub': { short: 'MalD', cls: 'dub' },
+    'malayalam_sub': { short: 'MalS', cls: 'sub' },
+    'kannada_dub': { short: 'KanD', cls: 'dub' },
+    'kannada_sub': { short: 'KanS', cls: 'sub' },
+    'bengali_dub': { short: 'BenD', cls: 'dub' },
+    'bengali_sub': { short: 'BenS', cls: 'sub' },
+    'marathi_dub': { short: 'MarD', cls: 'dub' },
+    'marathi_sub': { short: 'MarS', cls: 'sub' },
+    'punjabi_dub': { short: 'PunD', cls: 'dub' },
+    'punjabi_sub': { short: 'PunS', cls: 'sub' },
+    'gujarati_dub': { short: 'GujD', cls: 'dub' },
+    'gujarati_sub': { short: 'GujS', cls: 'sub' },
+    'japanese': { short: 'Jap', cls: '' },
+    'multi_audio': { short: 'MulA', cls: 'dub' },
+    'multi_sub': { short: 'MulS', cls: 'sub' }
   };
-  const order = ['hindi_dub', 'english_dub', 'english_sub', 'hindi_sub', 'tamil', 'telugu', 'japanese'];
+  const order = ['hindi_dub', 'english_dub', 'english_sub', 'hindi_sub', 'tamil_dub', 'tamil_sub', 'telugu_dub', 'telugu_sub', 'malayalam_dub', 'malayalam_sub', 'kannada_dub', 'kannada_sub', 'bengali_dub', 'bengali_sub', 'marathi_dub', 'marathi_sub', 'punjabi_dub', 'punjabi_sub', 'gujarati_dub', 'gujarati_sub', 'japanese', 'multi_audio', 'multi_sub'];
   const badges = [];
   for(const key of order) {
     if(badges.length >= maxCount) break;
@@ -4990,6 +5278,15 @@ async function openAnime(id) {
 }
 
 function goBack() { switchTab(state.prevTab || 'home'); }
+function openTermsPage() {
+  state.prevTab = state.tab || 'home';
+  state.tab = 'terms';
+  $$('.page').forEach(p => p.classList.remove('active'));
+  const target = $('#page-terms');
+  if(target) target.classList.add('active');
+  $$('.nav-item').forEach(n => n.classList.remove('active'));
+  window.scrollTo(0,0);
+}
 
 function renderDetail() {
   const a = state.currentAnime;
@@ -5103,7 +5400,7 @@ function renderWatchTab(a) {
   const cd = state.channels[a.id];
   let content = '';
   if(cd && cd.languages) {
-    const priorityOrder = ['hindi_dub', 'english_dub', 'english_sub', 'hindi_sub', 'tamil', 'telugu', 'japanese'];
+    const priorityOrder = ['hindi_dub', 'english_dub', 'english_sub', 'hindi_sub', 'tamil_dub', 'tamil_sub', 'telugu_dub', 'telugu_sub', 'malayalam_dub', 'malayalam_sub', 'kannada_dub', 'kannada_sub', 'bengali_dub', 'bengali_sub', 'marathi_dub', 'marathi_sub', 'punjabi_dub', 'punjabi_sub', 'gujarati_dub', 'gujarati_sub', 'japanese', 'multi_audio', 'multi_sub'];
     const langEntries = Object.entries(cd.languages).filter(([k, l]) => l.channels && l.channels.length);
     langEntries.sort((a, b) => {
       const idxA = priorityOrder.indexOf(a[0]);
@@ -5211,7 +5508,7 @@ function renderDetailActions() {
 function showLangDropdown(animeId) {
   const cd = state.channels[animeId];
   if(!cd || !cd.languages) { showToast('No channels available', 'error'); return; }
-  const priorityOrder = ['hindi_dub', 'english_dub', 'english_sub', 'hindi_sub', 'tamil', 'telugu', 'japanese'];
+  const priorityOrder = ['hindi_dub', 'english_dub', 'english_sub', 'hindi_sub', 'tamil_dub', 'tamil_sub', 'telugu_dub', 'telugu_sub', 'malayalam_dub', 'malayalam_sub', 'kannada_dub', 'kannada_sub', 'bengali_dub', 'bengali_sub', 'marathi_dub', 'marathi_sub', 'punjabi_dub', 'punjabi_sub', 'gujarati_dub', 'gujarati_sub', 'japanese', 'multi_audio', 'multi_sub'];
   const langEntries = Object.entries(cd.languages).filter(([k, l]) => l.channels && l.channels.length);
   langEntries.sort((a, b) => {
     const idxA = priorityOrder.indexOf(a[0]);
@@ -5428,6 +5725,22 @@ function setScheduleTab(tab) {
   if(tab === 'today') renderTodaySchedule();
   else renderUpcomingSchedule();
 }
+function filterScheduleDay(btn, filter) {
+  $$('.filter-chip').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  const cards = document.querySelectorAll('#today-timeline .timeline-card');
+  cards.forEach(card => {
+    const status = card.dataset.sstatus;
+    if(filter === 'all') card.style.display = 'flex';
+    else if(filter === status) card.style.display = 'flex';
+    else card.style.display = 'none';
+  });
+  // Hide empty periods
+  document.querySelectorAll('#today-timeline .timeline-period').forEach(period => {
+    const visible = period.querySelectorAll('.timeline-card[style*="flex"]').length;
+    period.style.display = visible > 0 ? 'block' : 'none';
+  });
+}
 
 function renderSchedule() {
   if(state.scheduleView === 'today') renderTodaySchedule();
@@ -5635,16 +5948,35 @@ function renderProfile() {
   const favoriteGenres = ['Action', 'Adventure', 'Fantasy'];
   const now = new Date();
   const month = now.getMonth();
-  let seasonName, seasonProgress;
-  if(month >= 0 && month <= 2) { seasonName = 'Winter ' + now.getFullYear(); seasonProgress = ((month + 1) / 3) * 100; }
-  else if(month >= 3 && month <= 5) { seasonName = 'Spring ' + now.getFullYear(); seasonProgress = ((month - 2) / 3) * 100; }
-  else if(month >= 6 && month <= 8) { seasonName = 'Summer ' + now.getFullYear(); seasonProgress = ((month - 5) / 3) * 100; }
-  else { seasonName = 'Fall ' + now.getFullYear(); seasonProgress = ((month - 8) / 3) * 100; }
+  const year = now.getFullYear();
+  let seasonName, seasonStart, seasonEnd, seasonProgress;
+  
+  if(month >= 0 && month <= 2) {
+    seasonName = 'Winter ' + year;
+    seasonStart = new Date(year, 0, 1); seasonEnd = new Date(year, 3, 1);
+  } else if(month >= 3 && month <= 5) {
+    seasonName = 'Spring ' + year;
+    seasonStart = new Date(year, 3, 1); seasonEnd = new Date(year, 6, 1);
+  } else if(month >= 6 && month <= 8) {
+    seasonName = 'Summer ' + year;
+    seasonStart = new Date(year, 6, 1); seasonEnd = new Date(year, 9, 1);
+  } else {
+    seasonName = 'Fall ' + year;
+    seasonStart = new Date(year, 9, 1); seasonEnd = new Date(year + 1, 0, 1);
+  }
+  const seasonTotal = seasonEnd - seasonStart;
+  const seasonElapsed = now - seasonStart;
+  seasonProgress = Math.min(100, Math.max(0, (seasonElapsed / seasonTotal) * 100));
 
-  // Get anime IDs that need fetching
   const historyIds = state.watchHistory.slice(0, 10).map(h => h.anilistId).filter(id => id > 0);
   const watchlistIds = state.watchlist.filter(id => Number(id) > 0);
   const allIds = [...new Set([...historyIds, ...watchlistIds])];
+
+  // RANK DATA
+  const currentXP = state.xp || 0;
+  const userRank = getUserRank(currentXP);
+  const nextRank = getNextRank(currentXP);
+  const rankProgress = getRankProgress(currentXP);
 
   // Build the profile HTML
   let html = '';
@@ -5666,9 +5998,9 @@ function renderProfile() {
         '@' + escHTML(uname.toLowerCase().replace(/\s+/g,'_')) + ' &middot; Joined ' + joinDate +
       '</div>' +
       '<div class="profile-badges-row">' +
-        '<span class="profile-badge ' + (isGuest ? 'member' : 'premium') + '">' + (isGuest ? '\u2B50 Free' : '\uD83D\uDC8E Premium') + '</span>' +
-        (admin ? '<span class="profile-badge admin">\uD83D\uDC51 Admin</span>' : '') +
-        '<span class="profile-badge member">\uD83D\uDCD6 Anime Fan</span>' +
+        '<span class="profile-badge ' + (isGuest ? 'member' : 'premium') + '">' + (isGuest ? '⭐ Free' : '💎 Premium') + '</span>' +
+        (admin ? '<span class="profile-badge admin">👑 Admin</span>' : '') +
+        '<span class="profile-badge member">📖 Anime Fan</span>' +
       '</div>' +
     '</div>' +
   '</div>';
@@ -5676,20 +6008,44 @@ function renderProfile() {
   html += '<div class="profile-stats-card">' +
     '<div class="profile-stat-item"><div class="profile-stat-value">' + watchCount + '</div><div class="profile-stat-label">Viewed</div></div>' +
     '<div class="profile-stat-item"><div class="profile-stat-value">' + wlCount + '</div><div class="profile-stat-label">Watchlist</div></div>' +
-    '<div class="profile-stat-item"><div class="profile-stat-value">' + favoriteGenres.length + '</div><div class="profile-stat-label">Genres</div></div>' +
+    '<div class="profile-stat-item"><div class="profile-stat-value" style="background:' + userRank.grad + ';-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">' + currentXP + '</div><div class="profile-stat-label">XP</div></div>' +
     '<div class="profile-stat-item"><div class="profile-stat-value">' + Object.keys(state.allComments).reduce((sum,k)=>sum+Object.keys(state.allComments[k]||{}).length,0) + '</div><div class="profile-stat-label">Comments</div></div>' +
   '</div>';
 
+  if(nextRank) {
+    html += '<div class="profile-section">' +
+      '<div class="profile-section-header">' +
+        '<div class="profile-section-title"><div class="profile-section-title-icon" style="background:' + userRank.grad + '20;color:' + userRank.color + ';">' + userRank.icon + '</div>Rank Progress</div>' +
+        '<span style="font-size:12px;color:var(--text-muted);font-weight:700;">' + userRank.name + ' &rarr; ' + nextRank.name + '</span>' +
+      '</div>' +
+      '<div class="profile-season-tracker">' +
+        '<div class="profile-season-header"><span class="profile-season-title">' + currentXP + ' / ' + nextRank.minXP + ' XP</span><span class="profile-season-count">' + rankProgress + '%</span></div>' +
+        '<div class="profile-season-bar"><div class="profile-season-fill" style="width:' + rankProgress + '%;background:' + userRank.grad + ';"></div></div>' +
+        '<div class="profile-season-labels"><span>' + userRank.name + '</span><span>' + nextRank.name + '</span></div>' +
+      '</div>' +
+    '</div>';
+  } else {
+    html += '<div class="profile-section">' +
+      '<div class="profile-section-header">' +
+        '<div class="profile-section-title"><div class="profile-section-title-icon" style="background:' + userRank.grad + '20;color:' + userRank.color + ';">' + userRank.icon + '</div>Max Rank Achieved!</div>' +
+      '</div>' +
+      '<div class="profile-season-tracker">' +
+        '<div class="profile-season-header"><span class="profile-season-title">Anime God - ' + currentXP + ' XP</span><span class="profile-season-count" style="color:var(--success);">MAX</span></div>' +
+        '<div class="profile-season-bar"><div class="profile-season-fill" style="width:100%;background:' + userRank.grad + ';"></div></div>' +
+      '</div>' +
+    '</div>';
+  }
+
   html += '<div class="profile-actions-grid">' +
-    '<button class="profile-action-btn" onclick="switchTab(\'search\')"><div class="profile-action-icon discover">\uD83D\uDD0D</div><span class="profile-action-label">Discover</span></button>' +
-    '<button class="profile-action-btn" onclick="switchTab(\'home\'); setHomeCategory(\'trending\'); exploreNow();"><div class="profile-action-icon history">\uD83D\uDD25</div><span class="profile-action-label">Trending</span></button>' +
-    '<button class="profile-action-btn" onclick="showToast(\'Settings coming soon!\', \'warning\')"><div class="profile-action-icon settings">\u2699\uFE0F</div><span class="profile-action-label">Settings</span></button>' +
-    '<button class="profile-action-btn" onclick="shareApp()"><div class="profile-action-icon share">\uD83D\uDCE3</div><span class="profile-action-label">Share</span></button>' +
+    '<button class="profile-action-btn" onclick="switchTab(\'search\')"><div class="profile-action-icon discover">🔍</div><span class="profile-action-label">Discover</span></button>' +
+    '<button class="profile-action-btn" onclick="switchTab(\'home\'); setHomeCategory(\'trending\'); exploreNow();"><div class="profile-action-icon history">🔥</div><span class="profile-action-label">Trending</span></button>' +
+    '<button class="profile-action-btn" onclick="showToast(\'Settings coming soon!\', \'warning\')"><div class="profile-action-icon settings">⚙️</div><span class="profile-action-label">Settings</span></button>' +
+    '<button class="profile-action-btn" onclick="shareApp()"><div class="profile-action-icon share">📢</div><span class="profile-action-label">Share</span></button>' +
   '</div>';
 
   html += '<div class="profile-section">' +
     '<div class="profile-section-header">' +
-      '<div class="profile-section-title"><div class="profile-section-title-icon" style="background:rgba(14,165,233,0.1);color:var(--accent);">\uD83D\uDCC5</div>Season Tracker</div>' +
+      '<div class="profile-section-title"><div class="profile-section-title-icon" style="background:rgba(14,165,233,0.1);color:var(--accent);">📅</div>Season Tracker</div>' +
     '</div>' +
     '<div class="profile-season-tracker">' +
       '<div class="profile-season-header"><span class="profile-season-title">' + escHTML(seasonName) + '</span><span class="profile-season-count">' + Math.round(seasonProgress) + '% Complete</span></div>' +
@@ -5700,7 +6056,7 @@ function renderProfile() {
 
   html += '<div class="profile-section">' +
     '<div class="profile-section-header">' +
-      '<div class="profile-section-title"><div class="profile-section-title-icon" style="background:rgba(139,92,246,0.1);color:#8B5CF6;">\uD83C\uDFAD</div>Favorite Genres</div>' +
+      '<div class="profile-section-title"><div class="profile-section-title-icon" style="background:rgba(139,92,246,0.1);color:#8B5CF6;">🎭</div>Favorite Genres</div>' +
     '</div>' +
     '<div class="profile-genre-tags">' +
       favoriteGenres.map(g => '<span class="profile-genre-tag">' + escHTML(g) + '</span>').join('') +
@@ -5708,18 +6064,17 @@ function renderProfile() {
     '</div>' +
   '</div>';
 
-  // Recently Viewed with real thumbnails
   html += '<div class="profile-section">' +
     '<div class="profile-section-header">' +
-      '<div class="profile-section-title"><div class="profile-section-title-icon" style="background:rgba(16,185,129,0.1);color:var(--success);">\u23F5</div>Recently Viewed</div>' +
+      '<div class="profile-section-title"><div class="profile-section-title-icon" style="background:rgba(16,185,129,0.1);color:var(--success);">⏱️</div>Recently Viewed</div>' +
       (state.watchHistory.length > 3 ? '<button class="section-link" onclick="switchTab(\'search\')">View All <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg></button>' : '') +
     '</div>';
   if(state.watchHistory.length === 0) {
     html += '<div class="profile-empty-state">' +
-      '<div class="profile-empty-emoji">\uD83D\uDCD6</div>' +
+      '<div class="profile-empty-emoji">📖</div>' +
       '<div class="profile-empty-title">No Recent Activity</div>' +
       '<div class="profile-empty-sub">Browse anime and your recently viewed list will appear here.</div>' +
-      '<button class="profile-empty-btn" onclick="switchTab(\'search\')">\uD83D\uDD0D Browse Anime</button>' +
+      '<button class="profile-empty-btn" onclick="switchTab(\'search\')">🔍 Browse Anime</button>' +
     '</div>';
   } else {
     html += '<div class="profile-recent-scroll">';
@@ -5737,18 +6092,17 @@ function renderProfile() {
   }
   html += '</div>';
 
-  // Watchlist with real thumbnails
   html += '<div class="profile-section">' +
     '<div class="profile-section-header">' +
-      '<div class="profile-section-title"><div class="profile-section-title-icon" style="background:rgba(239,68,68,0.1);color:var(--danger);">\u2764\uFE0F</div>My Watchlist</div>' +
+      '<div class="profile-section-title"><div class="profile-section-title-icon" style="background:rgba(239,68,68,0.1);color:var(--danger);">❤️</div>My Watchlist</div>' +
       (wlCount > 0 ? '<button class="section-link" onclick="switchTab(\'search\')">View All <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg></button>' : '') +
     '</div>';
   if(state.watchlist.length === 0) {
     html += '<div class="profile-empty-state">' +
-      '<div class="profile-empty-emoji">\uD83D\uDC96</div>' +
+      '<div class="profile-empty-emoji">💖</div>' +
       '<div class="profile-empty-title">Your Watchlist is Empty</div>' +
       '<div class="profile-empty-sub">Save anime you want to watch by tapping the heart icon.</div>' +
-      '<button class="profile-empty-btn" onclick="switchTab(\'search\')">\uD83D\uDD0D Find Anime</button>' +
+      '<button class="profile-empty-btn" onclick="switchTab(\'search\')">🔍 Find Anime</button>' +
     '</div>';
   } else {
     html += '<div class="profile-watchlist-scroll">';
@@ -5769,7 +6123,7 @@ function renderProfile() {
 
   html += '<div class="profile-section">' +
     '<div class="profile-section-header">' +
-      '<div class="profile-section-title"><div class="profile-section-title-icon" style="background:rgba(14,165,233,0.1);color:var(--accent);">\u2699\uFE0F</div>Account</div>' +
+      '<div class="profile-section-title"><div class="profile-section-title-icon" style="background:rgba(14,165,233,0.1);color:var(--accent);">⚙️</div>Account</div>' +
     '</div>' +
     '<div class="profile-settings-card">' +
       '<button class="profile-settings-item" onclick="clearWatchHistory()">' +
@@ -5782,34 +6136,18 @@ function renderProfile() {
         '<span class="profile-settings-text">Clear Cache</span>' +
         '<svg class="profile-settings-arrow" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>' +
       '</button>' +
-      '<button class="profile-settings-item" onclick="showToast(\'Notifications settings coming soon!\', \'warning\')">' +
-        '<div class="profile-settings-icon-wrap purple"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg></div>' +
-        '<span class="profile-settings-text">Notifications</span>' +
-        '<svg class="profile-settings-arrow" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>' +
-      '</button>' +
-      '<button class="profile-settings-item" onclick="showToast(\'Dark mode coming soon!\', \'warning\')">' +
-        '<div class="profile-settings-icon-wrap orange"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg></div>' +
-        '<span class="profile-settings-text">Dark Mode</span>' +
-        '<span style="font-size:12px;color:var(--text-muted);margin-left:auto;margin-right:8px;">On</span>' +
-        '<svg class="profile-settings-arrow" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>' +
-      '</button>' +
     '</div>' +
   '</div>';
 
   html += '<div class="profile-app-footer">' +
     '<div class="logo-text" style="font-size:20px;margin-bottom:6px;">IOX VAULT</div>' +
     '<div class="profile-app-footer-version">Anime Info & Tracking App</div>' +
-    '<div class="profile-app-footer-links">' +
-      '<a href="#" onclick="showToast(\'Terms page coming soon!\', \'warning\');return false;">Terms</a>' +
-      '<a href="#" onclick="showToast(\'Privacy page coming soon!\', \'warning\');return false;">Privacy</a>' +
-      '<a href="https://t.me/code_iox" target="_blank">Support</a>' +
-    '</div>' +
     '<div style="margin-top:12px;font-size:10px;opacity:0.5;">Powered by AniList API</div>' +
   '</div>';
 
   container.innerHTML = html;
 
-  // Fetch missing anime details and re-render
+  // Fetch missing anime details
   if(allIds.length > 0) {
     const uncached = allIds.filter(id => !getCachedAnime(id));
     if(uncached.length > 0) {
@@ -5876,8 +6214,10 @@ async function renderAPINews(isLoadMore = false) {
   try {
     let items = [];
     if(!isLoadMore) {
-      const url1 = RSS2JSON_API + '?rss_url=' + encodeURIComponent(ANITRENDZ_RSS);
-      const url2 = RSS2JSON_API + '?rss_url=' + encodeURIComponent(ANITRENDZ_RSS + '?paged=2');
+      // Cache-busting timestamp ensures fresh news each visit
+      const cb = '&_=' + Date.now();
+      const url1 = RSS2JSON_API + '?rss_url=' + encodeURIComponent(ANITRENDZ_RSS + '?cb=' + Date.now());
+      const url2 = RSS2JSON_API + '?rss_url=' + encodeURIComponent(ANITRENDZ_RSS + '?paged=2&cb=' + Date.now());
       const [res1, res2] = await Promise.all([fetch(url1), fetch(url2)]);
       const data1 = await res1.json();
       const data2 = await res2.json();
@@ -5926,7 +6266,7 @@ async function renderAPINews(isLoadMore = false) {
         '<img class="news-thumbnail" src="' + escHTML(n.image) + '" alt="" loading="lazy" onerror="this.src=\'' + escHTML(FALLBACK_NEWS_IMAGES[i % FALLBACK_NEWS_IMAGES.length]) + '\'">' +
         '<div class="news-content">' +
           '<span class="news-badge api-news">Anime News</span>' +
-          '<div class="news-title">' + escHTML(n.title) + '</div>' +
+          '<div class="news-title" style="display:block;-webkit-line-clamp:unset;-webkit-box-orient:unset;overflow:visible;">' + escHTML(n.title) + '</div>' +
           '<div class="news-excerpt">' + escHTML(n.excerpt) + '</div>' +
           '<div class="news-actions">' +
             '<span class="news-date">' + escHTML(n.date) + ' &middot; ' + escHTML(n.author) + '</span>' +
@@ -6480,17 +6820,43 @@ function showLangInput() {
 function renderPendingChannels() {
   const list = $('#pending-list');
   if(!list) return;
+  const allLangs = [
+    {key:'hindi_dub', label:'Hindi Dub', checked:true},
+    {key:'english_dub', label:'English Dub'},
+    {key:'english_sub', label:'English Sub'},
+    {key:'hindi_sub', label:'Hindi Sub'},
+    {key:'tamil_dub', label:'Tamil Dub'},
+    {key:'tamil_sub', label:'Tamil Sub'},
+    {key:'telugu_dub', label:'Telugu Dub'},
+    {key:'telugu_sub', label:'Telugu Sub'},
+    {key:'malayalam_dub', label:'Malayalam Dub'},
+    {key:'malayalam_sub', label:'Malayalam Sub'},
+    {key:'kannada_dub', label:'Kannada Dub'},
+    {key:'kannada_sub', label:'Kannada Sub'},
+    {key:'bengali_dub', label:'Bengali Dub'},
+    {key:'bengali_sub', label:'Bengali Sub'},
+    {key:'marathi_dub', label:'Marathi Dub'},
+    {key:'marathi_sub', label:'Marathi Sub'},
+    {key:'punjabi_dub', label:'Punjabi Dub'},
+    {key:'punjabi_sub', label:'Punjabi Sub'},
+    {key:'gujarati_dub', label:'Gujarati Dub'},
+    {key:'gujarati_sub', label:'Gujarati Sub'},
+    {key:'japanese', label:'Japanese (RAW)'},
+    {key:'multi_audio', label:'Multi Audio'},
+    {key:'multi_sub', label:'Multi Sub'}
+  ];
+  
   if(state.pendingChannels.length === 0) {
     list.innerHTML = '<div style="padding:12px;background:var(--bg-primary);border-radius:10px;">' +
-      '<div style="font-size:12px;color:var(--text-muted);margin-bottom:10px;">Add language links:</div>' +
-      '<input type="text" class="lang-input" id="lang-link-input" placeholder="Telegram channel link (e.g. https://t.me/channel)">' +
-      '<div class="lang-checkboxes">' +
-        '<label><input type="checkbox" value="hindi_dub" checked> Hindi Dub</label>' +
-        '<label><input type="checkbox" value="english_dub"> English Dub</label>' +
-        '<label><input type="checkbox" value="english_sub"> English Sub</label>' +
-        '<label><input type="checkbox" value="hindi_sub"> Hindi Sub</label>' +
+      '<div style="font-size:12px;color:var(--text-muted);margin-bottom:10px;font-weight:600;">Add language channels:</div>' +
+      '<input type="text" class="lang-input" id="lang-link-input" placeholder="Paste Telegram channel/group link (e.g. https://t.me/channel)">' +
+      '<div style="display:grid;grid-template-columns:repeat(2, 1fr);gap:6px;margin-bottom:12px;max-height:200px;overflow-y:auto;padding:4px;">' +
+        allLangs.map(l => '<label style="display:flex;align-items:center;gap:6px;padding:6px 8px;background:var(--bg-secondary);border-radius:8px;cursor:pointer;font-size:12px;transition:all 0.15s;" onmouseover="this.style.background=\'rgba(59,130,246,0.1)\'" onmouseout="this.style.background=\'var(--bg-secondary)\'">' +
+          '<input type="checkbox" value="' + l.key + '" ' + (l.checked ? 'checked' : '') + ' style="accent-color:var(--accent);width:16px;height:16px;">' +
+          '<span>' + escHTML(l.label) + '</span>' +
+        '</label>').join('') +
       '</div>' +
-      '<button class="admin-btn" style="width:100%;" onclick="addPendingChannel()">Add Language</button>' +
+      '<button class="admin-btn" style="width:100%;" onclick="addPendingChannel()">➕ Add Selected Languages</button>' +
     '</div>';
   } else {
     list.innerHTML = state.pendingChannels.map((p, i) =>
@@ -6502,6 +6868,7 @@ function renderPendingChannels() {
     '<button class="admin-btn secondary" style="width:100%;margin-top:8px;" onclick="addAnotherLang()">+ Add Another Language</button>';
   }
 }
+
 
 function addPendingChannel() {
   const linkInput = $('#lang-link-input');
@@ -6557,7 +6924,7 @@ function removePendingChannel(idx) {
 function saveAllChannels() {
   if(state.selectedIds.length === 0) { showToast('No anime selected', 'warning'); return; }
   if(state.pendingChannels.length === 0) { showToast('No languages added', 'warning'); return; }
-  const badgeMap = { hindi_dub: 'Hindi Dub', english_dub: 'English Dub', english_sub: 'English Sub', hindi_sub: 'Hindi Sub' };
+  const badgeMap = { hindi_dub: 'Hindi Dub', english_dub: 'English Dub', english_sub: 'English Sub', hindi_sub: 'Hindi Sub', tamil_dub: 'Tamil Dub', tamil_sub: 'Tamil Sub', telugu_dub: 'Telugu Dub', telugu_sub: 'Telugu Sub', malayalam_dub: 'Malayalam Dub', malayalam_sub: 'Malayalam Sub', kannada_dub: 'Kannada Dub', kannada_sub: 'Kannada Sub', bengali_dub: 'Bengali Dub', bengali_sub: 'Bengali Sub', marathi_dub: 'Marathi Dub', marathi_sub: 'Marathi Sub', punjabi_dub: 'Punjabi Dub', punjabi_sub: 'Punjabi Sub', gujarati_dub: 'Gujarati Dub', gujarati_sub: 'Gujarati Sub', japanese: 'Japanese', multi_audio: 'Multi Audio', multi_sub: 'Multi Sub' };
   state.selectedIds.forEach(id => {
     if(!state.channels[id]) state.channels[id] = { languages: {} };
     state.pendingChannels.forEach(p => {
