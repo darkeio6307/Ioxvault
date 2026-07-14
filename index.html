@@ -98,23 +98,24 @@ img { max-width: 100%; display: block; }
   position: sticky;
   top: 0;
   z-index: 100;
-  background: rgba(11,14,23,0.88);
-  backdrop-filter: blur(24px) saturate(180%);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
-  border-bottom: 1px solid var(--border);
+  background: rgba(11,14,23,0.75);
+  backdrop-filter: blur(32px) saturate(200%);
+  -webkit-backdrop-filter: blur(32px) saturate(200%);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
   padding: 12px 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
   flex-shrink: 0;
-  box-shadow: 0 1px 12px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 30px rgba(0,0,0,0.35), 0 1px 0 rgba(255,255,255,0.04) inset;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .app-header.scrolled {
-  background: rgba(11,14,23,0.95);
-  box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+  background: rgba(11,14,23,0.9);
+  box-shadow: 0 8px 40px rgba(0,0,0,0.45), 0 1px 0 rgba(255,255,255,0.04) inset;
   padding: 10px 20px;
+  border-bottom-color: rgba(255,255,255,0.08);
 }
 .header-left, .header-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
 .header-center { flex: 1; display: flex; justify-content: center; align-items: center; }
@@ -3791,182 +3792,508 @@ body.is-admin .page.admin-only.active { display: flex !important; flex-direction
     transition-duration: 0.01ms !important;
   }
 }
-/* ========== CAMPAIGN POP-UP (Premium Light-Mode Glassmorphism) ========== */
+/* ========== CAMPAIGN POP-UP (Free Fire Gaming Banner Style) ========== */
 .campaign-popup-overlay {
   position: fixed;
   inset: 0;
   z-index: 450;
-  background: rgba(0,0,0,0.6);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(0,0,0,0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   display: none;
   align-items: center;
   justify-content: center;
-  padding: 20px;
+  padding: 16px;
   animation: fadeIn 0.3s ease;
 }
 .campaign-popup-box {
-  background: rgba(255,255,255,0.75);
-  backdrop-filter: blur(25px) saturate(180%);
-  -webkit-backdrop-filter: blur(25px) saturate(180%);
-  border-radius: var(--radius);
-  width: 100%;
-  max-width: 400px;
-  max-height: 90vh;
-  overflow-y: auto;
-  overflow-x: hidden;
   position: relative;
-  border: 1px solid rgba(255,255,255,0.55);
-  box-shadow:
-    0 8px 32px rgba(0,0,0,0.14),
-    0 2px 8px rgba(0,0,0,0.1),
-    inset 0 1px 0 rgba(255,255,255,0.7);
+  width: 100%;
+  max-width: 600px;
+  border-radius: 20px;
+  overflow: hidden;
   animation: modalIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 24px 80px rgba(0,0,0,0.6), 0 0 60px rgba(59,130,246,0.08);
 }
-.campaign-popup-box::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: linear-gradient(90deg, #3B82F6, #8B5CF6, #EC4899);
-  border-radius: var(--radius) var(--radius) 0 0;
-  opacity: 0.85;
-}
+/* Close button - frosted glass X */
 .campaign-popup-close {
   position: absolute;
-  top: 14px;
-  right: 14px;
-  width: 34px;
-  height: 34px;
+  top: 12px;
+  right: 12px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
-  background: rgba(255,255,255,0.65);
-  backdrop-filter: blur(12px);
+  background: rgba(15,23,42,0.5);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #64748B;
+  color: rgba(255,255,255,0.8);
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 1px solid rgba(255,255,255,0.5);
-  z-index: 5;
-  font-size: 18px;
-  font-weight: 700;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  border: 1px solid rgba(255,255,255,0.12);
+  z-index: 10;
+  font-size: 20px;
+  font-weight: 300;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
 }
-.campaign-popup-close:hover { background: rgba(239,68,68,0.18); color: #EF4444; border-color: rgba(239,68,68,0.3); transform: scale(1.1); }
+.campaign-popup-close:hover { background: rgba(239,68,68,0.7); color: #fff; border-color: rgba(239,68,68,0.4); transform: scale(1.1) rotate(90deg); }
 .campaign-popup-close:active { transform: scale(0.95); }
+/* Image wrap - 16:9 clickable banner */
 .campaign-popup-img-wrap {
   width: 100%;
   aspect-ratio: 16/9;
   overflow: hidden;
   position: relative;
+  display: block;
+  cursor: pointer;
+  border-radius: 20px;
 }
 .campaign-popup-img-wrap img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.campaign-popup-img-wrap:hover img {
+  transform: scale(1.03);
 }
 .campaign-popup-img-wrap::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(to bottom, transparent 50%, rgba(255,255,255,0.45) 100%);
+  background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, transparent 30%, transparent 70%, rgba(0,0,0,0.35) 100%);
   pointer-events: none;
+  border-radius: 20px;
 }
-.campaign-popup-img-placeholder {
+/* Gaming style "Don't show again" checkbox */
+.campaign-dont-show-wrap {
+  position: relative; /* इससे ये इमेज के ऊपर चढ़ने के बजाय, उसके नीचे आ जाएगा */
+  display: flex;
+  align-items: center;
+  justify-content: center; /* सेंटर में रखने के लिए */
+  gap: 10px;
+  padding: 14px;
+  background: #0f172a; /* एकदम सॉलिड डार्क बैकग्राउंड */
+  border-top: 1px solid rgba(255,255,255,0.08);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
   width: 100%;
-  aspect-ratio: 16/9;
-  background: linear-gradient(135deg, #E2E8F0, #CBD5E1);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #3B82F6;
-  font-family: var(--font-heading);
-  font-size: 14px;
-  font-weight: 700;
 }
-.campaign-popup-body {
-  padding: 22px 24px 24px;
+.campaign-dont-show-wrap:hover {
+  background: #1e293b;
 }
-.campaign-popup-title {
-  font-family: var(--font-heading);
-  font-size: 22px;
-  font-weight: 800;
-  color: #0F172A;
-  margin-bottom: 8px;
-  line-height: 1.3;
-  letter-spacing: -0.4px;
-}
-.campaign-popup-desc {
-  font-size: 14px;
-  color: #475569;
-  line-height: 1.7;
-  margin-bottom: 20px;
-}
-.campaign-popup-actions {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 16px;
-}
-.campaign-btn {
-  flex: 1;
-  padding: 13px 16px;
-  border-radius: var(--radius-sm);
-  font-size: 14px;
-  font-weight: 700;
-  text-align: center;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  font-family: var(--font-heading);
-}
-.campaign-btn-primary {
-  background: linear-gradient(135deg, #3B82F6, #6366F1);
-  color: #fff;
-  box-shadow: 0 4px 16px rgba(59,130,246,0.3);
-}
-.campaign-btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(59,130,246,0.4); }
-.campaign-btn-primary:active { transform: scale(0.96); }
-.campaign-btn-secondary {
-  background: rgba(15,23,42,0.06);
-  color: #0F172A;
-  border: 1.5px solid rgba(15,23,42,0.12);
-}
-.campaign-btn-secondary:hover { background: rgba(15,23,42,0.1); border-color: rgba(59,130,246,0.3); transform: translateY(-2px); }
-.campaign-btn-secondary:active { transform: scale(0.96); }
-.campaign-dont-show {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 12px;
-  background: rgba(15,23,42,0.04);
-  border-radius: 12px;
-  cursor: pointer;
-  transition: all 0.15s;
-  border: 1px solid rgba(15,23,42,0.06);
-}
-.campaign-dont-show:hover { background: rgba(15,23,42,0.06); border-color: rgba(15,23,42,0.1); }
-.campaign-dont-show input[type="checkbox"] {
+.campaign-dont-show-wrap input[type="checkbox"] {
   width: 18px;
   height: 18px;
+  -webkit-appearance: auto !important; /* <--- इससे टिक (Tick) बॉक्स वापस आ जाएगा */
+  appearance: auto !important; /* <--- इससे टिक (Tick) बॉक्स वापस आ जाएगा */
   accent-color: #3B82F6;
   flex-shrink: 0;
   cursor: pointer;
+  margin: 0;
 }
-.campaign-dont-show label {
-  font-size: 13px;
-  color: #64748B;
+.campaign-dont-show-wrap label {
+  font-size: 12px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.85);
   cursor: pointer;
-  font-weight: 500;
-  user-select: none;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
+
+/* Gaming style corner accents */
+.campaign-popup-box::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 20px;
+  border: 1px solid rgba(59,130,246,0.15);
+  pointer-events: none;
+  z-index: 5;
+}
+/* Image placeholder */
+.campaign-popup-img-placeholder {
+  width: 100%;
+  aspect-ratio: 16/9;
+  background: linear-gradient(135deg, #1e293b, #0f172a);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent);
+  font-family: var(--font-heading);
+  font-size: 14px;
+  font-weight: 700;
+  border-radius: 20px;
+}
+
+/* ========== ULTRA PRO GLASSMORPHISM LANGUAGE MODAL ========== */
+.lang-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 350;
+  background: rgba(0,0,0,0.65);
+  backdrop-filter: blur(25px) saturate(180%);
+  -webkit-backdrop-filter: blur(25px) saturate(180%);
+  display: none;
+  align-items: flex-end;
+  justify-content: center;
+  animation: fadeIn 0.25s ease;
+}
+.lang-modal-overlay.open { display: flex; }
+.lang-modal-sheet {
+  width: 100%;
+  max-width: 600px;
+  max-height: 85vh;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(40px) saturate(200%);
+  -webkit-backdrop-filter: blur(40px) saturate(200%);
+  border-radius: 28px 28px 0 0;
+  border: 1px solid rgba(59, 130, 246, 0.15);
+  border-bottom: none;
+  box-shadow: 0 -8px 60px rgba(0,0,0,0.5), 0 0 40px rgba(59,130,246,0.06);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  animation: langSheetUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+}
+@keyframes langSheetUp {
+  from { transform: translateY(100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+.lang-modal-handle {
+  width: 40px;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255,255,255,0.15);
+  margin: 12px auto 8px;
+}
+.lang-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 24px 16px;
+}
+.lang-modal-title {
+  font-family: var(--font-heading);
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: -0.3px;
+}
+.lang-modal-close {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 18px;
+  font-weight: 300;
+}
+.lang-modal-close:hover { background: rgba(239,68,68,0.2); color: #fff; border-color: rgba(239,68,68,0.3); transform: rotate(90deg); }
+.lang-modal-list {
+  padding: 0 24px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.lang-option-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 20px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 18px;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+.lang-option-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(59,130,246,0.1), rgba(139,92,246,0.05));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.lang-option-card:hover {
+  transform: scale(1.02);
+  border-color: rgba(59, 130, 246, 0.3);
+  box-shadow: 0 4px 24px rgba(59,130,246,0.15), 0 0 0 1px rgba(59,130,246,0.1);
+}
+.lang-option-card:hover::before { opacity: 1; }
+.lang-option-card:active {
+  transform: scale(0.98);
+}
+.lang-option-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 20px;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+}
+.lang-option-icon.dub-bg { background: linear-gradient(135deg, #10B981, #34D399); }
+.lang-option-icon.sub-bg { background: linear-gradient(135deg, #6366F1, #818CF8); }
+.lang-option-icon.default-bg { background: linear-gradient(135deg, #3B82F6, #8B5CF6); }
+.lang-option-info {
+  flex: 1;
+  min-width: 0;
+  position: relative;
+  z-index: 1;
+}
+.lang-option-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+.lang-option-count {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+.lang-option-arrow {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+  position: relative;
+  z-index: 1;
+}
+.lang-option-card:hover .lang-option-arrow {
+  background: rgba(59,130,246,0.2);
+  color: var(--accent);
+  transform: translateX(3px);
+}
+.lang-links-section {
+  padding: 0 24px 24px;
+  display: none;
+}
+.lang-links-section.open { display: block; animation: fadeIn 0.25s ease; }
+.lang-links-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.lang-links-back {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.lang-links-back:hover { background: rgba(59,130,246,0.15); color: var(--accent); }
+.lang-link-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 14px;
+  color: var(--text-primary);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  transition: all 0.2s ease;
+}
+.lang-link-btn:hover {
+  background: rgba(59,130,246,0.1);
+  border-color: rgba(59,130,246,0.25);
+  transform: translateX(4px);
+  box-shadow: 0 4px 16px rgba(59,130,246,0.1);
+}
+.lang-link-btn svg { color: var(--accent); flex-shrink: 0; }
+
+/* ========== CAMPAIGN ADMIN MULTI-CAMPAIGN STYLES ========== */
+.campaign-admin-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+.campaign-admin-count {
+  font-size: 12px;
+  color: var(--accent);
+  font-weight: 700;
+  background: rgba(59,130,246,0.1);
+  padding: 4px 12px;
+  border-radius: 10px;
+}
+.campaign-table {
+  width: 100%;
+  min-width: 550px; /* Ye table ko pichakne se rokega aur scroll layega */
+  border-collapse: collapse;
+  margin-bottom: 16px;
+}
+.campaign-table th {
+  padding: 12px;
+  text-align: left;
+  font-size: 10px;
+  font-weight: 800;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  background: rgba(255,255,255,0.02);
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap; /* Ye text ko ek ke neeche ek aane se rokega */
+}
+.campaign-table td {
+  padding: 14px 12px;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+  color: var(--text-primary);
+  font-weight: 500;
+  vertical-align: middle;
+  white-space: nowrap; /* Ye buttons aur text ko ek line me rakhega */
+}
+
+.campaign-table tr:hover td { background: rgba(59,130,246,0.03); }
+.campaign-thumb {
+  width: 80px;
+  height: 45px;
+  border-radius: 8px;
+  object-fit: cover;
+  display: block;
+  background: linear-gradient(135deg, #1e293b, #0f172a);
+}
+.campaign-id-cell {
+  font-family: var(--font-heading);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.campaign-dest-cell {
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+.campaign-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+}
+.campaign-status-badge.active {
+  background: rgba(16,185,129,0.12);
+  color: var(--success);
+  border: 1px solid rgba(16,185,129,0.2);
+}
+.campaign-status-badge.inactive {
+  background: rgba(100,116,139,0.1);
+  color: var(--text-muted);
+  border: 1px solid rgba(100,116,139,0.15);
+}
+.status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+}
+.status-dot.active { box-shadow: 0 0 6px var(--success); }
+.campaign-row-actions {
+  display: flex;
+  gap: 6px;
+}
+.campaign-row-actions button {
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.campaign-row-actions .camp-edit-btn { background: rgba(59,130,246,0.1); color: var(--accent); }
+.campaign-row-actions .camp-edit-btn:hover { background: rgba(59,130,246,0.2); }
+.campaign-row-actions .camp-del-btn { background: rgba(239,68,68,0.1); color: var(--danger); }
+.campaign-row-actions .camp-del-btn:hover { background: rgba(239,68,68,0.2); }
+.campaign-row-actions .camp-toggle-btn { background: rgba(16,185,129,0.1); color: var(--success); }
+.campaign-row-actions .camp-toggle-btn:hover { background: rgba(16,185,129,0.2); }
+.campaign-row-actions .camp-toggle-btn.inactive { background: rgba(100,116,139,0.1); color: var(--text-muted); }
+
+/* Toggle switch */
+.toggle-switch {
+  position: relative;
+  width: 44px;
+  height: 24px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.1);
+  cursor: pointer;
+  transition: all 0.25s ease;
+  flex-shrink: 0;
+}
+.toggle-switch.on {
+  background: linear-gradient(135deg, #10B981, #34D399);
+  border-color: transparent;
+}
+.toggle-switch::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.toggle-switch.on::after { transform: translateX(20px); }
+
+/* Empty campaign state */
+.campaign-empty {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-muted);
+}
+.campaign-empty svg { width: 60px; height: 60px; margin: 0 auto 16px; opacity: 0.25; }
+
 
 /* ========== SCHEDULE PRO ENHANCEMENTS ========== */
 .schedule-pro-header {
@@ -4129,25 +4456,37 @@ body.is-admin .page.admin-only.active { display: flex !important; flex-direction
     </div>
   </div>
 </div>
-<!-- ========== CAMPAIGN POP-UP OVERLAY ========== -->
+<!-- ========== CAMPAIGN POP-UP OVERLAY (Free Fire Gaming Banner) ========== -->
 <div id="campaign-popup-overlay" class="campaign-popup-overlay" onclick="if(event.target===this)closeCampaignPopup(false)">
   <div class="campaign-popup-box" onclick="event.stopPropagation()">
     <div class="campaign-popup-close" onclick="closeCampaignPopup(false)">&times;</div>
-    <div id="campaign-popup-img-wrap" class="campaign-popup-img-wrap" style="display:none;">
-      <img id="campaign-popup-img" src="" alt="" onerror="this.parentNode.style.display='none'">
-    </div>
-    <div class="campaign-popup-body">
-      <div id="campaign-popup-title" class="campaign-popup-title"></div>
-      <div id="campaign-popup-desc" class="campaign-popup-desc"></div>
-      <div class="campaign-popup-actions">
-        <button id="campaign-btn-primary" class="campaign-btn campaign-btn-primary" style="display:none;"></button>
-        <button id="campaign-btn-secondary" class="campaign-btn campaign-btn-secondary" style="display:none;"></button>
+    <a id="campaign-popup-link" href="#" target="_blank" style="display:block;text-decoration:none;">
+      <div id="campaign-popup-img-wrap" class="campaign-popup-img-wrap">
+        <img id="campaign-popup-img" src="" alt="Campaign" onerror="this.style.display='none';document.getElementById('campaign-popup-img-placeholder').style.display='flex';">
+        <div id="campaign-popup-img-placeholder" class="campaign-popup-img-placeholder" style="display:none;">
+          <svg width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+        </div>
       </div>
-      <div class="campaign-dont-show" onclick="var cb=document.getElementById('campaign-dont-show');cb.checked=!cb.checked;">
-        <input type="checkbox" id="campaign-dont-show" onclick="event.stopPropagation()">
-        <label for="campaign-dont-show" onclick="event.stopPropagation()">Don't show again for today</label>
-      </div>
+    </a>
+    <div class="campaign-dont-show-wrap" onclick="var cb=document.getElementById('campaign-dont-show');cb.checked=!cb.checked;">
+      <input type="checkbox" id="campaign-dont-show" onclick="event.stopPropagation()">
+      <label for="campaign-dont-show" onclick="event.stopPropagation()">Don't show again for today</label>
     </div>
+  </div>
+</div>
+
+<!-- ========== GLASSMORPHISM LANGUAGE MODAL ========== -->
+<div id="lang-modal-overlay" class="lang-modal-overlay" onclick="if(event.target===this)closeLangModal()">
+  <div id="lang-modal-sheet" class="lang-modal-sheet" onclick="event.stopPropagation()">
+    <div class="lang-modal-handle"></div>
+    <div class="lang-modal-header">
+      <span class="lang-modal-title" id="lang-modal-title">Select Language</span>
+      <button class="lang-modal-close" onclick="closeLangModal()">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div id="lang-modal-list" class="lang-modal-list"></div>
+    <div id="lang-modal-links" class="lang-links-section"></div>
   </div>
 </div>
 
@@ -5777,52 +6116,7 @@ function renderDetailActions() {
   heart.innerHTML = `<svg fill="${isInWatchlist(state.currentAnime?.id)?'currentColor':'none'}" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>`;
 }
 
-function showLangDropdown(animeId) {
-  const cd = state.channels[animeId];
-  if(!cd || !cd.languages) { showToast('No channels available', 'error'); return; }
-  const priorityOrder = ['hindi_dub', 'english_dub', 'english_sub', 'hindi_sub', 'tamil_dub', 'tamil_sub', 'telugu_dub', 'telugu_sub', 'malayalam_dub', 'malayalam_sub', 'kannada_dub', 'kannada_sub', 'bengali_dub', 'bengali_sub', 'marathi_dub', 'marathi_sub', 'punjabi_dub', 'punjabi_sub', 'gujarati_dub', 'gujarati_sub', 'japanese', 'multi_audio', 'multi_sub'];
-  const langEntries = Object.entries(cd.languages).filter(([k, l]) => l.channels && l.channels.length);
-  langEntries.sort((a, b) => {
-    const idxA = priorityOrder.indexOf(a[0]);
-    const idxB = priorityOrder.indexOf(b[0]);
-    if(idxA >= 0 && idxB >= 0) return idxA - idxB;
-    if(idxA >= 0) return -1;
-    if(idxB >= 0) return 1;
-    return 0;
-  });
-  let content = '<div style="display:flex;flex-direction:column;gap:10px;">';
-  langEntries.forEach(([key, lang]) => {
-    const isDub = lang.badge && lang.badge.toLowerCase().includes('dub');
-    const isSub = lang.badge && lang.badge.toLowerCase().includes('sub');
-    const badgeColor = isDub ? 'linear-gradient(135deg,#10B981,#34D399)' : isSub ? 'linear-gradient(135deg,#6366F1,#818CF8)' : 'var(--accent-gradient)';
-    content += `<div style="background:var(--bg-secondary);border-radius:var(--radius);padding:16px;border:1.5px solid var(--border);margin-bottom:4px;">`;
-    content += `<div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">` +
-      `<div style="width:48px;height:48px;border-radius:14px;background:${badgeColor};display:flex;align-items:center;justify-content:center;color:#fff;flex-shrink:0;box-shadow:0 4px 12px rgba(0,0,0,0.3);"><svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>` +
-      `<div style="flex:1;min-width:0;">` +
-        `<div style="font-size:16px;font-weight:800;color:var(--text-primary);margin-bottom:3px;">${escHTML(lang.badge || key)}</div>` +
-        `<div style="font-size:12px;color:var(--text-muted);font-weight:500;">${lang.channels.length} source${lang.channels.length>1?'s':''}</div>` +
-      `</div>` +
-    `</div>`;
-    content += `<a href="${escHTML(lang.channels[0])}" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:14px;border-radius:var(--radius-sm);background:var(--accent-gradient);color:#fff;font-family:var(--font-heading);font-size:15px;font-weight:700;text-decoration:none;box-shadow:0 4px 16px rgba(59,130,246,0.3);margin-bottom:10px;" onmousedown="this.style.transform='scale(0.97)'" onmouseup="this.style.transform=''">` +
-      `<svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>` +
-      `Watch Now` +
-    `</a>`;
-    if(lang.channels.length > 1) {
-      content += `<div style="display:flex;flex-wrap:wrap;gap:8px;">`;
-      lang.channels.slice(1).forEach((link, i) => {
-        content += `<a href="${escHTML(link)}" target="_blank" style="flex:1;min-width:100px;padding:10px;border-radius:10px;background:var(--bg-primary);color:var(--text-primary);font-size:13px;font-weight:600;text-decoration:none;text-align:center;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;gap:6px;">` +
-          `Link ${i + 2}` +
-        `</a>`;
-      });
-      content += `</div>`;
-    }
-    content += `</div>`;
-  });
-  content += '</div>';
-  openModal('Select Language', content, null);
-  const modalActions = $('.modal-actions');
-  if(modalActions) modalActions.style.display = 'none';
-}
+// showLangDropdown -> See Multi-Campaign System section (glassmorphism modal)
 
 function shareAnime() {
   const a = state.currentAnime;
@@ -7464,80 +7758,87 @@ function renderCommentList() {
 }
 
 
-// ========== CAMPAIGN POP-UP SYSTEM ==========
+// ========== MULTI-CAMPAIGN POP-UP SYSTEM ==========
+// Firebase path: config/campaigns/{campaignId} -> { id, imageUrl, destinationUrl, active, createdAt }
+// Backward compatible: also reads legacy config/activePromo
+
+state.campaigns = [];
+state.campaignQueue = [];
+state.currentCampaignIndex = 0;
+
 function initCampaignPopup() {
   if(!db) return;
-  db.ref('config/activePromo').on('value', snap => {
-    const promo = snap.val();
-    state.campaignData = promo;
-    if(!state.campaignChecked) {
-      state.campaignChecked = true;
-      setTimeout(() => checkAndShowCampaign(), 2000);
-    }
+  db.ref('config/campaigns').on('value', snap => {
+    const campaigns = snap.val() || {};
+    state.campaigns = Object.entries(campaigns).map(([key, val]) => ({ ...val, _key: key }));
+    db.ref('config/activePromo').once('value').then(legacySnap => {
+      const legacy = legacySnap.val();
+      if(legacy && legacy.isActive && !state.campaigns.find(c => c.id === legacy.campaign_id)) {
+        state.campaigns.push({
+          _key: 'legacy_' + (legacy.campaign_id || 'old'),
+          id: legacy.campaign_id || 'legacy',
+          imageUrl: legacy.imageUrl || '',
+          destinationUrl: legacy.btn1Url || '',
+          active: true,
+          createdAt: legacy.updatedAt || Date.now()
+        });
+      }
+      if(!state.campaignChecked) {
+        state.campaignChecked = true;
+        setTimeout(() => checkAndShowCampaign(), 2000);
+      }
+    });
   });
 }
 
 function checkAndShowCampaign() {
-  const promo = state.campaignData;
-  if(!promo || !promo.isActive) {
-    hideCampaignPopup();
-    return;
-  }
-  // Check localStorage for dismissal
   try {
     const stored = JSON.parse(localStorage.getItem(CAMPAIGN_STORAGE_KEY) || '{}');
     const now = Date.now();
-    // Override: if campaign_id changed, show immediately regardless of expiry
-    if(stored.campaign_id === promo.campaign_id && stored.expiresAt && stored.expiresAt > now) {
-      return; // Still within dismissal period
+    if(stored.expiresAt && stored.expiresAt > now) {
+      hideCampaignPopup();
+      return;
     }
   } catch(e) {}
-  showCampaignPopup(promo);
+  const activeCampaigns = state.campaigns
+    .filter(c => c.active === true)
+    .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+  if(activeCampaigns.length === 0) {
+    hideCampaignPopup();
+    return;
+  }
+  state.campaignQueue = activeCampaigns;
+  state.currentCampaignIndex = 0;
+  showNextCampaign();
+}
+
+function showNextCampaign() {
+  const queue = state.campaignQueue;
+  if(!queue || state.currentCampaignIndex >= queue.length) {
+    hideCampaignPopup();
+    return;
+  }
+  const campaign = queue[state.currentCampaignIndex];
+  showCampaignPopup(campaign);
 }
 
 function showCampaignPopup(data) {
   const overlay = document.getElementById('campaign-popup-overlay');
-  const imgWrap = document.getElementById('campaign-popup-img-wrap');
   const imgEl = document.getElementById('campaign-popup-img');
-  const titleEl = document.getElementById('campaign-popup-title');
-  const descEl = document.getElementById('campaign-popup-desc');
-  const btn1 = document.getElementById('campaign-btn-primary');
-  const btn2 = document.getElementById('campaign-btn-secondary');
+  const imgWrap = document.getElementById('campaign-popup-img-wrap');
+  const placeholder = document.getElementById('campaign-popup-img-placeholder');
+  const linkEl = document.getElementById('campaign-popup-link');
   const checkbox = document.getElementById('campaign-dont-show');
   if(!overlay) return;
-  // Set image
   if(data.imageUrl) {
-    imgWrap.style.display = 'block';
     imgEl.src = data.imageUrl;
+    imgEl.style.display = 'block';
+    placeholder.style.display = 'none';
   } else {
-    imgWrap.style.display = 'none';
+    imgEl.style.display = 'none';
+    placeholder.style.display = 'flex';
   }
-  // Set content
-  titleEl.textContent = data.title || 'Special Announcement';
-  descEl.textContent = data.description || '';
-  // Primary button
-  if(data.btn1Text) {
-    btn1.style.display = 'flex';
-    btn1.innerHTML = escHTML(data.btn1Text);
-    btn1.onclick = function() {
-      if(data.btn1Url) window.open(data.btn1Url, '_blank');
-      closeCampaignPopup(false);
-    };
-  } else {
-    btn1.style.display = 'none';
-  }
-  // Secondary button
-  if(data.btn2Text) {
-    btn2.style.display = 'flex';
-    btn2.innerHTML = escHTML(data.btn2Text);
-    btn2.onclick = function() {
-      if(data.btn2Url) window.open(data.btn2Url, '_blank');
-      closeCampaignPopup(false);
-    };
-  } else {
-    btn2.style.display = 'none';
-  }
-  // Reset checkbox
+  linkEl.href = data.destinationUrl || '#';
   if(checkbox) checkbox.checked = false;
   overlay.style.display = 'flex';
 }
@@ -7545,18 +7846,16 @@ function showCampaignPopup(data) {
 function closeCampaignPopup(dontShow) {
   const overlay = document.getElementById('campaign-popup-overlay');
   if(overlay) overlay.style.display = 'none';
-  if(dontShow && state.campaignData && state.campaignData.campaign_id) {
-    // Calculate expiry: midnight of next day (12:00 AM)
+  if(dontShow) {
     const now = new Date();
     const tomorrowMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0, 0);
-    const expiresAt = tomorrowMidnight.getTime();
     try {
-      localStorage.setItem(CAMPAIGN_STORAGE_KEY, JSON.stringify({
-        campaign_id: state.campaignData.campaign_id,
-        expiresAt: expiresAt
-      }));
+      localStorage.setItem(CAMPAIGN_STORAGE_KEY, JSON.stringify({ expiresAt: tomorrowMidnight.getTime() }));
     } catch(e) {}
+    return;
   }
+  state.currentCampaignIndex++;
+  setTimeout(() => showNextCampaign(), 400);
 }
 
 function hideCampaignPopup() {
@@ -7564,7 +7863,103 @@ function hideCampaignPopup() {
   if(overlay) overlay.style.display = 'none';
 }
 
-// ----- Admin Campaign Manager -----
+// ========== GLASSMORPHISM LANGUAGE MODAL ==========
+let _currentLangAnimeId = null;
+
+function openLangModal(title, contentHtml) {
+  const overlay = document.getElementById('lang-modal-overlay');
+  const titleEl = document.getElementById('lang-modal-title');
+  const listEl = document.getElementById('lang-modal-list');
+  const linksEl = document.getElementById('lang-modal-links');
+  if(!overlay) return;
+  if(titleEl) titleEl.textContent = title || 'Select Language';
+  if(listEl) listEl.innerHTML = contentHtml || '';
+  if(linksEl) { linksEl.innerHTML = ''; linksEl.classList.remove('open'); }
+  if(listEl) listEl.style.display = 'flex';
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeLangModal() {
+  const overlay = document.getElementById('lang-modal-overlay');
+  if(overlay) overlay.classList.remove('open');
+  document.body.style.overflow = '';
+  _currentLangAnimeId = null;
+}
+
+function showLangDropdown(animeId) {
+  const cd = state.channels[animeId];
+  if(!cd || !cd.languages) { showToast('No channels available', 'error'); return; }
+  _currentLangAnimeId = animeId;
+  const priorityOrder = ['hindi_dub','english_dub','english_sub','hindi_sub','tamil_dub','tamil_sub','telugu_dub','telugu_sub','malayalam_dub','malayalam_sub','kannada_dub','kannada_sub','bengali_dub','bengali_sub','marathi_dub','marathi_sub','punjabi_dub','punjabi_sub','gujarati_dub','gujarati_sub','japanese','multi_audio','multi_sub'];
+  const langEntries = Object.entries(cd.languages).filter(([k, l]) => l.channels && l.channels.length);
+  langEntries.sort((a, b) => {
+    const idxA = priorityOrder.indexOf(a[0]);
+    const idxB = priorityOrder.indexOf(b[0]);
+    if(idxA >= 0 && idxB >= 0) return idxA - idxB;
+    if(idxA >= 0) return -1;
+    if(idxB >= 0) return 1;
+    return 0;
+  });
+  let content = '';
+  langEntries.forEach(([key, lang]) => {
+    const isDub = lang.badge && lang.badge.toLowerCase().includes('dub');
+    const isSub = lang.badge && lang.badge.toLowerCase().includes('sub');
+    const iconBg = isDub ? 'dub-bg' : isSub ? 'sub-bg' : 'default-bg';
+    const iconSvg = isDub
+      ? '<svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/></svg>'
+      : isSub
+      ? '<svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/></svg>'
+      : '<svg width="22" height="22" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
+    content += `<div class="lang-option-card" onclick="showLangLinks('${escHTML(key)}')">` +
+      `<div class="lang-option-icon ${iconBg}">${iconSvg}</div>` +
+      `<div class="lang-option-info">` +
+        `<div class="lang-option-name">${escHTML(lang.badge || key)}</div>` +
+        `<div class="lang-option-count">${lang.channels.length} source${lang.channels.length > 1 ? 's' : ''} available</div>` +
+      `</div>` +
+      `<div class="lang-option-arrow">` +
+        `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>` +
+      `</div>` +
+    `</div>`;
+  });
+  openLangModal('Watch on Telegram', content);
+}
+
+function showLangLinks(langKey) {
+  if(!_currentLangAnimeId) return;
+  const cd = state.channels[_currentLangAnimeId];
+  if(!cd || !cd.languages || !cd.languages[langKey]) return;
+  const lang = cd.languages[langKey];
+  const listEl = document.getElementById('lang-modal-list');
+  const linksEl = document.getElementById('lang-modal-links');
+  if(!linksEl) return;
+  let html = `<div class="lang-links-header">` +
+    `<button class="lang-links-back" onclick="backToLangList()">` +
+      `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>` +
+    `</button>` +
+    `<span style="font-family:var(--font-heading);font-size:16px;font-weight:700;color:var(--text-primary);">${escHTML(lang.badge || langKey)}</span>` +
+  `</div>`;
+  lang.channels.forEach((link, i) => {
+    html += `<a href="${escHTML(link)}" target="_blank" class="lang-link-btn" onclick="closeLangModal()">` +
+      `<span>Link ${i + 1}</span>` +
+      `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>` +
+    `</a>`;
+  });
+  linksEl.innerHTML = html;
+  if(listEl) listEl.style.display = 'none';
+  linksEl.classList.add('open');
+}
+
+function backToLangList() {
+  const listEl = document.getElementById('lang-modal-list');
+  const linksEl = document.getElementById('lang-modal-links');
+  if(linksEl) { linksEl.innerHTML = ''; linksEl.classList.remove('open'); }
+  if(listEl) listEl.style.display = 'flex';
+}
+
+// ========== MULTI-CAMPAIGN ADMIN MANAGER ==========
+let _campaignEditId = null;
+
 function renderCampaignManager() {
   const container = document.getElementById('admin-panel-campaign');
   if(!container) return;
@@ -7573,151 +7968,160 @@ function renderCampaignManager() {
     return;
   }
   container.innerHTML = '<div style="padding:20px;text-align:center;color:var(--text-muted);"><div class="skeleton" style="height:60px;border-radius:var(--radius);margin-bottom:16px;"></div><div class="skeleton" style="height:120px;border-radius:var(--radius-sm);"></div></div>';
-  db.ref('config/activePromo').once('value').then(snap => {
-    const promo = snap.val() || {};
-    renderCampaignForm(container, promo);
+  db.ref('config/campaigns').once('value').then(snap => {
+    const campaigns = snap.val() || {};
+    state.campaigns = Object.entries(campaigns).map(([key, val]) => ({ ...val, _key: key }));
+    renderCampaignAdminUI(container);
   }).catch(() => {
-    container.innerHTML = '<div class="empty-state"><div class="empty-state-title">Error</div><div class="empty-state-sub">Failed to load campaign data.</div></div>';
+    container.innerHTML = '<div class="empty-state"><div class="empty-state-title">Error</div><div class="empty-state-sub">Failed to load campaigns.</div></div>';
   });
 }
 
-function renderCampaignForm(container, promo) {
-  const isActiveChecked = promo.isActive ? 'checked' : '';
-  const html = '<div style="background:var(--bg-secondary);border-radius:var(--radius);padding:22px;margin-bottom:16px;border:1.5px solid var(--border);">' +
+function renderCampaignAdminUI(container) {
+  const isEdit = !!_campaignEditId;
+  const editCampaign = isEdit ? state.campaigns.find(c => c._key === _campaignEditId) : null;
+  let html = '<div style="background:var(--bg-secondary);border-radius:var(--radius);padding:22px;margin-bottom:16px;border:1.5px solid var(--border);">' +
     '<div style="font-family:var(--font-heading);font-size:18px;font-weight:800;margin-bottom:6px;color:var(--text-primary);display:flex;align-items:center;gap:10px;">' +
       '<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color:var(--accent);"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"/></svg>' +
-      'Campaign Manager' +
+      (isEdit ? 'Edit Campaign' : 'Add Campaign') +
     '</div>' +
-    '<div style="font-size:13px;color:var(--text-muted);margin-bottom:20px;font-weight:500;">Configure the promotional pop-up that appears to users after a 2-second delay.</div>' +
+    '<div style="font-size:13px;color:var(--text-muted);margin-bottom:20px;font-weight:500;">' + (isEdit ? 'Update campaign details below.' : 'Create a new campaign banner.') + '</div>' +
     '<div style="margin-bottom:14px;">' +
       '<label style="font-size:12px;font-weight:700;color:var(--text-primary);display:block;margin-bottom:6px;letter-spacing:0.3px;">Campaign ID *</label>' +
-      '<input type="text" class="lang-input" id="camp-id" placeholder="e.g. bot-ad, giveaway-1, summer-2025" value="' + escHTML(promo.campaign_id || '') + '" style="margin-bottom:4px;">' +
-      '<div style="font-size:11px;color:var(--text-muted);font-weight:500;">Unique identifier. Changing this forces the pop-up to show again for all users (override logic).</div>' +
+      '<input type="text" class="lang-input" id="camp-id" placeholder="e.g. summer-2025" value="' + escHTML(editCampaign ? editCampaign.id : '') + '" ' + (isEdit ? 'disabled style="opacity:0.6;"' : '') + '>' +
+      '<div style="font-size:11px;color:var(--text-muted);margin-top:4px;font-weight:500;">Unique identifier for this campaign.</div>' +
     '</div>' +
     '<div style="margin-bottom:14px;">' +
-      '<label style="font-size:12px;font-weight:700;color:var(--text-primary);display:block;margin-bottom:6px;letter-spacing:0.3px;">Title *</label>' +
-      '<input type="text" class="lang-input" id="camp-title" placeholder="Pop-up title" value="' + escHTML(promo.title || '') + '">' +
-    '</div>' +
-    '<div style="margin-bottom:14px;">' +
-      '<label style="font-size:12px;font-weight:700;color:var(--text-primary);display:block;margin-bottom:6px;letter-spacing:0.3px;">Description</label>' +
-      '<textarea class="comment-textarea" id="camp-desc" placeholder="Pop-up description..." style="min-height:70px;background:var(--bg-primary);">' + escHTML(promo.description || '') + '</textarea>' +
-    '</div>' +
-    '<div style="margin-bottom:14px;">' +
-      '<label style="font-size:12px;font-weight:700;color:var(--text-primary);display:block;margin-bottom:6px;letter-spacing:0.3px;">Image URL</label>' +
-      '<input type="text" class="lang-input" id="camp-img" placeholder="https://s4.anilist.dev/file/... .jpg" value="' + escHTML(promo.imageUrl || '') + '" style="margin-bottom:6px;">' +
-      '<div style="font-size:11px;color:var(--accent);background:rgba(59,130,246,0.06);padding:10px 12px;border-radius:10px;border:1px solid rgba(59,130,246,0.18);font-weight:500;line-height:1.5;">' +
+      '<label style="font-size:12px;font-weight:700;color:var(--text-primary);display:block;margin-bottom:6px;letter-spacing:0.3px;">Image URL *</label>' +
+      '<input type="text" class="lang-input" id="camp-img" placeholder="https://i.imgur.com/xxxx.jpg" value="' + escHTML(editCampaign ? editCampaign.imageUrl : '') + '">' +
+      '<div style="font-size:11px;color:var(--accent);background:rgba(59,130,246,0.06);padding:10px 12px;border-radius:10px;border:1px solid rgba(59,130,246,0.18);font-weight:500;line-height:1.5;margin-top:6px;">' +
         '<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="vertical-align:middle;margin-right:6px;"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>' +
-        'Tip: Any direct image URL works — Imgur, Discord CDN, AniList, or any .jpg/.png link.' +
+        'Direct image URLs: Imgur, Google Drive (direct), Discord CDN, etc.' +
       '</div>' +
     '</div>' +
-    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">' +
-      '<div>' +
-        '<label style="font-size:12px;font-weight:700;color:var(--text-primary);display:block;margin-bottom:6px;letter-spacing:0.3px;">Primary Button Text</label>' +
-        '<input type="text" class="lang-input" id="camp-btn1-text" placeholder="e.g. Join Now" value="' + escHTML(promo.btn1Text || '') + '">' +
-      '</div>' +
-      '<div>' +
-        '<label style="font-size:12px;font-weight:700;color:var(--text-primary);display:block;margin-bottom:6px;letter-spacing:0.3px;">Primary Button URL</label>' +
-        '<input type="text" class="lang-input" id="camp-btn1-url" placeholder="https://t.me/..." value="' + escHTML(promo.btn1Url || '') + '">' +
-      '</div>' +
-    '</div>' +
-    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px;">' +
-      '<div>' +
-        '<label style="font-size:12px;font-weight:700;color:var(--text-primary);display:block;margin-bottom:6px;letter-spacing:0.3px;">Secondary Button Text</label>' +
-        '<input type="text" class="lang-input" id="camp-btn2-text" placeholder="e.g. Learn More" value="' + escHTML(promo.btn2Text || '') + '">' +
-      '</div>' +
-      '<div>' +
-        '<label style="font-size:12px;font-weight:700;color:var(--text-primary);display:block;margin-bottom:6px;letter-spacing:0.3px;">Secondary Button URL</label>' +
-        '<input type="text" class="lang-input" id="camp-btn2-url" placeholder="https://t.me/..." value="' + escHTML(promo.btn2Url || '') + '">' +
-      '</div>' +
+    '<div style="margin-bottom:14px;">' +
+      '<label style="font-size:12px;font-weight:700;color:var(--text-primary);display:block;margin-bottom:6px;letter-spacing:0.3px;">Destination Link *</label>' +
+      '<input type="text" class="lang-input" id="camp-dest" placeholder="https://t.me/yourchannel" value="' + escHTML(editCampaign ? editCampaign.destinationUrl : '') + '">' +
+      '<div style="font-size:11px;color:var(--text-muted);margin-top:4px;font-weight:500;">URL that opens when the banner is clicked.</div>' +
     '</div>' +
     '<div style="display:flex;align-items:center;gap:10px;margin-bottom:20px;padding:14px;background:var(--bg-primary);border-radius:12px;border:1.5px solid var(--border);">' +
-      '<input type="checkbox" id="camp-active" ' + isActiveChecked + ' style="width:18px;height:18px;accent-color:var(--accent);cursor:pointer;">' +
-      '<label for="camp-active" style="font-size:14px;font-weight:600;color:var(--text-primary);cursor:pointer;user-select:none;">Active (show pop-up to users)</label>' +
-    '</div>' +
-    '<div style="display:flex;gap:10px;margin-bottom:10px;">' +
-      '<button class="admin-btn" style="flex:1;" onclick="saveCampaignSettings()">' +
-        '<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="vertical-align:middle;margin-right:6px;"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"/></svg>' +
-        'Save Campaign' +
-      '</button>' +
-      '<button class="admin-btn secondary" style="flex:1;" onclick="previewCampaign()">' +
-        '<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="vertical-align:middle;margin-right:6px;"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>' +
-        'Preview' +
-      '</button>' +
+      '<input type="checkbox" id="camp-active" ' + (editCampaign && editCampaign.active ? 'checked' : '') + ' style="width:18px;height:18px;accent-color:var(--accent);cursor:pointer;">' +
+      '<label for="camp-active" style="font-size:14px;font-weight:600;color:var(--text-primary);cursor:pointer;user-select:none;">Active (show to users)</label>' +
     '</div>' +
     '<div style="display:flex;gap:10px;">' +
-      '<button class="admin-btn danger" style="flex:1;" onclick="deleteCampaign()">' +
-        '<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="vertical-align:middle;margin-right:6px;"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>' +
-        'Delete Campaign' +
+      '<button class="admin-btn" style="flex:1;" onclick="saveMultiCampaign()">' +
+        '<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="vertical-align:middle;margin-right:6px;"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"/></svg>' +
+        (isEdit ? 'Update Campaign' : 'Save Campaign') +
       '</button>' +
+      (isEdit ? '<button class="admin-btn secondary" style="flex:1;" onclick="cancelEditCampaign()">Cancel</button>' : '') +
     '</div>' +
-  '</div>' +
-  '<div style="background:var(--bg-secondary);border-radius:var(--radius);padding:22px;border:1.5px solid var(--border);">' +
+  '</div>';
+  // Campaign List Table
+  html += '<div style="background:var(--bg-secondary);border-radius:var(--radius);padding:22px;border:1.5px solid var(--border);">' +
+    '<div class="campaign-admin-header">' +
+      '<div style="font-family:var(--font-heading);font-size:16px;font-weight:800;color:var(--text-primary);display:flex;align-items:center;gap:10px;">' +
+        '<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color:var(--accent);"><path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>' +
+        'All Campaigns' +
+      '</div>' +
+      '<span class="campaign-admin-count">' + state.campaigns.length + '</span>' +
+    '</div>';
+  if(state.campaigns.length === 0) {
+    html += '<div class="campaign-empty">' +
+      '<svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"/></svg>' +
+      '<div style="font-family:var(--font-heading);font-size:15px;font-weight:700;color:var(--text-primary);margin-bottom:6px;">No Campaigns Yet</div>' +
+      '<div style="font-size:13px;color:var(--text-muted);line-height:1.5;">Add your first campaign using the form above.</div>' +
+    '</div>';
+    } else {
+    html += '<div style="overflow-x:auto;"><table class="campaign-table">' +
+      '<thead><tr><th>Image</th><th>ID</th><th>Destination</th><th>Status</th><th>Actions</th></tr></thead><tbody>';
+    state.campaigns.forEach(c => {
+      const statusClass = c.active ? 'active' : 'inactive';
+      const statusText = c.active ? 'Active' : 'Inactive';
+      html += '<tr>' +
+        '<td>' + (c.imageUrl ? '<img class="campaign-thumb" src="' + escHTML(c.imageUrl) + '" alt="" onerror="this.style.display=\'none\'">' : '<div class="campaign-thumb" style="display:flex;align-items:center;justify-content:center;color:var(--text-muted);font-size:10px;font-weight:700;">IMG</div>') + '</td>' +
+        '<td><div class="campaign-id-cell">' + escHTML(c.id || c._key) + '</div></td>' +
+        '<td><div class="campaign-dest-cell">' + escHTML(c.destinationUrl || '-') + '</div></td>' +
+        '<td><span class="campaign-status-badge ' + statusClass + '"><span class="status-dot"></span> ' + statusText + '</span></td>' +
+        '<td><div class="campaign-row-actions">' +
+          '<button class="camp-edit-btn" onclick="startCampaignEdit(\'' + escHTML(c._key) + '\')">Edit</button>' +
+          '<button class="camp-toggle-btn ' + statusClass + '" onclick="toggleCampaignActive(\'' + escHTML(c._key) + '\')">' + (c.active ? 'Off' : 'On') + '</button>' +
+          '<button class="camp-del-btn" onclick="deleteCampaign(\'' + escHTML(c._key) + '\')">Del</button>' +
+        '</div></td>' +
+      '</tr>';
+    });
+    html += '</tbody></table></div>';
+    }
+  // How It Works
+  html += '<div style="background:var(--bg-secondary);border-radius:var(--radius);padding:22px;border:1.5px solid var(--border);margin-top:16px;">' +
     '<div style="font-family:var(--font-heading);font-size:16px;font-weight:800;margin-bottom:12px;color:var(--text-primary);">How It Works</div>' +
     '<div style="font-size:13px;color:var(--text-secondary);line-height:1.9;">' +
-      '<div style="display:flex;gap:10px;margin-bottom:10px;"><span style="color:var(--accent);font-weight:800;">1.</span><span>The pop-up fetches data from <code style="background:var(--bg-primary);padding:2px 6px;border-radius:4px;font-size:12px;">config/activePromo</code> in Firebase.</span></div>' +
-      '<div style="display:flex;gap:10px;margin-bottom:10px;"><span style="color:var(--accent);font-weight:800;">2.</span><span>If <strong>Active</strong> is checked, it appears to users after 2 seconds.</span></div>' +
-     // The fixed line:
-      '<div style="display:flex;gap:10px;margin-bottom:10px;"><span style="color:var(--accent);font-weight:800;">3.</span><span>Users can tick "Don\'t show again for today" to hide it until midnight.</span></div>' +
-
-      '<div style="display:flex;gap:10px;"><span style="color:var(--accent);font-weight:800;">4.</span><span><strong>Override:</strong> Changing the Campaign ID forces the pop-up to show again for all users.</span></div>' +
+      '<div style="display:flex;gap:10px;margin-bottom:10px;"><span style="color:var(--accent);font-weight:800;">1.</span><span>Campaigns stored at <code style="background:var(--bg-primary);padding:2px 6px;border-radius:4px;font-size:12px;">config/campaigns/{id}</code> in Firebase.</span></div>' +
+      '<div style="display:flex;gap:10px;margin-bottom:10px;"><span style="color:var(--accent);font-weight:800;">2.</span><span>All <strong>Active</strong> campaigns show to users one after another (newest first).</span></div>' +
+      '<div style="display:flex;gap:10px;margin-bottom:10px;"><span style="color:var(--accent);font-weight:800;">3.</span><span>Users can tick &quot;\'t show again for today&quot; to suppress ALL campaigns until midnight.</span></div>' +
+      '<div style="display:flex;gap:10px;"><span style="color:var(--accent);font-weight:800;">4.</span><span>Clicking the banner image opens the Destination Link in a new tab.</span></div>' +
     '</div>' +
   '</div>';
   container.innerHTML = html;
 }
 
-function saveCampaignSettings() {
-  const campaign_id = document.getElementById('camp-id').value.trim();
-  const title = document.getElementById('camp-title').value.trim();
-  const description = document.getElementById('camp-desc').value.trim();
+function saveMultiCampaign() {
+  const id = document.getElementById('camp-id').value.trim();
   const imageUrl = document.getElementById('camp-img').value.trim();
-  const btn1Text = document.getElementById('camp-btn1-text').value.trim();
-  const btn1Url = document.getElementById('camp-btn1-url').value.trim();
-  const btn2Text = document.getElementById('camp-btn2-text').value.trim();
-  const btn2Url = document.getElementById('camp-btn2-url').value.trim();
-  const isActive = document.getElementById('camp-active').checked;
-  if(!campaign_id) { showToast('Campaign ID is required', 'warning'); return; }
-  if(!title) { showToast('Title is required', 'warning'); return; }
-  const promo = { campaign_id: campaign_id, title: title, description: description, imageUrl: imageUrl, btn1Text: btn1Text, btn1Url: btn1Url, btn2Text: btn2Text, btn2Url: btn2Url, isActive: isActive, updatedAt: Date.now() };
-  db.ref('config/activePromo').set(promo).then(() => {
-    state.campaignData = promo;
+  const destinationUrl = document.getElementById('camp-dest').value.trim();
+  const active = document.getElementById('camp-active').checked;
+  if(!id) { showToast('Campaign ID is required', 'warning'); return; }
+  if(!imageUrl) { showToast('Image URL is required', 'warning'); return; }
+  if(!destinationUrl) { showToast('Destination Link is required', 'warning'); return; }
+  const campaign = {
+    id: id,
+    imageUrl: imageUrl,
+    destinationUrl: destinationUrl,
+    active: active,
+    createdAt: (_campaignEditId && state.campaigns.find(c => c._key === _campaignEditId)) ? state.campaigns.find(c => c._key === _campaignEditId).createdAt : Date.now()
+  };
+  const key = _campaignEditId || id;
+  db.ref('config/campaigns/' + key).set(campaign).then(() => {
+    _campaignEditId = null;
     showToast('Campaign saved!', 'success');
+    renderCampaignManager();
   }).catch(() => showToast('Failed to save campaign', 'error'));
 }
 
-function previewCampaign() {
-  const promo = {
-    campaign_id: 'preview',
-    title: document.getElementById('camp-title').value.trim() || 'Preview',
-    description: document.getElementById('camp-desc').value.trim(),
-    imageUrl: document.getElementById('camp-img').value.trim(),
-    btn1Text: document.getElementById('camp-btn1-text').value.trim(),
-    btn1Url: document.getElementById('camp-btn1-url').value.trim(),
-    btn2Text: document.getElementById('camp-btn2-text').value.trim(),
-    btn2Url: document.getElementById('camp-btn2-url').value.trim(),
-    isActive: true
-  };
-  showCampaignPopup(promo);
+function startCampaignEdit(key) {
+  _campaignEditId = key;
+  renderCampaignManager();
 }
 
-function deleteCampaign() {
-  openModal('Delete Campaign', 'Are you sure you want to delete this campaign? This will remove the pop-up for all users.', function() {
-    if(db) {
-      db.ref('config/activePromo').remove().then(function() {
-        state.campaignData = null;
-        hideCampaignPopup();
-        showToast('Campaign deleted successfully', 'success');
-        renderCampaignManager();
-      }).catch(function() {
-        showToast('Failed to delete campaign', 'error');
-      });
-    } else {
-      showToast('Firebase not available', 'error');
-    }
+function cancelEditCampaign() {
+  _campaignEditId = null;
+  renderCampaignManager();
+}
+
+function toggleCampaignActive(key) {
+  const campaign = state.campaigns.find(c => c._key === key);
+  if(!campaign) return;
+  const newActive = !campaign.active;
+  db.ref('config/campaigns/' + key + '/active').set(newActive).then(() => {
+    campaign.active = newActive;
+    showToast('Campaign ' + (newActive ? 'activated' : 'deactivated'), 'success');
+    renderCampaignManager();
+  }).catch(() => showToast('Failed to update', 'error'));
+}
+
+function deleteCampaign(key) {
+  const campaign = state.campaigns.find(c => c._key === key);
+  const name = campaign ? (campaign.id || key) : key;
+  openModal('Delete Campaign', 'Delete campaign &quot;' + escHTML(name) + '&quot;? This cannot be undone.', function() {
+    if(_campaignEditId === key) _campaignEditId = null;
+    db.ref('config/campaigns/' + key).remove().then(() => {
+      state.campaigns = state.campaigns.filter(c => c._key !== key);
+      showToast('Campaign deleted', 'success');
+      renderCampaignManager();
+    }).catch(() => showToast('Failed to delete', 'error'));
   });
 }
 
-
-// ========== URL ROUTING ==========
+// ========== URL ROUTING ==========// ========== URL ROUTING ==========
 function handleUrlParams() {
   try {
     const url = new URL(window.location.href);
@@ -7751,6 +8155,12 @@ document.addEventListener('touchstart', e => {
 
 document.addEventListener('touchmove', e => {
   if(!isSwiping) return;
+  
+  // FIX: Agar user table ya kisi scrollable area par touch kar raha hai, toh swipe gesture ko cancel kar do
+  if(e.target.closest('table, .cards-scroll, .pills-scroll, .profile-recent-scroll, .profile-watchlist-scroll, [style*="overflow-x"]')) {
+    return; 
+  }
+
   touchCurrentX = e.touches[0].clientX;
   const dx = touchCurrentX - touchStartX;
   if(Math.abs(dx) > 10 && state.tab !== 'detail') {
