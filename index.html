@@ -3791,6 +3791,252 @@ body.is-admin .page.admin-only.active { display: flex !important; flex-direction
     transition-duration: 0.01ms !important;
   }
 }
+/* ========== CAMPAIGN POP-UP (Premium Light-Mode Glassmorphism) ========== */
+.campaign-popup-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 450;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: fadeIn 0.3s ease;
+}
+.campaign-popup-box {
+  background: rgba(255,255,255,0.75);
+  backdrop-filter: blur(25px) saturate(180%);
+  -webkit-backdrop-filter: blur(25px) saturate(180%);
+  border-radius: var(--radius);
+  width: 100%;
+  max-width: 400px;
+  max-height: 90vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: relative;
+  border: 1px solid rgba(255,255,255,0.55);
+  box-shadow:
+    0 8px 32px rgba(0,0,0,0.14),
+    0 2px 8px rgba(0,0,0,0.1),
+    inset 0 1px 0 rgba(255,255,255,0.7);
+  animation: modalIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.campaign-popup-box::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #3B82F6, #8B5CF6, #EC4899);
+  border-radius: var(--radius) var(--radius) 0 0;
+  opacity: 0.85;
+}
+.campaign-popup-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.65);
+  backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #64748B;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid rgba(255,255,255,0.5);
+  z-index: 5;
+  font-size: 18px;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+.campaign-popup-close:hover { background: rgba(239,68,68,0.18); color: #EF4444; border-color: rgba(239,68,68,0.3); transform: scale(1.1); }
+.campaign-popup-close:active { transform: scale(0.95); }
+.campaign-popup-img-wrap {
+  width: 100%;
+  aspect-ratio: 16/9;
+  overflow: hidden;
+  position: relative;
+}
+.campaign-popup-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.campaign-popup-img-wrap::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 50%, rgba(255,255,255,0.45) 100%);
+  pointer-events: none;
+}
+.campaign-popup-img-placeholder {
+  width: 100%;
+  aspect-ratio: 16/9;
+  background: linear-gradient(135deg, #E2E8F0, #CBD5E1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #3B82F6;
+  font-family: var(--font-heading);
+  font-size: 14px;
+  font-weight: 700;
+}
+.campaign-popup-body {
+  padding: 22px 24px 24px;
+}
+.campaign-popup-title {
+  font-family: var(--font-heading);
+  font-size: 22px;
+  font-weight: 800;
+  color: #0F172A;
+  margin-bottom: 8px;
+  line-height: 1.3;
+  letter-spacing: -0.4px;
+}
+.campaign-popup-desc {
+  font-size: 14px;
+  color: #475569;
+  line-height: 1.7;
+  margin-bottom: 20px;
+}
+.campaign-popup-actions {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.campaign-btn {
+  flex: 1;
+  padding: 13px 16px;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-weight: 700;
+  text-align: center;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: var(--font-heading);
+}
+.campaign-btn-primary {
+  background: linear-gradient(135deg, #3B82F6, #6366F1);
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(59,130,246,0.3);
+}
+.campaign-btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(59,130,246,0.4); }
+.campaign-btn-primary:active { transform: scale(0.96); }
+.campaign-btn-secondary {
+  background: rgba(15,23,42,0.06);
+  color: #0F172A;
+  border: 1.5px solid rgba(15,23,42,0.12);
+}
+.campaign-btn-secondary:hover { background: rgba(15,23,42,0.1); border-color: rgba(59,130,246,0.3); transform: translateY(-2px); }
+.campaign-btn-secondary:active { transform: scale(0.96); }
+.campaign-dont-show {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  background: rgba(15,23,42,0.04);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+  border: 1px solid rgba(15,23,42,0.06);
+}
+.campaign-dont-show:hover { background: rgba(15,23,42,0.06); border-color: rgba(15,23,42,0.1); }
+.campaign-dont-show input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: #3B82F6;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+.campaign-dont-show label {
+  font-size: 13px;
+  color: #64748B;
+  cursor: pointer;
+  font-weight: 500;
+  user-select: none;
+}
+
+/* ========== SCHEDULE PRO ENHANCEMENTS ========== */
+.schedule-pro-header {
+  margin: 16px 16px 20px;
+  padding: 28px 24px;
+  border-radius: var(--radius);
+  background: linear-gradient(135deg, rgba(37,99,235,0.18) 0%, rgba(139,92,246,0.12) 50%, rgba(14,165,233,0.08) 100%);
+  border: 1.5px solid rgba(59,130,246,0.25);
+  position: relative;
+  overflow: hidden;
+  animation: heroCardIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+.schedule-pro-header::before {
+  content: '';
+  position: absolute;
+  top: -40%;
+  right: -20%;
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(59,130,246,0.15), transparent 70%);
+  animation: heroOrbFloat 7s ease-in-out infinite;
+}
+.schedule-pro-header::after {
+  content: '';
+  position: absolute;
+  bottom: -40%;
+  left: -15%;
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(139,92,246,0.12), transparent 70%);
+  animation: heroOrbFloat 9s ease-in-out infinite reverse;
+}
+.schedule-pro-date {
+  font-family: var(--font-heading);
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: -0.5px;
+  position: relative;
+  z-index: 1;
+}
+.schedule-pro-sub {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-top: 6px;
+  font-weight: 500;
+  position: relative;
+  z-index: 1;
+}
+.schedule-pro-count {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+  padding: 8px 16px;
+  border-radius: 20px;
+  background: rgba(59,130,246,0.12);
+  border: 1px solid rgba(59,130,246,0.2);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--accent);
+  position: relative;
+  z-index: 1;
+}
+.schedule-pro-count svg {
+  animation: ptrSpin 3s linear infinite;
+}
+
 </style>
 <base target="_blank">
 </head>
@@ -3880,6 +4126,27 @@ body.is-admin .page.admin-only.active { display: flex !important; flex-direction
     <div style="display:flex;gap:8px;">
       <button class="modal-btn secondary" style="flex:1;" onclick="closePasswordModal()">Cancel</button>
       <button class="modal-btn primary" style="flex:1;" onclick="checkPassword()">Unlock</button>
+    </div>
+  </div>
+</div>
+<!-- ========== CAMPAIGN POP-UP OVERLAY ========== -->
+<div id="campaign-popup-overlay" class="campaign-popup-overlay" onclick="if(event.target===this)closeCampaignPopup(false)">
+  <div class="campaign-popup-box" onclick="event.stopPropagation()">
+    <div class="campaign-popup-close" onclick="closeCampaignPopup(false)">&times;</div>
+    <div id="campaign-popup-img-wrap" class="campaign-popup-img-wrap" style="display:none;">
+      <img id="campaign-popup-img" src="" alt="" onerror="this.parentNode.style.display='none'">
+    </div>
+    <div class="campaign-popup-body">
+      <div id="campaign-popup-title" class="campaign-popup-title"></div>
+      <div id="campaign-popup-desc" class="campaign-popup-desc"></div>
+      <div class="campaign-popup-actions">
+        <button id="campaign-btn-primary" class="campaign-btn campaign-btn-primary" style="display:none;"></button>
+        <button id="campaign-btn-secondary" class="campaign-btn campaign-btn-secondary" style="display:none;"></button>
+      </div>
+      <div class="campaign-dont-show" onclick="var cb=document.getElementById('campaign-dont-show');cb.checked=!cb.checked;">
+        <input type="checkbox" id="campaign-dont-show" onclick="event.stopPropagation()">
+        <label for="campaign-dont-show" onclick="event.stopPropagation()">Don't show again for today</label>
+      </div>
     </div>
   </div>
 </div>
@@ -4200,6 +4467,7 @@ body.is-admin .page.admin-only.active { display: flex !important; flex-direction
       <button class="admin-tab active" onclick="setAdminTab('dashboard')">Dashboard</button>
       <button class="admin-tab" onclick="setAdminTab('channels')">Channels</button>
       <button class="admin-tab" onclick="setAdminTab('news')">News Manager</button>
+      <button class="admin-tab" onclick="setAdminTab('campaign')">Campaign</button>
       <button class="admin-tab" onclick="setAdminTab('users')">Users</button>
       <button class="admin-tab" onclick="setAdminTab('comments')">Comments</button>
     </div>
@@ -4207,6 +4475,7 @@ body.is-admin .page.admin-only.active { display: flex !important; flex-direction
       <div class="admin-panel active" id="admin-panel-dashboard"></div>
       <div class="admin-panel" id="admin-panel-channels"></div>
       <div class="admin-panel" id="admin-panel-news"></div>
+      <div class="admin-panel" id="admin-panel-campaign"></div>
       <div class="admin-panel" id="admin-panel-users"></div>
       <div class="admin-panel" id="admin-panel-comments"></div>
     </div>
@@ -4363,7 +4632,9 @@ const state = {
   newsDisplayCount: 10,
   newsRefreshing: false,
   currentNewsItem: null,
-  animeCache: {}
+  animeCache: {},
+  campaignData: null,
+  campaignChecked: false
 };
 
 // ========== CONSTANTS ==========
@@ -4391,6 +4662,7 @@ const FALLBACK_NEWS_IMAGES = [
 ];
 const DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const CAMPAIGN_STORAGE_KEY = 'iox_campaign_dismiss';
 
 // ========== RANKING SYSTEM ==========
 const RANKS = [
@@ -5753,18 +6025,46 @@ async function renderTodaySchedule() {
   const now = new Date();
   const dayName = DAYS[now.getDay()];
   const dateStr = now.toLocaleDateString('en-US', {month:'long', day:'numeric', year:'numeric'});
-  container.innerHTML = '<div style="padding:20px;text-align:center;color:var(--text-muted);"><div class="skeleton" style="height:80px;border-radius:var(--radius);margin-bottom:16px;"></div><div class="skeleton" style="height:120px;border-radius:var(--radius-sm);margin-bottom:10px;"></div><div class="skeleton" style="height:120px;border-radius:var(--radius-sm);"></div></div>';
+  container.innerHTML = `<div style="padding:20px;text-align:center;color:var(--text-muted);"><div class="skeleton" style="height:80px;border-radius:var(--radius);margin-bottom:16px;"></div><div class="skeleton" style="height:120px;border-radius:var(--radius-sm);margin-bottom:10px;"></div><div class="skeleton" style="height:120px;border-radius:var(--radius-sm);"></div></div>`;
   const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
   const endOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
   const startTs = Math.floor(startOfDay.getTime()/1000);
   const endTs = Math.floor(endOfDay.getTime()/1000);
   const data = await anilistQuery(Q_AIRING, { page: 1, perPage: 50, airingAtGreater: startTs, airingAtLesser: endTs });
   if(!data || !data.Page || !data.Page.airingSchedules || data.Page.airingSchedules.length === 0) {
-    container.innerHTML = '<div class="schedule-pro-header"><div class="schedule-pro-date">' + dayName.toUpperCase() + '</div><div class="schedule-pro-sub">' + dateStr + '</div><div class="schedule-pro-count">0 anime scheduled</div></div>' +
-      '<div class="schedule-empty-pro"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div class="schedule-empty-pro-title">No Releases Today</div><div class="schedule-empty-pro-sub">No anime episodes are scheduled for release today. Check the Upcoming tab for future releases.</div></div>';
+    container.innerHTML = `<div class="schedule-pro-header"><div class="schedule-pro-date">` + dayName.toUpperCase() + `</div><div class="schedule-pro-sub">` + dateStr + `</div><div class="schedule-pro-count">0 anime scheduled today</div></div>` +
+      `<div class="schedule-empty-pro"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><div class="schedule-empty-pro-title">No Releases Today</div><div class="schedule-empty-pro-sub">No anime episodes are scheduled for release today. Check the Upcoming tab for future releases.</div></div>`;
     return;
   }
-  const schedules = data.Page.airingSchedules;
+  let schedules = data.Page.airingSchedules;
+  // Strict chronological sort by airing time
+  schedules.sort((a, b) => Number(a.airingAt) - Number(b.airingAt));
+  // Separate currently airing vs upcoming vs aired
+  const currentTs = Date.now()/1000;
+  const currentlyAiring = [];
+  const upcomingToday = [];
+  const airedToday = [];
+  schedules.forEach(s => {
+    const diff = Math.abs(currentTs - s.airingAt);
+    if(diff < 1800) currentlyAiring.push(s);
+    else if(s.airingAt > currentTs) upcomingToday.push(s);
+    else airedToday.push(s);
+  });
+  // Build HTML
+  let html = `<div class="schedule-pro-header">` +
+    `<div class="schedule-pro-date">` + dayName.toUpperCase() + ` <span style="font-size:14px;font-weight:600;color:var(--accent);">TODAY</span></div>` +
+    `<div class="schedule-pro-sub">` + dateStr + `</div>` +
+    `<div class="schedule-pro-count"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg> ` + schedules.length + ` episode` + (schedules.length > 1 ? 's' : '') + ` releasing today</div>` +
+  `</div>`;
+  // Currently Airing Section
+  if(currentlyAiring.length > 0) {
+    html += `<div style="margin:0 16px 16px;"><div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;"><div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#EF4444,#F87171);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 0 12px rgba(239,68,68,0.4);animation:livePulse 2s ease-in-out infinite;"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24" style="color:#fff;"><path d="M8 5v14l11-7z"/></svg></div><div><div style="font-family:var(--font-heading);font-size:15px;font-weight:800;color:var(--text-primary);letter-spacing:0.3px;">On Air Right Now</div><div style="font-size:11px;color:var(--text-muted);font-weight:600;">` + currentlyAiring.length + ` episode` + (currentlyAiring.length > 1 ? 's' : '') + ` airing</div></div></div>`;
+    currentlyAiring.forEach(s => {
+      html += buildTimelineCard(s, true);
+    });
+    html += `</div>`;
+  }
+  // Timeline sections
   const morning = [], afternoon = [], evening = [], night = [];
   schedules.forEach(s => {
     const hour = new Date(s.airingAt * 1000).getHours();
@@ -5773,55 +6073,66 @@ async function renderTodaySchedule() {
     else if(hour >= 17 && hour < 21) evening.push(s);
     else night.push(s);
   });
-  let html = '<div class="schedule-pro-header">' +
-    '<div class="schedule-pro-date">' + dayName.toUpperCase() + ' <span style="font-size:14px;font-weight:600;color:var(--accent);">TODAY</span></div>' +
-    '<div class="schedule-pro-sub">' + dateStr + '</div>' +
-    '<div class="schedule-pro-count"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg> ' + schedules.length + ' episode' + (schedules.length > 1 ? 's' : '') + ' releasing</div>' +
-  '</div>';
-  html += '<div class="timeline-container">';
+  html += `<div class="timeline-container">`;
   const timeGroups = [
-    { label: 'Morning', time: '5AM - 12PM', icon: '\u2600\uFE0F', cls: 'morning', items: morning },
-    { label: 'Afternoon', time: '12PM - 5PM', icon: '\u26A1', cls: 'afternoon', items: afternoon },
-    { label: 'Evening', time: '5PM - 9PM', icon: '\uD83C\DF05', cls: 'evening', items: evening },
-    { label: 'Late Night', time: '9PM - 5AM', icon: '\uD83C\DF19', cls: 'night', items: night }
+    { label: 'Morning', time: '5:00 AM - 11:59 AM', icon: '\u2600\uFE0F', cls: 'morning', items: morning },
+    { label: 'Afternoon', time: '12:00 PM - 4:59 PM', icon: '\u26A1', cls: 'afternoon', items: afternoon },
+    { label: 'Evening', time: '5:00 PM - 8:59 PM', icon: '\uD83C\uDF05', cls: 'evening', items: evening },
+    { label: 'Late Night', time: '9:00 PM - 4:59 AM', icon: '\uD83C\uDF19', cls: 'night', items: night }
   ];
   timeGroups.forEach(g => {
     if(g.items.length === 0) return;
-    html += '<div class="timeline-period">' +
-      '<div class="timeline-period-header">' +
-        '<div class="timeline-period-dot ' + g.cls + '">' + g.icon + '</div>' +
-        '<span class="timeline-period-label">' + g.label + '</span>' +
-        '<span class="timeline-period-time">' + g.time + '</span>' +
-      '</div>';
+    html += `<div class="timeline-period">` +
+      `<div class="timeline-period-header">` +
+        `<div class="timeline-period-dot ` + g.cls + `">` + g.icon + `</div>` +
+        `<span class="timeline-period-label">` + g.label + `</span>` +
+        `<span class="timeline-period-time">` + g.time + `</span>` +
+      `</div>`;
     g.items.forEach(s => {
-      const a = s.media;
-      const title = getAnilistTitle(a.title);
-      const time = new Date(s.airingAt * 1000);
-      const timeStr = time.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
-      const isAiringNow = Math.abs(Date.now()/1000 - s.airingAt) < 1800;
-      const minsUntil = Math.floor((s.airingAt - Date.now()/1000)/60);
-      let countdownTxt = '';
-      if(isAiringNow) countdownTxt = 'Airing now';
-      else if(minsUntil > 0 && minsUntil < 60) countdownTxt = 'In ' + minsUntil + 'm';
-      else if(minsUntil >= 60 && minsUntil < 1440) countdownTxt = 'In ' + Math.floor(minsUntil/60) + 'h ' + (minsUntil%60) + 'm';
-      html += '<div class="timeline-card" onclick="openAnime(' + a.id + ')">' +
-        '<img src="' + escHTML(a.coverImage?.large||'') + '" alt="' + escHTML(title) + '" loading="lazy" onerror="this.style.display=\'none\'">' +
-        '<div class="timeline-card-info">' +
-          '<div class="timeline-card-title">' + escHTML(title) + '</div>' +
-          '<div class="timeline-card-meta">' + (a.type||'TV') + ' &middot; Ep ' + (s.episode||'?') + '</div>' +
-          '<div class="timeline-card-badges">' +
-            '<span class="timeline-time-badge"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path stroke-linecap="round" d="M12 6v6l4 2"/></svg> ' + timeStr + '</span>' +
-            '<span class="timeline-ep-badge">EP ' + (s.episode||'?') + '</span>' +
-            (isAiringNow ? '<span class="timeline-live-badge"><span class="live-dot"></span> LIVE</span>' : (countdownTxt ? '<span class="timeline-countdown">' + countdownTxt + '</span>' : '')) +
-          '</div>' +
-        '</div>' +
-      '</div>';
+      html += buildTimelineCard(s, false);
     });
-    html += '</div>';
+    html += `</div>`;
   });
-  html += '</div>';
+  html += `</div>`;
   container.innerHTML = html;
 }
+
+function buildTimelineCard(s, isLiveSection) {
+  const a = s.media;
+  const title = getAnilistTitle(a.title);
+  const time = new Date(s.airingAt * 1000);
+  const timeStr = time.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+  const nowTs = Date.now()/1000;
+  const diff = s.airingAt - nowTs;
+  const isAiringNow = Math.abs(diff) < 1800;
+  const hasAired = diff < -1800;
+  let statusLabel = '';
+  if(isAiringNow) statusLabel = '<span class="timeline-live-badge"><span class="live-dot"></span> LIVE</span>';
+  else if(hasAired) statusLabel = '<span style="font-size:11px;color:var(--success);font-weight:700;background:rgba(16,185,129,0.1);padding:4px 10px;border-radius:8px;border:1px solid rgba(16,185,129,0.2);">Aired</span>';
+  else {
+    const minsUntil = Math.floor(diff/60);
+    if(minsUntil > 0 && minsUntil < 60) statusLabel = '<span class="timeline-countdown">In ' + minsUntil + 'm</span>';
+    else if(minsUntil >= 60 && minsUntil < 1440) {
+      const h = Math.floor(minsUntil/60);
+      const m = minsUntil % 60;
+      statusLabel = '<span class="timeline-countdown">In ' + h + 'h ' + m + 'm</span>';
+    }
+  }
+  const cardBorder = isAiringNow ? 'border-left:3px solid var(--danger);' : hasAired ? 'border-left:3px solid var(--success);' : 'border-left:3px solid var(--accent);';
+  return `<div class="timeline-card" onclick="openAnime(` + a.id + `)" style="` + cardBorder + `">` +
+    `<img src="` + escHTML(a.coverImage?.large||'') + `" alt="` + escHTML(title) + `" loading="lazy" onerror="this.style.display='none'">` +
+    `<div class="timeline-card-info">` +
+      `<div class="timeline-card-title">` + escHTML(title) + `</div>` +
+      `<div class="timeline-card-meta">` + (a.type||'TV') + ` &middot; Ep ` + (s.episode||'?') + `</div>` +
+      `<div class="timeline-card-badges">` +
+        `<span class="timeline-time-badge"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path stroke-linecap="round" d="M12 6v6l4 2"/></svg> ` + timeStr + `</span>` +
+        `<span class="timeline-ep-badge">EP ` + (s.episode||'?') + `</span>` +
+        statusLabel +
+      `</div>` +
+    `</div>` +
+  `</div>`;
+}
+
 
 async function renderUpcomingSchedule() {
   const container = $('#panel-upcoming');
@@ -6543,6 +6854,7 @@ function setAdminTab(tab) {
   else if(tab === 'news') renderNewsManager();
   else if(tab === 'users') renderUserManager();
   else if(tab === 'comments') renderCommentManager();
+  else if(tab === 'campaign') renderCampaignManager();
 }
 
 function renderAdmin() {
@@ -7152,6 +7464,259 @@ function renderCommentList() {
 }
 
 
+// ========== CAMPAIGN POP-UP SYSTEM ==========
+function initCampaignPopup() {
+  if(!db) return;
+  db.ref('config/activePromo').on('value', snap => {
+    const promo = snap.val();
+    state.campaignData = promo;
+    if(!state.campaignChecked) {
+      state.campaignChecked = true;
+      setTimeout(() => checkAndShowCampaign(), 2000);
+    }
+  });
+}
+
+function checkAndShowCampaign() {
+  const promo = state.campaignData;
+  if(!promo || !promo.isActive) {
+    hideCampaignPopup();
+    return;
+  }
+  // Check localStorage for dismissal
+  try {
+    const stored = JSON.parse(localStorage.getItem(CAMPAIGN_STORAGE_KEY) || '{}');
+    const now = Date.now();
+    // Override: if campaign_id changed, show immediately regardless of expiry
+    if(stored.campaign_id === promo.campaign_id && stored.expiresAt && stored.expiresAt > now) {
+      return; // Still within dismissal period
+    }
+  } catch(e) {}
+  showCampaignPopup(promo);
+}
+
+function showCampaignPopup(data) {
+  const overlay = document.getElementById('campaign-popup-overlay');
+  const imgWrap = document.getElementById('campaign-popup-img-wrap');
+  const imgEl = document.getElementById('campaign-popup-img');
+  const titleEl = document.getElementById('campaign-popup-title');
+  const descEl = document.getElementById('campaign-popup-desc');
+  const btn1 = document.getElementById('campaign-btn-primary');
+  const btn2 = document.getElementById('campaign-btn-secondary');
+  const checkbox = document.getElementById('campaign-dont-show');
+  if(!overlay) return;
+  // Set image
+  if(data.imageUrl) {
+    imgWrap.style.display = 'block';
+    imgEl.src = data.imageUrl;
+  } else {
+    imgWrap.style.display = 'none';
+  }
+  // Set content
+  titleEl.textContent = data.title || 'Special Announcement';
+  descEl.textContent = data.description || '';
+  // Primary button
+  if(data.btn1Text) {
+    btn1.style.display = 'flex';
+    btn1.innerHTML = escHTML(data.btn1Text);
+    btn1.onclick = function() {
+      if(data.btn1Url) window.open(data.btn1Url, '_blank');
+      closeCampaignPopup(false);
+    };
+  } else {
+    btn1.style.display = 'none';
+  }
+  // Secondary button
+  if(data.btn2Text) {
+    btn2.style.display = 'flex';
+    btn2.innerHTML = escHTML(data.btn2Text);
+    btn2.onclick = function() {
+      if(data.btn2Url) window.open(data.btn2Url, '_blank');
+      closeCampaignPopup(false);
+    };
+  } else {
+    btn2.style.display = 'none';
+  }
+  // Reset checkbox
+  if(checkbox) checkbox.checked = false;
+  overlay.style.display = 'flex';
+}
+
+function closeCampaignPopup(dontShow) {
+  const overlay = document.getElementById('campaign-popup-overlay');
+  if(overlay) overlay.style.display = 'none';
+  if(dontShow && state.campaignData && state.campaignData.campaign_id) {
+    // Calculate expiry: midnight of next day (12:00 AM)
+    const now = new Date();
+    const tomorrowMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0, 0);
+    const expiresAt = tomorrowMidnight.getTime();
+    try {
+      localStorage.setItem(CAMPAIGN_STORAGE_KEY, JSON.stringify({
+        campaign_id: state.campaignData.campaign_id,
+        expiresAt: expiresAt
+      }));
+    } catch(e) {}
+  }
+}
+
+function hideCampaignPopup() {
+  const overlay = document.getElementById('campaign-popup-overlay');
+  if(overlay) overlay.style.display = 'none';
+}
+
+// ----- Admin Campaign Manager -----
+function renderCampaignManager() {
+  const container = document.getElementById('admin-panel-campaign');
+  if(!container) return;
+  if(!db) {
+    container.innerHTML = '<div class="empty-state"><div class="empty-state-title">No Database</div><div class="empty-state-sub">Campaign management requires Firebase.</div></div>';
+    return;
+  }
+  container.innerHTML = '<div style="padding:20px;text-align:center;color:var(--text-muted);"><div class="skeleton" style="height:60px;border-radius:var(--radius);margin-bottom:16px;"></div><div class="skeleton" style="height:120px;border-radius:var(--radius-sm);"></div></div>';
+  db.ref('config/activePromo').once('value').then(snap => {
+    const promo = snap.val() || {};
+    renderCampaignForm(container, promo);
+  }).catch(() => {
+    container.innerHTML = '<div class="empty-state"><div class="empty-state-title">Error</div><div class="empty-state-sub">Failed to load campaign data.</div></div>';
+  });
+}
+
+function renderCampaignForm(container, promo) {
+  const isActiveChecked = promo.isActive ? 'checked' : '';
+  const html = '<div style="background:var(--bg-secondary);border-radius:var(--radius);padding:22px;margin-bottom:16px;border:1.5px solid var(--border);">' +
+    '<div style="font-family:var(--font-heading);font-size:18px;font-weight:800;margin-bottom:6px;color:var(--text-primary);display:flex;align-items:center;gap:10px;">' +
+      '<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color:var(--accent);"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"/></svg>' +
+      'Campaign Manager' +
+    '</div>' +
+    '<div style="font-size:13px;color:var(--text-muted);margin-bottom:20px;font-weight:500;">Configure the promotional pop-up that appears to users after a 2-second delay.</div>' +
+    '<div style="margin-bottom:14px;">' +
+      '<label style="font-size:12px;font-weight:700;color:var(--text-primary);display:block;margin-bottom:6px;letter-spacing:0.3px;">Campaign ID *</label>' +
+      '<input type="text" class="lang-input" id="camp-id" placeholder="e.g. bot-ad, giveaway-1, summer-2025" value="' + escHTML(promo.campaign_id || '') + '" style="margin-bottom:4px;">' +
+      '<div style="font-size:11px;color:var(--text-muted);font-weight:500;">Unique identifier. Changing this forces the pop-up to show again for all users (override logic).</div>' +
+    '</div>' +
+    '<div style="margin-bottom:14px;">' +
+      '<label style="font-size:12px;font-weight:700;color:var(--text-primary);display:block;margin-bottom:6px;letter-spacing:0.3px;">Title *</label>' +
+      '<input type="text" class="lang-input" id="camp-title" placeholder="Pop-up title" value="' + escHTML(promo.title || '') + '">' +
+    '</div>' +
+    '<div style="margin-bottom:14px;">' +
+      '<label style="font-size:12px;font-weight:700;color:var(--text-primary);display:block;margin-bottom:6px;letter-spacing:0.3px;">Description</label>' +
+      '<textarea class="comment-textarea" id="camp-desc" placeholder="Pop-up description..." style="min-height:70px;background:var(--bg-primary);">' + escHTML(promo.description || '') + '</textarea>' +
+    '</div>' +
+    '<div style="margin-bottom:14px;">' +
+      '<label style="font-size:12px;font-weight:700;color:var(--text-primary);display:block;margin-bottom:6px;letter-spacing:0.3px;">Image URL</label>' +
+      '<input type="text" class="lang-input" id="camp-img" placeholder="https://s4.anilist.dev/file/... .jpg" value="' + escHTML(promo.imageUrl || '') + '" style="margin-bottom:6px;">' +
+      '<div style="font-size:11px;color:var(--accent);background:rgba(59,130,246,0.06);padding:10px 12px;border-radius:10px;border:1px solid rgba(59,130,246,0.18);font-weight:500;line-height:1.5;">' +
+        '<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="vertical-align:middle;margin-right:6px;"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>' +
+        'Tip: Any direct image URL works — Imgur, Discord CDN, AniList, or any .jpg/.png link.' +
+      '</div>' +
+    '</div>' +
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">' +
+      '<div>' +
+        '<label style="font-size:12px;font-weight:700;color:var(--text-primary);display:block;margin-bottom:6px;letter-spacing:0.3px;">Primary Button Text</label>' +
+        '<input type="text" class="lang-input" id="camp-btn1-text" placeholder="e.g. Join Now" value="' + escHTML(promo.btn1Text || '') + '">' +
+      '</div>' +
+      '<div>' +
+        '<label style="font-size:12px;font-weight:700;color:var(--text-primary);display:block;margin-bottom:6px;letter-spacing:0.3px;">Primary Button URL</label>' +
+        '<input type="text" class="lang-input" id="camp-btn1-url" placeholder="https://t.me/..." value="' + escHTML(promo.btn1Url || '') + '">' +
+      '</div>' +
+    '</div>' +
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px;">' +
+      '<div>' +
+        '<label style="font-size:12px;font-weight:700;color:var(--text-primary);display:block;margin-bottom:6px;letter-spacing:0.3px;">Secondary Button Text</label>' +
+        '<input type="text" class="lang-input" id="camp-btn2-text" placeholder="e.g. Learn More" value="' + escHTML(promo.btn2Text || '') + '">' +
+      '</div>' +
+      '<div>' +
+        '<label style="font-size:12px;font-weight:700;color:var(--text-primary);display:block;margin-bottom:6px;letter-spacing:0.3px;">Secondary Button URL</label>' +
+        '<input type="text" class="lang-input" id="camp-btn2-url" placeholder="https://t.me/..." value="' + escHTML(promo.btn2Url || '') + '">' +
+      '</div>' +
+    '</div>' +
+    '<div style="display:flex;align-items:center;gap:10px;margin-bottom:20px;padding:14px;background:var(--bg-primary);border-radius:12px;border:1.5px solid var(--border);">' +
+      '<input type="checkbox" id="camp-active" ' + isActiveChecked + ' style="width:18px;height:18px;accent-color:var(--accent);cursor:pointer;">' +
+      '<label for="camp-active" style="font-size:14px;font-weight:600;color:var(--text-primary);cursor:pointer;user-select:none;">Active (show pop-up to users)</label>' +
+    '</div>' +
+    '<div style="display:flex;gap:10px;margin-bottom:10px;">' +
+      '<button class="admin-btn" style="flex:1;" onclick="saveCampaignSettings()">' +
+        '<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="vertical-align:middle;margin-right:6px;"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"/></svg>' +
+        'Save Campaign' +
+      '</button>' +
+      '<button class="admin-btn secondary" style="flex:1;" onclick="previewCampaign()">' +
+        '<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="vertical-align:middle;margin-right:6px;"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>' +
+        'Preview' +
+      '</button>' +
+    '</div>' +
+    '<div style="display:flex;gap:10px;">' +
+      '<button class="admin-btn danger" style="flex:1;" onclick="deleteCampaign()">' +
+        '<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="vertical-align:middle;margin-right:6px;"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>' +
+        'Delete Campaign' +
+      '</button>' +
+    '</div>' +
+  '</div>' +
+  '<div style="background:var(--bg-secondary);border-radius:var(--radius);padding:22px;border:1.5px solid var(--border);">' +
+    '<div style="font-family:var(--font-heading);font-size:16px;font-weight:800;margin-bottom:12px;color:var(--text-primary);">How It Works</div>' +
+    '<div style="font-size:13px;color:var(--text-secondary);line-height:1.9;">' +
+      '<div style="display:flex;gap:10px;margin-bottom:10px;"><span style="color:var(--accent);font-weight:800;">1.</span><span>The pop-up fetches data from <code style="background:var(--bg-primary);padding:2px 6px;border-radius:4px;font-size:12px;">config/activePromo</code> in Firebase.</span></div>' +
+      '<div style="display:flex;gap:10px;margin-bottom:10px;"><span style="color:var(--accent);font-weight:800;">2.</span><span>If <strong>Active</strong> is checked, it appears to users after 2 seconds.</span></div>' +
+     // The fixed line:
+      '<div style="display:flex;gap:10px;margin-bottom:10px;"><span style="color:var(--accent);font-weight:800;">3.</span><span>Users can tick "Don\'t show again for today" to hide it until midnight.</span></div>' +
+
+      '<div style="display:flex;gap:10px;"><span style="color:var(--accent);font-weight:800;">4.</span><span><strong>Override:</strong> Changing the Campaign ID forces the pop-up to show again for all users.</span></div>' +
+    '</div>' +
+  '</div>';
+  container.innerHTML = html;
+}
+
+function saveCampaignSettings() {
+  const campaign_id = document.getElementById('camp-id').value.trim();
+  const title = document.getElementById('camp-title').value.trim();
+  const description = document.getElementById('camp-desc').value.trim();
+  const imageUrl = document.getElementById('camp-img').value.trim();
+  const btn1Text = document.getElementById('camp-btn1-text').value.trim();
+  const btn1Url = document.getElementById('camp-btn1-url').value.trim();
+  const btn2Text = document.getElementById('camp-btn2-text').value.trim();
+  const btn2Url = document.getElementById('camp-btn2-url').value.trim();
+  const isActive = document.getElementById('camp-active').checked;
+  if(!campaign_id) { showToast('Campaign ID is required', 'warning'); return; }
+  if(!title) { showToast('Title is required', 'warning'); return; }
+  const promo = { campaign_id: campaign_id, title: title, description: description, imageUrl: imageUrl, btn1Text: btn1Text, btn1Url: btn1Url, btn2Text: btn2Text, btn2Url: btn2Url, isActive: isActive, updatedAt: Date.now() };
+  db.ref('config/activePromo').set(promo).then(() => {
+    state.campaignData = promo;
+    showToast('Campaign saved!', 'success');
+  }).catch(() => showToast('Failed to save campaign', 'error'));
+}
+
+function previewCampaign() {
+  const promo = {
+    campaign_id: 'preview',
+    title: document.getElementById('camp-title').value.trim() || 'Preview',
+    description: document.getElementById('camp-desc').value.trim(),
+    imageUrl: document.getElementById('camp-img').value.trim(),
+    btn1Text: document.getElementById('camp-btn1-text').value.trim(),
+    btn1Url: document.getElementById('camp-btn1-url').value.trim(),
+    btn2Text: document.getElementById('camp-btn2-text').value.trim(),
+    btn2Url: document.getElementById('camp-btn2-url').value.trim(),
+    isActive: true
+  };
+  showCampaignPopup(promo);
+}
+
+function deleteCampaign() {
+  openModal('Delete Campaign', 'Are you sure you want to delete this campaign? This will remove the pop-up for all users.', function() {
+    if(db) {
+      db.ref('config/activePromo').remove().then(function() {
+        state.campaignData = null;
+        hideCampaignPopup();
+        showToast('Campaign deleted successfully', 'success');
+        renderCampaignManager();
+      }).catch(function() {
+        showToast('Failed to delete campaign', 'error');
+      });
+    } else {
+      showToast('Firebase not available', 'error');
+    }
+  });
+}
+
+
 // ========== URL ROUTING ==========
 function handleUrlParams() {
   try {
@@ -7238,6 +7803,7 @@ function init() {
   initUser();
   setupHiddenAdminTrigger();
   handleUrlParams();
+  initCampaignPopup();
   // Pre-load trending and popular
   setTimeout(() => {
     if(state.explored && state.tab === 'home') renderHomeContent();
