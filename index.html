@@ -5560,6 +5560,278 @@ body {
   z-index: 10; /* इसे ऊपर रखने के लिए */
 }
 
+
+/* ========== COMPACT AUTOPLAY NOTICE (Lightweight Toast) ========== */
+.autoplay-notice-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 460;
+  background: rgba(0,0,0,0.2);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  display: none;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 0 16px calc(76px + env(safe-area-inset-bottom));
+  pointer-events: none;
+  animation: fadeIn 0.25s ease;
+}
+.autoplay-notice-overlay.open { display: flex; }
+.autoplay-notice-sheet {
+  width: 100%;
+  max-width: 420px;
+  background: rgba(21, 26, 39, 0.92);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border-radius: 20px;
+  border: 1px solid rgba(59, 130, 246, 0.18);
+  padding: 14px 18px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4), 0 0 20px rgba(59,130,246,0.06);
+  animation: toastSlideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  position: relative;
+  overflow: hidden;
+}
+.autoplay-notice-sheet::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(59,130,246,0.6), transparent);
+}
+@keyframes toastSlideUp {
+  from { transform: translateY(20px) scale(0.96); opacity: 0; }
+  to { transform: translateY(0) scale(1); opacity: 1; }
+}
+.autoplay-notice-icon-wrap {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(59,130,246,0.2), rgba(139,92,246,0.12));
+  border: 1px solid rgba(59,130,246,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #93C5FD;
+  flex-shrink: 0;
+}
+.autoplay-notice-text-wrap {
+  flex: 1;
+  min-width: 0;
+}
+.autoplay-notice-title {
+  font-family: var(--font-heading);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+  letter-spacing: -0.2px;
+}
+.autoplay-notice-sub {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  font-weight: 500;
+}
+.autoplay-notice-btn {
+  padding: 10px 18px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #3B82F6, #6366F1);
+  color: #fff;
+  font-family: var(--font-heading);
+  font-size: 13px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 12px rgba(59,130,246,0.25);
+  white-space: nowrap;
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+}
+.autoplay-notice-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.12), transparent);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.autoplay-notice-btn:hover::before { opacity: 1; }
+.autoplay-notice-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  filter: grayscale(0.4);
+}
+.autoplay-notice-countdown {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 800;
+  background: rgba(255,255,255,0.15);
+  padding: 2px 8px;
+  border-radius: 8px;
+  margin-left: 6px;
+  min-width: 20px;
+  text-align: center;
+}
+.autoplay-notice-close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+  transition: all 0.2s;
+  z-index: 2;
+}
+.autoplay-notice-close:hover { background: rgba(239,68,68,0.2); color: #fff; }
+
+/* ========== COUNTDOWN SLIDE-OUT NOTICE ========== */
+.countdown-slide-notice {
+  position: absolute;
+  top: 0; right: 0; bottom: 0;
+  width: 260px; max-width: 82%;
+  background: rgba(11, 14, 23, 0.97);
+  backdrop-filter: blur(28px) saturate(200%);
+  -webkit-backdrop-filter: blur(28px) saturate(200%);
+  border-left: 2.5px solid var(--danger);
+  padding: 20px;
+  transform: translateX(110%);
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+  border-radius: 0 var(--radius) var(--radius) 0;
+  box-shadow: -10px 0 40px rgba(0,0,0,0.5);
+  pointer-events: none;
+}
+.countdown-slide-notice.open {
+  transform: translateX(0);
+  pointer-events: auto;
+}
+.countdown-slide-close {
+  position: absolute;
+  top: 12px; right: 12px;
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 18px; font-weight: 300; line-height: 1;
+  transition: all 0.2s ease;
+  z-index: 11;
+}
+.countdown-slide-close:hover {
+  background: rgba(239,68,68,0.2); color: #fff;
+  transform: rotate(90deg) scale(1.1);
+}
+.countdown-slide-close:active { transform: scale(0.9); }
+
+.countdown-slide-notice-icon {
+  width: 36px; height: 36px;
+  border-radius: 10px;
+  background: rgba(239,68,68,0.12);
+  border: 1px solid rgba(239,68,68,0.2);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--danger); flex-shrink: 0;
+}
+.countdown-slide-notice-title {
+  font-family: var(--font-heading);
+  font-size: 13px; font-weight: 800;
+  color: var(--text-primary);
+  text-transform: uppercase; letter-spacing: 0.8px;
+}
+.countdown-slide-notice-text {
+  font-size: 12px; color: var(--text-secondary);
+  line-height: 1.7; font-weight: 500;
+}
+.countdown-slide-notice-text strong { color: var(--danger); font-weight: 700; }
+.countdown-info-btn {
+  position: absolute;
+  top: 14px; right: 14px;
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.06);
+  border: 1.5px solid rgba(255,255,255,0.1);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-muted);
+  cursor: pointer; z-index: 6;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  font-family: var(--font-heading);
+  font-size: 15px; font-weight: 800;
+  line-height: 1; padding-bottom: 1px;
+}
+.countdown-info-btn:hover {
+  background: var(--accent); color: #fff;
+  border-color: var(--accent);
+  transform: scale(1.12) rotate(8deg);
+  box-shadow: 0 4px 14px rgba(59,130,246,0.35);
+}
+.countdown-info-btn:active { transform: scale(0.93); }
+.countdown-timer-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px; margin-top: 2px;
+}
+.countdown-timer-unit {
+  background: rgba(255,255,255,0.035);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 14px;
+  padding: 12px 4px 10px;
+  text-align: center; min-width: 0;
+  transition: all 0.2s ease;
+}
+.countdown-timer-unit:hover {
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(59,130,246,0.2);
+  transform: translateY(-2px);
+}
+.countdown-timer-value {
+  font-family: var(--font-heading);
+  font-size: 22px; font-weight: 900;
+  background: var(--accent-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1; display: block; letter-spacing: -0.5px;
+}
+.countdown-timer-label {
+  font-size: 9px; color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: 1px;
+  font-weight: 700; margin-top: 5px; display: block;
+}
+.countdown-progress-track {
+  width: 100%; height: 4px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 2px; margin-top: 16px;
+  overflow: hidden;
+}
+.countdown-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--accent-secondary));
+  border-radius: 2px;
+  transition: width 1s linear;
+  box-shadow: 0 0 10px rgba(59,130,246,0.3);
+}
 </style>
 <base target="_blank">
 </head>
@@ -6318,7 +6590,31 @@ const SoundEngine = (function() {
     osc.stop(t + 0.2);
   }
 
-  return { tabSwitch, slideChange, popupOpen, popupClose, notify, error };
+  // Dedicated countdown/notice slide sound — soft glass chime
+  function noticeSlide() {
+    if (!enabled) return;
+    const c = getCtx(); if (!c) return;
+    const t = now();
+    const notes = [880, 1100, 1320];
+    notes.forEach((freq, i) => {
+      const osc = c.createOscillator();
+      const gain = c.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, t + i * 0.05);
+      gain.gain.setValueAtTime(0, t + i * 0.05);
+      gain.gain.linearRampToValueAtTime(0.06, t + i * 0.05 + 0.03);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + i * 0.05 + 0.18);
+      osc.connect(gain);
+      gain.connect(c.destination);
+      osc.start(t + i * 0.05);
+      osc.stop(t + i * 0.05 + 0.18);
+    });
+  }
+
+  function _getCtx() { return getCtx(); }
+  function enable() { enabled = true; }
+
+  return { tabSwitch, slideChange, popupOpen, popupClose, notify, error, noticeSlide, _getCtx, enable };
 })();
 
 // Convenience global
@@ -6326,7 +6622,18 @@ function playSound(type) {
   if (!SoundEngine[type]) return;
   // Resume audio context on user interaction (browser policy)
   try {
-    const ctx = window.AudioContext ? new window.AudioContext() : (window.webkitAudioContext ? new window.webkitAudioContext() : null);
+    const ctx = SoundEngine._getCtx ? SoundEngine._getCtx() : null;
+    if (ctx && ctx.state === 'suspended') ctx.resume();
+  } catch(e) {}
+  SoundEngine[type]();
+}
+
+// Dedicated sound for notices/toasts/notifications only
+function playNoticeSound(type) {
+  if (!SoundEngine[type]) return;
+  SoundEngine.enable();
+  try {
+    const ctx = SoundEngine._getCtx ? SoundEngine._getCtx() : null;
     if (ctx && ctx.state === 'suspended') ctx.resume();
   } catch(e) {}
   SoundEngine[type]();
@@ -6527,13 +6834,13 @@ function shouldShowScheduleNotice() {
 }
 function showScheduleNotice() {
   if(!shouldShowScheduleNotice()) return;
-  playSound('popupOpen');
+  playNoticeSound('popupOpen');
   const overlay = document.getElementById('notice-popup-overlay');
   if(overlay) overlay.classList.add('open');
   setTimeout(() => closeScheduleNotice(), 5500);
 }
 function closeScheduleNotice() {
-  playSound('popupClose');
+  playNoticeSound('popupClose');
   const overlay = document.getElementById('notice-popup-overlay');
   if(overlay) overlay.classList.remove('open');
   try { localStorage.setItem(SCHEDULE_NOTICE_KEY, String(Date.now())); } catch(e) {}
@@ -6733,8 +7040,8 @@ function setupHiddenAdminTrigger() {
   logo.addEventListener('mouseleave', () => { if(longPressTimer) { clearTimeout(longPressTimer); longPressTimer = null; } });
 }
 
-function openPasswordModal() { $('#password-overlay').classList.add('open'); setTimeout(() => $('#password-input').focus(), 100); }
-function closePasswordModal() { $('#password-overlay').classList.remove('open'); $('#password-input').value = ''; }
+function openPasswordModal() { playNoticeSound('popupOpen'); $('#password-overlay').classList.add('open'); setTimeout(() => $('#password-input').focus(), 100); }
+function closePasswordModal() { playNoticeSound('popupClose'); $('#password-overlay').classList.remove('open'); $('#password-input').value = ''; }
 
 function checkPassword() {
   const val = $('#password-input').value.trim();
@@ -6892,31 +7199,188 @@ function saveAutoplayCount() {
   const uid = state.user ? state.user.id : 'guest';
   try { localStorage.setItem('iox_autoplay_count_' + uid, String(state.autoplayCount)); } catch(e) {}
 }
+const AUTOPLAY_NOTICE_KEY = 'iox_autoplay_notice_v2';
+
+function getAutoplayNoticeKey() {
+  // Use stable key for guests (since guest ID changes every reload)
+  const uid = state.user && !state.user.id.startsWith('guest_') ? state.user.id : 'guest_stable';
+  return AUTOPLAY_NOTICE_KEY + '_' + uid;
+}
+
 function shouldShowAutoplayNotice() {
-  // Show on 1st play (count becomes 1), then 11th, 21st, etc.
+  try {
+    const dismissed = localStorage.getItem(getAutoplayNoticeKey());
+    if(dismissed) {
+      const dismissedTime = parseInt(dismissed);
+      if(!isNaN(dismissedTime)) {
+        const daysSince = (Date.now() - dismissedTime) / (1000 * 60 * 60 * 24);
+        if(daysSince < 15) return false;
+      }
+    }
+  } catch(e) {}
+  // Show on first autoplay (count 1) and every 10th after that
   return state.autoplayCount === 1 || state.autoplayCount % 10 === 1;
 }
-function showAutoplayNotice() {
-  const hero = document.getElementById('detail-hero');
-  if(!hero) return;
-  let notice = document.getElementById('autoplay-notice');
-  if(!notice) {
-    notice = document.createElement('div');
-    notice.id = 'autoplay-notice';
-    notice.innerHTML = '<div style="display:flex;align-items:center;gap:10px;"><span style="font-size:18px;">🔔</span><div><div style="font-weight:700;font-size:13px;margin-bottom:2px;">Auto-play is ON</div><div style="font-size:12px;opacity:0.85;">You can turn it off from Profile → Account Settings</div></div></div>';
-    notice.style.cssText = 'position:absolute;bottom:16px;left:16px;right:16px;z-index:10;background:rgba(15,23,42,0.92);backdrop-filter:blur(16px);border:1px solid rgba(59,130,246,0.3);border-radius:16px;padding:14px 18px;color:#fff;font-family:var(--font-body);font-size:13px;box-shadow:0 8px 32px rgba(0,0,0,0.4),0 0 20px rgba(59,130,246,0.1);transform:translateY(120px);opacity:0;transition:all 0.5s cubic-bezier(0.16,1,0.3,1);pointer-events:none;';
-    hero.appendChild(notice);
+
+// Manual test function — call from console: testAutoplayNotice()
+window.testAutoplayNotice = function() {
+  state.autoplayCount = 1;
+  showAutoplayNotice();
+};
+
+function dismissAutoplayNotice() {
+  playNoticeSound('popupClose');
+  try { localStorage.setItem(getAutoplayNoticeKey(), String(Date.now())); } catch(e) {}
+  const overlay = document.getElementById('autoplay-notice-overlay');
+  if(overlay) {
+    overlay.style.opacity = '0';
+    setTimeout(() => { if(overlay.parentNode) overlay.parentNode.removeChild(overlay); }, 300);
   }
-  requestAnimationFrame(() => {
-    notice.style.transform = 'translateY(0)';
-    notice.style.opacity = '1';
-  });
-  setTimeout(() => {
-    if(notice) {
-      notice.style.transform = 'translateY(120px)';
-      notice.style.opacity = '0';
+  if(state.pendingCountdownNotice) {
+    state.pendingCountdownNotice = false;
+    setTimeout(showCountdownNotice, 400);
+  }
+}
+
+function showAutoplayNotice() {
+  playNoticeSound('popupOpen');
+  const existing = document.getElementById('autoplay-notice-overlay');
+  if(existing && existing.parentNode) existing.parentNode.removeChild(existing);
+
+  const overlay = document.createElement('div');
+  overlay.id = 'autoplay-notice-overlay';
+  overlay.className = 'autoplay-notice-overlay';
+  overlay.innerHTML =
+    '<div class="autoplay-notice-sheet">' +
+      '<div class="autoplay-notice-icon-wrap">' +
+        '<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>' +
+      '</div>' +
+      '<div class="autoplay-notice-text-wrap">' +
+        '<div class="autoplay-notice-title">Auto-play Trailer</div>' +
+        '<div class="autoplay-notice-sub">Trailers play automatically. Change in Profile settings.</div>' +
+      '</div>' +
+      '<button class="autoplay-notice-btn" id="autoplay-notice-btn" disabled>' +
+        '<span>Got it</span>' +
+        '<span class="autoplay-notice-countdown" id="autoplay-notice-countdown">3</span>' +
+      '</button>' +
+    '</div>';
+
+  document.body.appendChild(overlay);
+  requestAnimationFrame(() => { overlay.classList.add('open'); });
+
+  let secondsLeft = 3;
+  const btn = document.getElementById('autoplay-notice-btn');
+  const countdownEl = document.getElementById('autoplay-notice-countdown');
+
+  const timer = setInterval(() => {
+    secondsLeft--;
+    if(countdownEl) countdownEl.textContent = secondsLeft;
+    if(secondsLeft <= 0) {
+      clearInterval(timer);
+      if(countdownEl) countdownEl.style.display = 'none';
+      if(btn) btn.disabled = false;
     }
-  }, 4000);
+  }, 1000);
+
+  btn.onclick = function() {
+    if(btn.disabled) return;
+    playNoticeSound('popupClose');
+    dismissAutoplayNotice();
+  };
+
+  overlay.onclick = function(e) {
+    if(e.target === overlay) dismissAutoplayNotice();
+  };
+}function formatCountdown(totalSeconds) {
+  if(totalSeconds <= 0) return 'Airing now!';
+  const days = Math.floor(totalSeconds / 86400);
+  const hours = Math.floor((totalSeconds % 86400) / 3600);
+  const mins = Math.floor((totalSeconds % 3600) / 60);
+  const secs = totalSeconds % 60;
+  if(days > 0) return `${days}d ${hours}h ${mins}m`;
+  if(hours > 0) return `${hours}h ${mins}m ${secs}s`;
+  return `${mins}m ${secs}s`;
+}
+const COUNTDOWN_NOTICE_KEY = 'iox_countdown_notice_v1';
+let countdownNoticeTimer = null;
+
+function openCountdownNotice() {
+  const notice = document.getElementById('countdown-slide-notice');
+  if(!notice) return;
+  notice.classList.add('open');
+  playNoticeSound('noticeSlide');
+  if(countdownNoticeTimer) clearTimeout(countdownNoticeTimer);
+  countdownNoticeTimer = setTimeout(() => { closeCountdownNotice(); }, 15000);
+}
+
+function closeCountdownNotice() {
+  const notice = document.getElementById('countdown-slide-notice');
+  if(notice) { notice.classList.remove('open'); playNoticeSound('popupClose'); }
+  if(countdownNoticeTimer) { clearTimeout(countdownNoticeTimer); countdownNoticeTimer = null; }
+  try { localStorage.setItem(COUNTDOWN_NOTICE_KEY, '1'); } catch(e) {}
+}
+
+function toggleCountdownNotice() {
+  const notice = document.getElementById('countdown-slide-notice');
+  if(!notice) return;
+  const isOpen = notice.classList.contains('open');
+  if(isOpen) { closeCountdownNotice(); }
+  else { openCountdownNotice(); }
+}
+
+function showCountdownNotice() {
+  try {
+    const dismissed = localStorage.getItem(COUNTDOWN_NOTICE_KEY);
+    if(dismissed) return;
+  } catch(e) { return; }
+  openCountdownNotice();
+}
+
+function maybeAutoShowCountdownNotice() {
+  state.pendingCountdownNotice = true;
+}
+
+
+function startAiringCountdown(a) {
+  if(airingCountdownInterval) { clearInterval(airingCountdownInterval); airingCountdownInterval = null; }
+  if(a.status !== 'RELEASING' || !a.nextAiringEpisode) return;
+  maybeAutoShowCountdownNotice();
+  const startTime = Math.floor(Date.now() / 1000);
+  const totalDuration = Math.max(a.nextAiringEpisode.airingAt - startTime, 1);
+  const update = () => {
+    const epEl = document.getElementById('airing-countdown-ep');
+    const daysEl = document.getElementById('cd-days');
+    const hoursEl = document.getElementById('cd-hours');
+    const minsEl = document.getElementById('cd-mins');
+    const secsEl = document.getElementById('cd-secs');
+    const progressEl = document.getElementById('countdown-progress-fill');
+    if(!daysEl) { clearInterval(airingCountdownInterval); airingCountdownInterval = null; return; }
+    const now = Math.floor(Date.now() / 1000);
+    const target = a.nextAiringEpisode.airingAt;
+    const remaining = target - now;
+    if(remaining <= 0) {
+      daysEl.textContent = '00'; hoursEl.textContent = '00'; minsEl.textContent = '00'; secsEl.textContent = '00';
+      if(epEl) epEl.textContent = 'EP ' + (a.nextAiringEpisode.episode || '?') + ' — Airing Now!';
+      if(progressEl) progressEl.style.width = '100%';
+    } else {
+      const days = Math.floor(remaining / 86400);
+      const hours = Math.floor((remaining % 86400) / 3600);
+      const mins = Math.floor((remaining % 3600) / 60);
+      const secs = remaining % 60;
+      daysEl.textContent = String(days).padStart(2, '0');
+      hoursEl.textContent = String(hours).padStart(2, '0');
+      minsEl.textContent = String(mins).padStart(2, '0');
+      secsEl.textContent = String(secs).padStart(2, '0');
+      if(epEl) epEl.textContent = 'EP ' + (a.nextAiringEpisode.episode || '?') + ' — Upcoming';
+      if(progressEl && totalDuration > 0) {
+        const elapsed = totalDuration - remaining;
+        const pct = Math.min(100, Math.max(2, (elapsed / totalDuration) * 100));
+        progressEl.style.width = pct + '%';
+      }
+    }
+  };
+  update();
+  airingCountdownInterval = setInterval(update, 1000);
 }
 function toggleAutoplayTrailer() {
   state.autoplayTrailer = !state.autoplayTrailer;
@@ -6938,13 +7402,11 @@ function dismissNote(key) {
 
 // ========== SIDEBAR ==========
 function openSidebar() {
-  playSound('popupOpen');
   $('#sidebar').classList.add('open');
   $('#sidebar-overlay').classList.add('open');
   document.body.style.overflow = 'hidden';
 }
 function closeSidebar() {
-  playSound('popupClose');
   $('#sidebar').classList.remove('open');
   $('#sidebar-overlay').classList.remove('open');
   document.body.style.overflow = '';
@@ -6958,9 +7420,15 @@ document.addEventListener('touchend', e => {
 
 // ========== TAB SWITCHING ==========
 let autoplayTimeout = null;
+let airingCountdownInterval = null;
 function switchTab(name) {
   if(name === state.tab) return;
   if(autoplayTimeout) { clearTimeout(autoplayTimeout); autoplayTimeout = null; }
+  if(airingCountdownInterval) { clearInterval(airingCountdownInterval); airingCountdownInterval = null; }
+  if(countdownNoticeTimer) { clearTimeout(countdownNoticeTimer); countdownNoticeTimer = null; }
+  state.pendingCountdownNotice = false;
+  const cdNotice = document.getElementById('countdown-slide-notice');
+  if(cdNotice) cdNotice.classList.remove('open');
   state.prevTab = state.tab || 'home';
   state.tab = name;
   $$('.page').forEach(p => p.classList.remove('active'));
@@ -6981,7 +7449,7 @@ function switchTab(name) {
 
 // ========== TOAST / MODAL ==========
 function showToast(msg, type) {
-  playSound(type === 'error' ? 'error' : 'notify');
+  playNoticeSound(type === 'error' ? 'error' : 'notify');
   const container = $('#toast-container');
   const toast = document.createElement('div');
   toast.className = 'toast ' + (type||'');
@@ -6991,12 +7459,13 @@ function showToast(msg, type) {
 }
 let modalCallback = null;
 function openModal(title, content, onConfirm) {
+  playNoticeSound('popupOpen');
   modalCallback = onConfirm;
   const overlay = $('#modal-overlay');
   overlay.innerHTML = '<div class="modal-content"><div class="modal-title">' + escHTML(title) + '</div><div>' + content + '</div><div class="modal-actions"><button class="modal-btn secondary" onclick="closeModal()">Cancel</button><button class="modal-btn primary" onclick="confirmModal()">Confirm</button></div></div>';
   overlay.classList.add('open');
 }
-function closeModal() { modalCallback = null; $('#modal-overlay').classList.remove('open'); }
+function closeModal() { modalCallback = null; playNoticeSound('popupClose'); $('#modal-overlay').classList.remove('open'); }
 function confirmModal() { if(modalCallback) modalCallback(); closeModal(); }
 
 // ========== SHARE ==========
@@ -7041,7 +7510,6 @@ function addWatchHistory(animeId, episode) {
 
 // ========== HOME PAGE (ULTRA PRO) ==========
 function setHomeCategory(cat) {
-  playSound('tabSwitch');
   state.homeCategory = cat;
   $$('#home-pills .pill-btn').forEach(b => b.classList.toggle('active', b.dataset.cat === cat));
   renderHomeContent();
@@ -7418,7 +7886,6 @@ function handleSearchKeydown(event, value) {
 
 // ========== ANIME DETAIL PAGE ==========
 async function openAnime(id) {
-  playSound('popupOpen');
   const animeId = Number(id);
   if(!id || isNaN(animeId) || animeId <= 0) { showToast('Invalid anime ID', 'error'); return; }
   state.prevTab = state.tab || 'home';
@@ -7443,16 +7910,21 @@ async function openAnime(id) {
         saveAutoplayCount();
         if(shouldShowAutoplayNotice()) {
           showAutoplayNotice();
+        } else if(state.pendingCountdownNotice) {
+          state.pendingCountdownNotice = false;
+          setTimeout(showCountdownNotice, 400);
         }
       }
       autoplayTimeout = null;
     }, 500);
+  } else if(state.pendingCountdownNotice) {
+    state.pendingCountdownNotice = false;
+    setTimeout(showCountdownNotice, 400);
   }
 }
 
-function goBack() { playSound('popupClose'); switchTab(state.prevTab || 'home'); }
+function goBack() { if(airingCountdownInterval) { clearInterval(airingCountdownInterval); airingCountdownInterval = null; } switchTab(state.prevTab || 'home'); }
 function openTermsPage() {
-  playSound('popupOpen');
   state.prevTab = state.tab || 'home';
   state.tab = 'terms';
   $$('.page').forEach(p => p.classList.remove('active'));
@@ -7467,6 +7939,7 @@ function renderDetail() {
   if(!a) return;
   renderDetailHero(a);
   renderDetailBody(a);
+  startAiringCountdown(a);
 }
 
 function renderDetailHero(a) {
@@ -7543,6 +8016,39 @@ function renderDetailBody(a) {
       `<div class="stat-box"><div class="stat-value">${eps}</div><div class="stat-label">Episodes</div></div>` +
       `<div class="stat-box"><div class="stat-value">${dur}</div><div class="stat-label">Duration</div></div>` +
     `</div>` +
+    `<div id="airing-countdown-card" style="display:${a.status==='RELEASING' && a.nextAiringEpisode ? 'block' : 'none'};margin:0 16px 18px;padding:18px;border-radius:var(--radius);background:linear-gradient(135deg, rgba(37,99,235,0.12), rgba(139,92,246,0.08), rgba(14,165,233,0.06));border:1.5px solid rgba(59,130,246,0.25);position:relative;overflow:hidden;box-shadow:0 4px 20px rgba(59,130,246,0.1), 0 0 0 1px rgba(255,255,255,0.04) inset;">` +
+      `<button class="countdown-info-btn" onclick="toggleCountdownNotice()" title="Broadcast Info">i</button>` +
+      `<div id="countdown-slide-notice" class="countdown-slide-notice">` +
+        `<button class="countdown-slide-close" onclick="closeCountdownNotice()">&times;</button>` +
+        `<div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;">` +
+          `<div class="countdown-slide-notice-icon">` +
+            `<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.29 3.86L1.82 18a2 2 0 002 3h16.36a2 2 0 002-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>` +
+          `</div>` +
+          `<span class="countdown-slide-notice-title">Broadcast Info</span>` +
+        `</div>` +
+        `<p class="countdown-slide-notice-text">` +
+          `This schedule is for the <strong>Japanese Original</strong> broadcast. English/Hindi dub release dates may differ based on licensing and localization schedules.` +
+        `</p>` +
+      `</div>` +
+      `<div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">` +
+        `<div style="width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg, #EF4444, #F87171);display:flex;align-items:center;justify-content:center;color:#fff;flex-shrink:0;box-shadow:0 4px 16px rgba(239,68,68,0.3);animation:livePulse 2s ease-in-out infinite;">` +
+          `<svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path stroke-linecap="round" d="M12 6v6l4 2"/></svg>` +
+        `</div>` +
+        `<div style="flex:1;min-width:0;">` +
+          `<div style="font-family:var(--font-heading);font-size:16px;font-weight:800;color:var(--text-primary);margin-bottom:2px;">Next Episode Countdown</div>` +
+          `<div id="airing-countdown-ep" style="font-size:12px;font-weight:700;color:var(--accent);letter-spacing:0.5px;">EP ${a.nextAiringEpisode ? (a.nextAiringEpisode.episode || '?') : '?'} — Upcoming</div>` +
+        `</div>` +
+      `</div>` +
+      `<div class="countdown-timer-grid" id="countdown-timer-grid">` +
+        `<div class="countdown-timer-unit"><span class="countdown-timer-value" id="cd-days">00</span><span class="countdown-timer-label">Days</span></div>` +
+        `<div class="countdown-timer-unit"><span class="countdown-timer-value" id="cd-hours">00</span><span class="countdown-timer-label">Hours</span></div>` +
+        `<div class="countdown-timer-unit"><span class="countdown-timer-value" id="cd-mins">00</span><span class="countdown-timer-label">Mins</span></div>` +
+        `<div class="countdown-timer-unit"><span class="countdown-timer-value" id="cd-secs">00</span><span class="countdown-timer-label">Secs</span></div>` +
+      `</div>` +
+      `<div class="countdown-progress-track">` +
+        `<div class="countdown-progress-fill" id="countdown-progress-fill" style="width:0%;"></div>` +
+      `</div>` +
+    `</div>` +
     `<div class="detail-tabs">` +
       `<button class="detail-tab active" onclick="setDetailTab('overview')">Overview</button>` +
       `<button class="detail-tab" onclick="setDetailTab('watch')">Watch</button>` +
@@ -7563,7 +8069,6 @@ function renderDetailBody(a) {
 }
 
 function setDetailTab(tab) {
-  playSound('tabSwitch');
   $$('.detail-tab').forEach(t => t.classList.toggle('active', t.textContent.toLowerCase().trim() === tab));
   $$('.tab-panel').forEach(p => p.classList.toggle('active', p.dataset.tab === tab));
 }
@@ -7734,7 +8239,6 @@ function toggleTrailer() {
 }
 
 function showMiniPlayer() {
-  playSound('popupOpen');
   const a = state.currentAnime;
   if(!a || !a.trailer || !a.trailer.id) {
     showToast('No trailer available for this anime', 'warning');
@@ -7777,7 +8281,6 @@ function closeMiniPlayer() {
 }
 
 function hideMiniPlayer() {
-  playSound('popupClose');
   const container = $('#detail-trailer-iframe-container');
   const wrap = $('#detail-trailer-wrap');
   const heroContent = $('#detail-hero-content');
@@ -7949,7 +8452,6 @@ function deleteComment(commentId, animeId) {
 
 // ========== SCHEDULE PAGE ==========
 function setScheduleTab(tab) {
-  playSound('tabSwitch');
   state.scheduleView = tab;
   $$('.schedule-tab').forEach(t => t.classList.toggle('active', t.textContent.toLowerCase().trim() === tab));
   $$('.schedule-panel').forEach(p => p.classList.toggle('active', p.id === 'panel-' + tab));
@@ -8029,7 +8531,6 @@ function buildScheduleHero(items, type) {
   `</div>`;
 }
 function setScheduleHeroSlide(idx) {
-  playSound('slideChange');
   const banner = document.getElementById('schedule-hero-banner');
   if(!banner) return;
   const slides = banner.querySelectorAll('.schedule-hero-slide');
@@ -8669,7 +9170,6 @@ function loadMoreNews() {
 }
 
 function setNewsTab(tab) {
-  playSound('tabSwitch');
   state.newsView = tab;
   $$('.news-tab').forEach(t => t.classList.toggle('active', t.textContent.toLowerCase().includes(tab)));
   $$('.news-panel').forEach(p => p.classList.toggle('active', p.id === 'news-panel-' + tab));
@@ -8780,7 +9280,6 @@ async function renderAPINews(isLoadMore = false) {
 }
 
 function openNewsDetail(index) {
-  playSound('popupOpen');
   const item = state.newsData[index];
   if(!item) return;
   state.currentNewsItem = item;
@@ -8794,7 +9293,6 @@ function openNewsDetail(index) {
 }
 
 function closeNewsDetail() {
-  playSound('popupClose');
   switchTab(state.prevTab || 'news');
 }
 
@@ -9026,7 +9524,6 @@ function deleteCustomNews(key) {
 
 // ========== ADMIN PANEL (FIXED & PROFESSIONAL) ==========
 function setAdminTab(tab) {
-  playSound('tabSwitch');
   state.adminView = tab;
   $$('.admin-tab').forEach(t => t.classList.toggle('active', t.textContent.toLowerCase().trim() === tab));
   $$('.admin-panel').forEach(p => p.classList.toggle('active', p.id === 'admin-panel-' + tab));
@@ -9934,7 +10431,6 @@ function showCampaignPopup(data) {
 }
 
 function closeCampaignPopup(dontShow) {
-  playSound('popupClose');
   const overlay = document.getElementById('campaign-popup-overlay');
   if(overlay) overlay.style.display = 'none';
   if(dontShow) {
@@ -9972,7 +10468,6 @@ function openLangModal(title, contentHtml) {
 }
 
 function closeLangModal() {
-  playSound('popupClose');
   const overlay = document.getElementById('lang-modal-overlay');
   if(overlay) overlay.classList.remove('open');
   document.body.style.overflow = '';
@@ -9980,7 +10475,6 @@ function closeLangModal() {
 }
 
 function showLangDropdown(animeId) {
-  playSound('popupOpen');
   const cd = state.channels[animeId];
   if(!cd || !cd.languages) { showToast('No channels available', 'error'); return; }
   _currentLangAnimeId = animeId;
