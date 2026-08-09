@@ -6372,6 +6372,7 @@ const state = {
   customNewsLoaded: false,
   newsDisplayCount: 10,
   newsRefreshing: false,
+  autoplayTrailer: true,
   currentNewsItem: null,
   animeCache: {},
   campaignData: null,
@@ -6440,15 +6441,35 @@ function addXP(amount) {
   state.xp = (state.xp || 0) + earned;
   state.totalXP = (state.totalXP || 0) + earned;
   if(db && state.user) db.ref('users/' + state.user.id + '/xp').set(state.xp);
+  saveXPToLocal();
   return earned;
 }
 function loadUserXP() {
-  if(!db || !state.user) return;
+  const uid = state.user ? state.user.id : 'guest';
+  // Load from localStorage first (fast, works offline)
+  try {
+    const raw = localStorage.getItem('iox_xp_' + uid);
+    if(raw) {
+      const saved = JSON.parse(raw);
+      if(typeof saved.xp === 'number') { state.xp = saved.xp; state.totalXP = saved.totalXP || saved.xp; }
+    }
+  } catch(e) {}
+  // Then sync from Firebase (cross-device)
+  if(!db || !state.user || state.user.id.startsWith('guest_')) return;
   db.ref('users/' + state.user.id + '/xp').once('value').then(snap => {
     const savedXP = snap.val();
-    if(savedXP && typeof savedXP === 'number') { state.xp = savedXP; state.totalXP = savedXP; }
-    else { state.xp = 0; state.totalXP = 0; }
+    if(savedXP && typeof savedXP === 'number') {
+      // Use the higher value (Firebase might be newer, or local might be newer if offline)
+      if(savedXP > state.xp) { state.xp = savedXP; state.totalXP = savedXP; }
+      saveXPToLocal();
+    }
   });
+}
+function saveXPToLocal() {
+  try {
+    const uid = state.user ? state.user.id : 'guest';
+    localStorage.setItem('iox_xp_' + uid, JSON.stringify({xp: state.xp, totalXP: state.totalXP}));
+  } catch(e) {}
 }
 
 // ========== DOM HELPERS ==========
@@ -6549,6 +6570,7 @@ function initUser() {
     loadUserData();
     loadUserXP();
     loadCustomNews();
+    loadSettings();
     startHeaderClock();
   });
 }
@@ -6833,6 +6855,36 @@ function getRecentSearches() {
 function saveRecentSearches() {
   try { localStorage.setItem('iox_recent_searches', JSON.stringify(state.recentSearches.slice(0,10))); } catch(e){}
 }
+function loadSettings() {
+  const uid = state.user ? state.user.id : 'guest';
+  // Load from localStorage first (fast, offline)
+  try {
+    const raw = localStorage.getItem('iox_settings_' + uid);
+    if(raw) {
+      const s = JSON.parse(raw);
+      if(typeof s.autoplayTrailer === 'boolean') state.autoplayTrailer = s.autoplayTrailer;
+    }
+  } catch(e) {}
+  // Sync from Firebase (cross-device)
+  if(!db || !state.user || state.user.id.startsWith('guest_')) return;
+  db.ref('users/' + state.user.id + '/settings/autoplayTrailer').once('value').then(snap => {
+    const val = snap.val();
+    if(typeof val === 'boolean') { state.autoplayTrailer = val; }
+  });
+}
+function saveSettings() {
+  const uid = state.user ? state.user.id : 'guest';
+  try { localStorage.setItem('iox_settings_' + uid, JSON.stringify({autoplayTrailer: state.autoplayTrailer})); } catch(e) {}
+  if(db && state.user && !state.user.id.startsWith('guest_')) {
+    db.ref('users/' + state.user.id + '/settings/autoplayTrailer').set(state.autoplayTrailer);
+  }
+}
+function toggleAutoplayTrailer() {
+  state.autoplayTrailer = !state.autoplayTrailer;
+  saveSettings();
+  showToast('Auto-play Trailer ' + (state.autoplayTrailer ? 'ON' : 'OFF'), 'success');
+  renderProfile();
+}
 function addRecentSearch(q) {
   if(!q || q.length < 2) return;
   state.recentSearches = [q, ...state.recentSearches.filter(s=>s.toLowerCase()!==q.toLowerCase())].slice(0,10);
@@ -6866,8 +6918,10 @@ document.addEventListener('touchend', e => {
 });
 
 // ========== TAB SWITCHING ==========
+let autoplayTimeout = null;
 function switchTab(name) {
   if(name === state.tab) return;
+  if(autoplayTimeout) { clearTimeout(autoplayTimeout); autoplayTimeout = null; }
   state.prevTab = state.tab || 'home';
   state.tab = name;
   $$('.page').forEach(p => p.classList.remove('active'));
@@ -7341,6 +7395,15 @@ async function openAnime(id) {
   state.currentAnime = data.Media;
   addWatchHistory(animeId);
   renderDetail();
+  if(state.autoplayTrailer && state.currentAnime && state.currentAnime.trailer && state.currentAnime.trailer.id) {
+    if(autoplayTimeout) clearTimeout(autoplayTimeout);
+    autoplayTimeout = setTimeout(() => {
+      if(state.tab === 'detail' && state.currentAnime && state.currentAnime.id === animeId) {
+        showMiniPlayer();
+      }
+      autoplayTimeout = null;
+    }, 2000);
+  }
 }
 
 function goBack() { playSound('popupClose'); switchTab(state.prevTab || 'home'); }
@@ -8505,6 +8568,11 @@ function renderProfile() {
         '<div class="profile-settings-icon-wrap red"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></div>' +
         '<span class="profile-settings-text">Clear History</span>' +
         '<svg class="profile-settings-arrow" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>' +
+      '</button>' +
+      '<button class="profile-settings-item" onclick="toggleAutoplayTrailer()">' +
+        '<div class="profile-settings-icon-wrap green"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>' +
+        '<span class="profile-settings-text">Auto-play Trailer</span>' +
+        '<span style="margin-left:auto;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:800;background:' + (state.autoplayTrailer ? 'rgba(16,185,129,0.15);color:var(--success);border:1px solid rgba(16,185,129,0.25)' : 'rgba(100,116,139,0.1);color:var(--text-muted);border:1px solid rgba(100,116,139,0.15)') + ';">' + (state.autoplayTrailer ? 'ON' : 'OFF') + '</span>' +
       '</button>' +
       '<button class="profile-settings-item" onclick="clearCache()">' +
         '<div class="profile-settings-icon-wrap blue"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg></div>' +
